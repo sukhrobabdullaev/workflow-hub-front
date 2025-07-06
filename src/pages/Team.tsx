@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -6,19 +6,27 @@ import { useAppStore } from '@/store/appStore';
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'active': return 'bg-success/10 text-success';
-    case 'away': return 'bg-warning/10 text-warning';
-    case 'offline': return 'bg-muted text-muted-foreground';
-    default: return 'bg-muted text-muted-foreground';
+    case 'active':
+      return 'bg-success/10 text-success';
+    case 'away':
+      return 'bg-warning/10 text-warning';
+    case 'offline':
+      return 'bg-muted text-muted-foreground';
+    default:
+      return 'bg-muted text-muted-foreground';
   }
 };
 
 const getStatusIndicator = (status: string) => {
   switch (status) {
-    case 'active': return 'bg-success';
-    case 'away': return 'bg-warning';
-    case 'offline': return 'bg-muted-foreground';
-    default: return 'bg-muted-foreground';
+    case 'active':
+      return 'bg-success';
+    case 'away':
+      return 'bg-warning';
+    case 'offline':
+      return 'bg-muted-foreground';
+    default:
+      return 'bg-muted-foreground';
   }
 };
 
@@ -40,13 +48,20 @@ export const Team = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {teamMembers.map((member) => {
+        {teamMembers.map(member => {
           const memberTasks = tasks.filter(task => task.assignee === member.id);
-          const completedTasks = memberTasks.filter(task => task.status === 'done').length;
-          const activeTasks = memberTasks.filter(task => task.status === 'in-progress').length;
+          const completedTasks = memberTasks.filter(
+            task => task.status === 'done'
+          ).length;
+          const activeTasks = memberTasks.filter(
+            task => task.status === 'in-progress'
+          ).length;
 
           return (
-            <Card key={member.id} className="shadow-soft hover:shadow-elevated transition-all duration-200">
+            <Card
+              key={member.id}
+              className="shadow-soft hover:shadow-elevated transition-all duration-200"
+            >
               <CardHeader>
                 <div className="flex items-center gap-4">
                   <div className="relative">
@@ -56,14 +71,21 @@ export const Team = () => {
                         {member.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <div 
+                    <div
                       className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background ${getStatusIndicator(member.status)}`}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <CardTitle className="text-lg truncate">{member.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{member.role}</p>
-                    <Badge className={`mt-1 ${getStatusColor(member.status)}`} variant="secondary">
+                    <CardTitle className="text-lg truncate">
+                      {member.name}
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      {member.role}
+                    </p>
+                    <Badge
+                      className={`mt-1 ${getStatusColor(member.status)}`}
+                      variant="secondary"
+                    >
                       {member.status}
                     </Badge>
                   </div>
@@ -74,16 +96,24 @@ export const Team = () => {
                   <div className="text-sm text-muted-foreground">
                     {member.email}
                   </div>
-                  
+
                   {/* Task Statistics */}
                   <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-primary">{activeTasks}</div>
-                      <div className="text-xs text-muted-foreground">Active Tasks</div>
+                      <div className="text-2xl font-bold text-primary">
+                        {activeTasks}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Active Tasks
+                      </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-success">{completedTasks}</div>
-                      <div className="text-xs text-muted-foreground">Completed</div>
+                      <div className="text-2xl font-bold text-success">
+                        {completedTasks}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Completed
+                      </div>
                     </div>
                   </div>
 

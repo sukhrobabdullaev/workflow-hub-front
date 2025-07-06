@@ -1,9 +1,9 @@
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom';
 
 // Mock window.matchMedia for tests
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: jest.fn().mockImplementation(query => ({
     matches: false,
     media: query,
     onchange: null,
@@ -22,9 +22,9 @@ mockIntersectionObserver.mockReturnValue({
   unobserve: () => null,
   disconnect: () => null,
 });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 (window as any).IntersectionObserver = mockIntersectionObserver;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 (global as any).IntersectionObserver = mockIntersectionObserver;
 
 // Mock ResizeObserver
@@ -34,7 +34,7 @@ mockResizeObserver.mockReturnValue({
   unobserve: () => null,
   disconnect: () => null,
 });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 (window as any).ResizeObserver = mockResizeObserver;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 (global as any).ResizeObserver = mockResizeObserver;

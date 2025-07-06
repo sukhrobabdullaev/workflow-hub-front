@@ -1,17 +1,37 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/store/appStore';
 
 // Enhanced chart component
-const Chart = ({ data, type = 'bar', title }: { data: number[]; type?: 'bar' | 'line' | 'area'; title?: string }) => {
+const Chart = ({
+  data,
+  type = 'bar',
+  title,
+}: {
+  data: number[];
+  type?: 'bar' | 'line' | 'area';
+  title?: string;
+}) => {
   const max = Math.max(...data);
-  
+
+  if (title) {
+    // Title is provided, can be used for chart header
+  }
+
   if (type === 'area') {
-    const points = data.map((value, index) => {
-      const x = (index / (data.length - 1)) * 100;
-      const y = 100 - (value / max) * 70 - 10;
-      return `${x},${y}`;
-    }).join(' ');
+    const points = data
+      .map((value, index) => {
+        const x = (index / (data.length - 1)) * 100;
+        const y = 100 - (value / max) * 70 - 10;
+        return `${x},${y}`;
+      })
+      .join(' ');
 
     const areaPoints = `0,90 ${points} 100,90`;
 
@@ -20,8 +40,16 @@ const Chart = ({ data, type = 'bar', title }: { data: number[]; type?: 'bar' | '
         <svg viewBox="0 0 100 100" className="w-full h-full">
           <defs>
             <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.3"/>
-              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.05"/>
+              <stop
+                offset="0%"
+                stopColor="hsl(var(--primary))"
+                stopOpacity="0.3"
+              />
+              <stop
+                offset="100%"
+                stopColor="hsl(var(--primary))"
+                stopOpacity="0.05"
+              />
             </linearGradient>
           </defs>
           <polygon points={areaPoints} fill="url(#areaGradient)" />
@@ -50,11 +78,13 @@ const Chart = ({ data, type = 'bar', title }: { data: number[]; type?: 'bar' | '
   }
 
   if (type === 'line') {
-    const points = data.map((value, index) => {
-      const x = (index / (data.length - 1)) * 100;
-      const y = 100 - (value / max) * 80 - 10;
-      return `${x},${y}`;
-    }).join(' ');
+    const points = data
+      .map((value, index) => {
+        const x = (index / (data.length - 1)) * 100;
+        const y = 100 - (value / max) * 80 - 10;
+        return `${x},${y}`;
+      })
+      .join(' ');
 
     return (
       <div className="h-48 w-full">
@@ -101,7 +131,7 @@ const Chart = ({ data, type = 'bar', title }: { data: number[]; type?: 'bar' | '
 };
 
 export const Analytics = () => {
-  const { projects, tasks, teamMembers } = useAppStore();
+  const { projects, tasks } = useAppStore();
 
   // Sample analytics data
   const weeklyProgress = [45, 52, 61, 58, 67, 73, 68];
@@ -112,8 +142,9 @@ export const Analytics = () => {
   // Calculate key metrics
   const totalProjects = projects.length;
   const activeProjects = projects.filter(p => p.status === 'active').length;
-  const completedProjects = projects.filter(p => p.status === 'completed').length;
-  const overallProgress = Math.round(projects.reduce((acc, p) => acc + p.progress, 0) / totalProjects);
+  const overallProgress = Math.round(
+    projects.reduce((acc, p) => acc + p.progress, 0) / totalProjects
+  );
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -136,7 +167,9 @@ export const Analytics = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="shadow-soft">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Overall Progress</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Overall Progress
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{overallProgress}%</div>
@@ -145,29 +178,41 @@ export const Analytics = () => {
         </Card>
         <Card className="shadow-soft">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Projects
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{activeProjects}</div>
-            <p className="text-xs text-muted-foreground">Out of {totalProjects} total</p>
+            <p className="text-xs text-muted-foreground">
+              Out of {totalProjects} total
+            </p>
           </CardContent>
         </Card>
         <Card className="shadow-soft">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Completed Tasks</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Completed Tasks
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{tasks.filter(t => t.status === 'done').length}</div>
+            <div className="text-2xl font-bold">
+              {tasks.filter(t => t.status === 'done').length}
+            </div>
             <p className="text-xs text-muted-foreground">This month</p>
           </CardContent>
         </Card>
         <Card className="shadow-soft">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Team Efficiency</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Team Efficiency
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">87%</div>
-            <p className="text-xs text-muted-foreground">Average productivity</p>
+            <p className="text-xs text-muted-foreground">
+              Average productivity
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -177,7 +222,9 @@ export const Analytics = () => {
         <Card className="shadow-soft">
           <CardHeader>
             <CardTitle>Weekly Progress</CardTitle>
-            <CardDescription>Project completion trends over the past week</CardDescription>
+            <CardDescription>
+              Project completion trends over the past week
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Chart data={weeklyProgress} type="area" />
@@ -187,7 +234,9 @@ export const Analytics = () => {
         <Card className="shadow-soft">
           <CardHeader>
             <CardTitle>Monthly Task Distribution</CardTitle>
-            <CardDescription>Task completion throughout the year</CardDescription>
+            <CardDescription>
+              Task completion throughout the year
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Chart data={monthlyTasks} type="bar" />
@@ -197,7 +246,9 @@ export const Analytics = () => {
         <Card className="shadow-soft">
           <CardHeader>
             <CardTitle>Team Performance</CardTitle>
-            <CardDescription>Individual team member productivity scores</CardDescription>
+            <CardDescription>
+              Individual team member productivity scores
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Chart data={teamPerformance} type="line" />
@@ -207,7 +258,9 @@ export const Analytics = () => {
         <Card className="shadow-soft">
           <CardHeader>
             <CardTitle>Project Completion Rates</CardTitle>
-            <CardDescription>Progress across different projects</CardDescription>
+            <CardDescription>
+              Progress across different projects
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Chart data={projectCompletion} type="bar" />
@@ -219,7 +272,9 @@ export const Analytics = () => {
       <Card className="shadow-soft">
         <CardHeader>
           <CardTitle>Project Details</CardTitle>
-          <CardDescription>Comprehensive project analytics and statistics</CardDescription>
+          <CardDescription>
+            Comprehensive project analytics and statistics
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -235,27 +290,36 @@ export const Analytics = () => {
                 </tr>
               </thead>
               <tbody>
-                {projects.map((project) => {
-                  const projectTasks = tasks.filter(t => t.projectId === project.id);
-                  const completedTasks = projectTasks.filter(t => t.status === 'done').length;
-                  
+                {projects.map(project => {
+                  const projectTasks = tasks.filter(
+                    t => t.projectId === project.id
+                  );
+                  const completedTasks = projectTasks.filter(
+                    t => t.status === 'done'
+                  ).length;
+
                   return (
                     <tr key={project.id} className="border-b hover:bg-muted/50">
                       <td className="p-3 font-medium">{project.name}</td>
                       <td className="p-3">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          project.status === 'active' ? 'bg-success/10 text-success' :
-                          project.status === 'completed' ? 'bg-primary/10 text-primary' :
-                          project.status === 'planning' ? 'bg-warning/10 text-warning' :
-                          'bg-muted text-muted-foreground'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            project.status === 'active'
+                              ? 'bg-success/10 text-success'
+                              : project.status === 'completed'
+                                ? 'bg-primary/10 text-primary'
+                                : project.status === 'planning'
+                                  ? 'bg-warning/10 text-warning'
+                                  : 'bg-muted text-muted-foreground'
+                          }`}
+                        >
                           {project.status}
                         </span>
                       </td>
                       <td className="p-3">
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-2 bg-muted rounded-full">
-                            <div 
+                            <div
                               className="h-full bg-gradient-primary rounded-full"
                               style={{ width: `${project.progress}%` }}
                             />
@@ -263,9 +327,13 @@ export const Analytics = () => {
                           <span className="text-xs">{project.progress}%</span>
                         </div>
                       </td>
-                      <td className="p-3">{completedTasks}/{projectTasks.length}</td>
+                      <td className="p-3">
+                        {completedTasks}/{projectTasks.length}
+                      </td>
                       <td className="p-3">{project.teamMembers.length}</td>
-                      <td className="p-3">{new Date(project.dueDate).toLocaleDateString()}</td>
+                      <td className="p-3">
+                        {new Date(project.dueDate).toLocaleDateString()}
+                      </td>
                     </tr>
                   );
                 })}
