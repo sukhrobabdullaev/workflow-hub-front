@@ -4,6 +4,82 @@
 
 **URL**: https://lovable.dev/projects/14cb6ed1-cf8f-4f3f-90a4-3d30965a6c89
 
+## 🚀 Features
+
+- ⚡️ Vite for fast development and building
+- ⚛️ React 18 with TypeScript
+- 🎨 Tailwind CSS for styling
+- 🧪 Jest for testing
+- 🔍 ESLint for linting
+- 📦 Bun as package manager
+- 🤖 GitHub Actions for CI/CD
+
+## 🧪 Testing
+
+```bash
+# Run tests
+bun run test
+
+# Run tests in watch mode
+bun run test:watch
+
+# Run tests with coverage
+bun run test:coverage
+
+# Run tests for CI
+bun run test:ci
+```
+
+## 🔍 Linting
+
+```bash
+# Run ESLint
+bun run lint
+
+# Fix ESLint issues automatically
+bun run lint:fix
+
+# Check for linting errors (CI mode)
+bun run lint:check
+
+# Run TypeScript check
+bun run type-check
+```
+
+## 🤖 CI/CD Pipeline
+
+The project includes comprehensive GitHub Actions workflows:
+
+### CI Pipeline (`.github/workflows/ci.yml`)
+
+- **Lint Job**: Runs ESLint and TypeScript checks
+- **Test Job**: Executes Jest tests with coverage reporting
+- **Build Job**: Creates production build
+- **Security Job**: Runs security audit
+
+### Deployment Pipeline (`.github/workflows/deploy.yml`)
+
+- Deploys to production on main branch
+- Includes build verification
+- Ready for Netlify/Vercel deployment
+
+## 📊 Code Quality Standards
+
+- **ESLint**: Strict linting with TypeScript rules
+- **TypeScript**: Strong typing with strict mode
+- **Jest**: Comprehensive testing with 70% coverage threshold
+- **Testing Library**: React component testing best practices
+
+## 🚦 Quality Gates
+
+The CI pipeline enforces:
+
+- Zero linting errors (`--max-warnings 0`)
+- All tests must pass
+- Minimum 70% code coverage
+- Successful TypeScript compilation
+- Security audit passes
+
 ## How can I edit this code?
 
 There are several ways of editing your application.
@@ -71,4 +147,5 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
 # workflow-hub
