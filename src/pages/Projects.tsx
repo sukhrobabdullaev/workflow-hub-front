@@ -1,15 +1,28 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAppStore } from '@/store/appStore';
+import { Link } from 'react-router-dom';
+import { Kanban } from 'lucide-react';
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'active': return 'bg-success/10 text-success';
-    case 'planning': return 'bg-warning/10 text-warning';
-    case 'completed': return 'bg-primary/10 text-primary';
-    case 'on-hold': return 'bg-destructive/10 text-destructive';
-    default: return 'bg-muted text-muted-foreground';
+    case 'active':
+      return 'bg-success/10 text-success';
+    case 'planning':
+      return 'bg-warning/10 text-warning';
+    case 'completed':
+      return 'bg-primary/10 text-primary';
+    case 'on-hold':
+      return 'bg-destructive/10 text-destructive';
+    default:
+      return 'bg-muted text-muted-foreground';
   }
 };
 
@@ -25,14 +38,25 @@ export const Projects = () => {
             Manage and track your project portfolio
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90">
-          New Project
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button className="bg-gradient-primary hover:opacity-90">
+            New Project
+          </Button>
+          <Link to="/project-management">
+            <Button variant="outline">
+              <Kanban className="w-4 h-4 mr-2" />
+              Kanban Board
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
-          <Card key={project.id} className="shadow-soft hover:shadow-elevated transition-all duration-200 cursor-pointer">
+        {projects.map(project => (
+          <Card
+            key={project.id}
+            className="shadow-soft hover:shadow-elevated transition-all duration-200 cursor-pointer"
+          >
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">{project.name}</CardTitle>
@@ -51,7 +75,7 @@ export const Projects = () => {
                     <span>{project.progress}%</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
                       style={{ width: `${project.progress}%` }}
                     />
@@ -62,7 +86,7 @@ export const Projects = () => {
                 <div>
                   <p className="text-sm text-muted-foreground mb-2">Team</p>
                   <div className="flex -space-x-2">
-                    {project.teamMembers.slice(0, 3).map((memberId) => {
+                    {project.teamMembers.slice(0, 3).map(memberId => {
                       const member = teamMembers.find(m => m.id === memberId);
                       return member ? (
                         <img

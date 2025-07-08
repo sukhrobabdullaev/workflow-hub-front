@@ -1,8 +1,8 @@
-# Welcome to your Lovable project
+# Workflow Hub
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/14cb6ed1-cf8f-4f3f-90a4-3d30965a6c89
+A modern project management application with Kanban board functionality built with React, TypeScript, and Tailwind CSS.
 
 ## 🚀 Features
 
@@ -84,15 +84,9 @@ The CI pipeline enforces:
 
 There are several ways of editing your application.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/14cb6ed1-cf8f-4f3f-90a4-3d30965a6c89) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you want to work locally using your own IDE, you can clone this repo and push changes.
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -135,17 +129,31 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- @dnd-kit (for drag and drop functionality)
+- Zustand (for state management)
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/14cb6ed1-cf8f-4f3f-90a4-3d30965a6c89) and click on Share -> Publish.
+You can deploy this project to any static hosting service like:
 
-## Can I connect a custom domain to my Lovable project?
+- Netlify
+- Vercel
+- GitHub Pages
+- AWS S3 + CloudFront
 
-Yes, you can!
+Simply run `npm run build` to create the production build in the `dist` folder.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Features
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- 📊 **Dashboard**: Overview of projects and tasks
+- 📋 **Project Management**: Create and manage projects
+- 🔄 **Kanban Board**: Drag and drop task management with To Do, In Progress, and Done columns
+- 👥 **Team Management**: Manage team members and assignments
+- 📈 **Analytics**: Project progress and team performance insights
+- ⚙️ **Settings**: Customize your workspace
+
+## Can I connect a custom domain to my project?
+
+Yes! When deploying to services like Netlify or Vercel, you can easily connect a custom domain through their dashboard settings.
 
 # workflow-hub

@@ -16,6 +16,7 @@ import { useAuthStore } from '@/store/authStore';
 const menuItems = [
   { title: 'Dashboard', url: '/dashboard', icon: 'dashboard' },
   { title: 'Projects', url: '/projects', icon: 'chart-bar' },
+  { title: 'Project Management', url: '/project-management', icon: 'kanban' },
   { title: 'Team', url: '/team', icon: 'users' },
   { title: 'Analytics', url: '/analytics', icon: 'chart-pie' },
   { title: 'Settings', url: '/settings', icon: 'settings' },
@@ -93,6 +94,19 @@ const IconComponent = ({
       >
         <circle cx="12" cy="12" r="3" />
         <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
+      </svg>
+    ),
+    kanban: (
+      <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="3" y="3" width="5" height="18" />
+        <rect x="10" y="3" width="5" height="12" />
+        <rect x="17" y="3" width="5" height="8" />
       </svg>
     ),
   };

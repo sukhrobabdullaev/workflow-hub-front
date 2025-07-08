@@ -11,7 +11,7 @@ interface Project {
   tasks: Task[];
 }
 
-interface Task {
+export interface Task {
   id: string;
   title: string;
   description: string;
