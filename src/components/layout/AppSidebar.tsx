@@ -16,13 +16,12 @@ import { useAuthStore } from '@/store/authStore';
 const menuItems = [
   { title: 'Dashboard', url: '/dashboard', icon: 'dashboard' },
   { title: 'Projects', url: '/projects', icon: 'chart-bar' },
-  { title: 'Project Management', url: '/project-management', icon: 'kanban' },
+  { title: 'Project Board', url: '/project-management', icon: 'kanban' },
   { title: 'Team', url: '/team', icon: 'users' },
   { title: 'Analytics', url: '/analytics', icon: 'chart-pie' },
   { title: 'Settings', url: '/settings', icon: 'settings' },
 ];
 
-// Simple icon component using basic shapes
 const IconComponent = ({
   name,
   className,
@@ -119,21 +118,25 @@ export const AppSidebar = () => {
   const user = useAuthStore(state => state.user);
 
   const getNavClassName = ({ isActive }: { isActive: boolean }) =>
-    isActive
-      ? 'bg-sidebar-accent text-sidebar-primary font-medium'
-      : 'hover:bg-sidebar-accent/50';
+    `${
+      isActive
+        ? 'bg-sidebar-accent text-sidebar-primary font-medium'
+        : 'hover:bg-sidebar-accent/50'
+    }`;
 
   const collapsed = !open;
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarContent className="bg-sidebar border-r border-sidebar-border">
-        {/* Logo/Brand */}
         <div className="p-4 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">W</span>
-            </div>
+            <img
+              src="/logo.png"
+              alt="WorkflowHub Logo"
+              className={`w-8 h-8 ${collapsed ? 'mx-auto' : ''}`}
+            />
+
             {!collapsed && (
               <div>
                 <h2 className="font-bold text-sidebar-foreground">
@@ -174,7 +177,6 @@ export const AppSidebar = () => {
           </div>
         )}
 
-        {/* Navigation */}
         <SidebarGroup className="flex-1">
           <SidebarGroupLabel className="px-4 py-2 text-sidebar-foreground/60">
             {!collapsed && 'Navigation'}
@@ -184,7 +186,11 @@ export const AppSidebar = () => {
               {menuItems.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className="mx-2">
-                    <NavLink to={item.url} className={getNavClassName}>
+                    <NavLink
+                      to={item.url}
+                      className={getNavClassName}
+                      end={item.url === '/dashboard'}
+                    >
                       <IconComponent
                         name={item.icon}
                         className="w-5 h-5 flex-shrink-0"

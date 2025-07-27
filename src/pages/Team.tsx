@@ -3,6 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useAppStore } from '@/store/appStore';
+import type { TeamMember } from '@/store/appStore';
+import {
+  TeamMemberProfileModal,
+  AssignTaskModal,
+  InviteMemberModal,
+} from '@/components/modals';
+import { useState } from 'react';
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -32,6 +39,24 @@ const getStatusIndicator = (status: string) => {
 
 export const Team = () => {
   const { teamMembers, tasks } = useAppStore();
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isAssignTaskModalOpen, setIsAssignTaskModalOpen] = useState(false);
+  const [isInviteMemberModalOpen, setIsInviteMemberModalOpen] = useState(false);
+
+  const handleViewProfile = (member: TeamMember) => {
+    setSelectedMember(member);
+    setIsProfileModalOpen(true);
+  };
+
+  const handleAssignTask = (member: TeamMember) => {
+    setSelectedMember(member);
+    setIsAssignTaskModalOpen(true);
+  };
+
+  const handleInviteMember = () => {
+    setIsInviteMemberModalOpen(true);
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -42,7 +67,10 @@ export const Team = () => {
             Manage your team members and their assignments
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90">
+        <Button
+          className="bg-gradient-primary hover:opacity-90"
+          onClick={handleInviteMember}
+        >
           Invite Member
         </Button>
       </div>
@@ -119,10 +147,20 @@ export const Team = () => {
 
                   {/* Actions */}
                   <div className="flex gap-2 pt-2">
-                    <Button variant="outline" size="sm" className="flex-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleViewProfile(member)}
+                    >
                       View Profile
                     </Button>
-                    <Button variant="outline" size="sm" className="flex-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleAssignTask(member)}
+                    >
                       Assign Task
                     </Button>
                   </div>
@@ -132,6 +170,25 @@ export const Team = () => {
           );
         })}
       </div>
+
+      <TeamMemberProfileModal
+        open={isProfileModalOpen}
+        onOpenChange={setIsProfileModalOpen}
+        member={selectedMember}
+      />
+
+      {/* Assign Task Modal */}
+      <AssignTaskModal
+        open={isAssignTaskModalOpen}
+        onOpenChange={setIsAssignTaskModalOpen}
+        member={selectedMember}
+      />
+
+      {/* Invite Member Modal */}
+      <InviteMemberModal
+        open={isInviteMemberModalOpen}
+        onOpenChange={setIsInviteMemberModalOpen}
+      />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -8,6 +9,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/authStore';
 import { useAppStore } from '@/store/appStore';
+import {
+  CreateProjectModal,
+  CreateTaskModal,
+  ViewReportsModal,
+} from '@/components/modals';
+import { useNavigate } from 'react-router-dom';
 
 // Simple chart component for demonstration
 const SimpleChart = ({
@@ -144,6 +151,13 @@ const ActivityItem = ({
 export const Dashboard = () => {
   const user = useAuthStore(state => state.user);
   const { projects, tasks, teamMembers } = useAppStore();
+  const navigate = useNavigate();
+
+  // Modal states
+  const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] =
+    useState(false);
+  const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
+  const [isViewReportsModalOpen, setIsViewReportsModalOpen] = useState(false);
 
   // Calculate metrics
   const activeProjects = projects.filter(p => p.status === 'active').length;
@@ -204,10 +218,18 @@ export const Dashboard = () => {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button className="bg-gradient-primary hover:opacity-90">
+          <Button
+            className="bg-gradient-primary hover:opacity-90"
+            onClick={() => setIsCreateProjectModalOpen(true)}
+          >
             New Project
           </Button>
-          <Button variant="outline">View Reports</Button>
+          <Button
+            variant="outline"
+            onClick={() => setIsViewReportsModalOpen(true)}
+          >
+            View Reports
+          </Button>
         </div>
       </div>
 
@@ -308,6 +330,7 @@ export const Dashboard = () => {
               variant="outline"
               className="w-full justify-start"
               size="sm"
+              onClick={() => setIsCreateTaskModalOpen(true)}
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -324,6 +347,7 @@ export const Dashboard = () => {
               variant="outline"
               className="w-full justify-start"
               size="sm"
+              onClick={() => navigate('/projects')}
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -341,6 +365,7 @@ export const Dashboard = () => {
               variant="outline"
               className="w-full justify-start"
               size="sm"
+              onClick={() => navigate('/team')}
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -360,6 +385,7 @@ export const Dashboard = () => {
               variant="outline"
               className="w-full justify-start"
               size="sm"
+              onClick={() => navigate('/analytics')}
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -376,6 +402,22 @@ export const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modals */}
+      <CreateProjectModal
+        open={isCreateProjectModalOpen}
+        onOpenChange={setIsCreateProjectModalOpen}
+      />
+
+      <CreateTaskModal
+        open={isCreateTaskModalOpen}
+        onOpenChange={setIsCreateTaskModalOpen}
+      />
+
+      <ViewReportsModal
+        open={isViewReportsModalOpen}
+        onOpenChange={setIsViewReportsModalOpen}
+      />
     </div>
   );
 };

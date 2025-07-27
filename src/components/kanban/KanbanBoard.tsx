@@ -19,10 +19,14 @@ import { KanbanCard } from './KanbanCard';
 
 interface KanbanBoardProps {
   projectId?: string;
+  tasks?: Task[];
 }
 
-export const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
-  const { tasks, moveTask } = useAppStore();
+export const KanbanBoard: React.FC<KanbanBoardProps> = ({
+  projectId,
+  tasks: propTasks,
+}) => {
+  const { tasks: storeTasks, moveTask } = useAppStore();
   const [activeTask, setActiveTask] = React.useState<Task | null>(null);
 
   const sensors = useSensors(
@@ -33,10 +37,12 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
     })
   );
 
-  // Filter tasks by project if projectId is provided
-  const filteredTasks = projectId
-    ? tasks.filter(task => task.projectId === projectId)
-    : tasks;
+  // Use provided tasks or filter from store
+  const filteredTasks =
+    propTasks ||
+    (projectId
+      ? storeTasks.filter(task => task.projectId === projectId)
+      : storeTasks);
 
   const todoTasks = filteredTasks.filter(task => task.status === 'todo');
   const inProgressTasks = filteredTasks.filter(

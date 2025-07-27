@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface Project {
+export interface Project {
   id: string;
   name: string;
   description: string;
@@ -22,7 +22,7 @@ export interface Task {
   projectId: string;
 }
 
-interface TeamMember {
+export interface TeamMember {
   id: string;
   name: string;
   email: string;
@@ -80,6 +80,36 @@ const mockProjects: Project[] = [
     progress: 100,
     dueDate: '2024-01-20',
     teamMembers: ['1', '6'],
+    tasks: [],
+  },
+  {
+    id: '4',
+    name: 'Marketing Campaign',
+    description: 'Q2 digital marketing initiative',
+    status: 'active',
+    progress: 40,
+    dueDate: '2024-06-30',
+    teamMembers: ['2', '3', '4'],
+    tasks: [],
+  },
+  {
+    id: '5',
+    name: 'Infrastructure Upgrade',
+    description: 'Server hardware and software updates',
+    status: 'on-hold',
+    progress: 15,
+    dueDate: '2024-08-15',
+    teamMembers: ['1', '6'],
+    tasks: [],
+  },
+  {
+    id: '6',
+    name: 'Customer Portal',
+    description: 'Self-service customer dashboard',
+    status: 'planning',
+    progress: 5,
+    dueDate: '2024-09-30',
+    teamMembers: ['4', '5', '6'],
     tasks: [],
   },
 ];
@@ -171,7 +201,7 @@ const mockTeamMembers: TeamMember[] = [
     email: 'sarah@workflowhub.com',
     role: 'UI/UX Designer',
     avatar:
-      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
     status: 'active',
   },
   {
