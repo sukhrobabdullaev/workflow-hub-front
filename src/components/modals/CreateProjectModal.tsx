@@ -27,7 +27,7 @@ import {
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { useAppStore } from '@/store/appStore';
+import { useCreateProject } from '@/hooks/useProjects';
 import { useToast } from '@/hooks/use-toast';
 
 interface CreateProjectModalProps {
@@ -40,67 +40,49 @@ export const CreateProjectModal = ({
   onOpenChange,
 }: CreateProjectModalProps) => {
   const [formData, setFormData] = useState({
-    name: '',
+    title: '',
     description: '',
     status: 'planning' as 'planning' | 'active' | 'completed' | 'on-hold',
     dueDate: '',
   });
   const [selectedDate, setSelectedDate] = useState<Date>();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const { addProject } = useAppStore();
+  const createProjectMutation = useCreateProject();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name.trim()) {
+    if (!formData.title.trim()) {
       toast({
         title: 'Error',
-        description: 'Project name is required',
+        description: 'Project title is required',
         variant: 'destructive',
       });
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-
-      addProject({
-        name: formData.name,
-        description: formData.description,
-        status: formData.status,
-        progress: 0,
-        dueDate: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
-        teamMembers: [],
-        tasks: [],
-      });
-
-      toast({
-        title: 'Success',
-        description: 'Project created successfully',
-      });
-
-      // Reset form
-      setFormData({
-        name: '',
-        description: '',
-        status: 'planning',
-        dueDate: '',
-      });
-      setSelectedDate(undefined);
-      onOpenChange(false);
-    } catch {
-      toast({
-        title: 'Error',
-        description: 'Failed to create project',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    createProjectMutation.mutate({
+      title: formData.title,
+      description: formData.description,
+      status: formData.status,
+      progress: 0,
+      dueDate: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
+      // teamMembers: [],
+      // tasks: [],
+    }, {
+      onSuccess: () => {
+        // Reset form
+        setFormData({
+          title: '',
+          description: '',
+          status: 'planning',
+          dueDate: '',
+        });
+        setSelectedDate(undefined);
+        onOpenChange(false);
+      }
+    });
   };
 
   return (
@@ -119,9 +101,9 @@ export const CreateProjectModal = ({
             <Input
               id="name"
               placeholder="Enter project name"
-              value={formData.name}
+              value={formData.title}
               onChange={e =>
-                setFormData(prev => ({ ...prev, name: e.target.value }))
+                setFormData(prev => ({ ...prev, title: e.target.value }))
               }
               required
             />
@@ -197,12 +179,12 @@ export const CreateProjectModal = ({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={isLoading}
+              disabled={createProjectMutation.isPending}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Creating...' : 'Create Project'}
+            <Button type="submit" disabled={createProjectMutation.isPending}>
+              {createProjectMutation.isPending ? 'Creating...' : 'Create Project'}
             </Button>
           </DialogFooter>
         </form>
