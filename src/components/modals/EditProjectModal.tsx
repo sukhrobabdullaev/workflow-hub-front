@@ -27,8 +27,7 @@ import {
 import { CalendarIcon, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { useUpdateProject, useDeleteProject } from '@/hooks/useProjects';
-import { type Project } from '@/store/appStore';
+import { useAppStore, type Project } from '@/store/appStore';
 import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
@@ -59,9 +58,9 @@ export const EditProjectModal = ({
   });
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const updateProjectMutation = useUpdateProject();
-  const deleteProjectMutation = useDeleteProject();
+  const { updateProject, deleteProject, tasks } = useAppStore();
   const { toast } = useToast();
 
   // Initialize form data when project changes
@@ -102,21 +101,35 @@ export const EditProjectModal = ({
       return;
     }
 
-    updateProjectMutation.mutate({
-      id: project.id,
-      data: {
+    setIsLoading(true);
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+
+      updateProject(project.id, {
         name: formData.name,
         description: formData.description,
         status: formData.status,
         dueDate: selectedDate
           ? format(selectedDate, 'yyyy-MM-dd')
           : project.dueDate,
-      }
-    }, {
-      onSuccess: () => {
-        onOpenChange(false);
-      }
-    });
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Project updated successfully',
+      });
+
+      onOpenChange(false);
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to update project',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDelete = async () => {
