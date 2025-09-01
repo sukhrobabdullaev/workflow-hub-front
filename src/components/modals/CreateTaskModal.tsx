@@ -189,15 +189,14 @@ export const CreateTaskModal = ({
                       <div className="flex items-center justify-between w-full">
                         <span>{project.name}</span>
                         <span
-                          className={`text-xs px-2 py-1 rounded-full font-medium ${
-                            project.status === 'active'
+                          className={`text-xs px-2 py-1 rounded-full font-medium ${project.status === 'active'
                               ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300'
                               : project.status === 'planning'
                                 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
                                 : project.status === 'on-hold'
                                   ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'
                                   : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                          }`}
+                            }`}
                         >
                           {project.status}
                         </span>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,6 +24,7 @@ export const RegisterForm = ({ onToggleMode }: RegisterFormProps) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const register = useAuthStore(state => state.register);
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,6 +49,7 @@ export const RegisterForm = ({ onToggleMode }: RegisterFormProps) => {
           description:
             'Your WorkflowHub account has been created successfully.',
         });
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Registration error:', error);

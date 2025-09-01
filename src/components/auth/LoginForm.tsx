@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,6 +22,7 @@ export const LoginForm = ({ onToggleMode }: LoginFormProps) => {
   const [password, setPassword] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
   const login = useAuthStore(state => state.login);
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,6 +36,7 @@ export const LoginForm = ({ onToggleMode }: LoginFormProps) => {
           title: 'Welcome back!',
           description: "You've been successfully logged in.",
         });
+        navigate('/dashboard');
       } else {
         toast({
           title: 'Login failed',

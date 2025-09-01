@@ -93,13 +93,12 @@ const MetricCard = ({
       <CardTitle className="text-sm font-medium">{title}</CardTitle>
       {trend && (
         <div
-          className={`text-xs px-2 py-1 rounded-full ${
-            trend === 'up'
-              ? 'bg-success/10 text-success'
-              : trend === 'down'
-                ? 'bg-destructive/10 text-destructive'
-                : 'bg-muted text-muted-foreground'
-          }`}
+          className={`text-xs px-2 py-1 rounded-full ${trend === 'up'
+            ? 'bg-success/10 text-success'
+            : trend === 'down'
+              ? 'bg-destructive/10 text-destructive'
+              : 'bg-muted text-muted-foreground'
+            }`}
         >
           {trend === 'up' ? '↗' : trend === 'down' ? '↘' : '→'}
         </div>

@@ -13,6 +13,7 @@ import { Team } from '@/pages/Team';
 import { Analytics } from '@/pages/Analytics';
 import { Settings } from '@/pages/Settings';
 import { Auth } from '@/pages/Auth';
+import { Landing } from '@/pages/Landing';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient({
@@ -44,17 +45,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <AppLayout>
-                  <Dashboard />
-                </AppLayout>
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/landing" element={<Landing />} />
           <Route
             path="/dashboard"
             element={
