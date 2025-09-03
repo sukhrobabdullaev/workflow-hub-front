@@ -27,6 +27,11 @@ export const PasswordReset = ({ onBack, onResetComplete }: PasswordResetProps) =
         setIsLoading(true);
 
         try {
+            // Normalize user input
+            const normalizedEmail = email.trim();
+            if (normalizedEmail !== email) {
+                setEmail(normalizedEmail);
+            }
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 2000));
 

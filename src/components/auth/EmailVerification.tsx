@@ -36,8 +36,10 @@ export const EmailVerification = ({ email, onBack, onVerificationComplete }: Ema
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             setResendCount(prev => prev + 1);
-            // Set cooldown period (30 seconds, increasing with each resend)
-            const cooldownMs = 30000 * Math.pow(2, resendCount);
+            // Set cooldown period with max cap of 5 minutes
+            const baseMs = 30000;
+            const maxMs = 300000; // 5 minutes
+            const cooldownMs = Math.min(baseMs * Math.pow(2, resendCount), maxMs);
             setCooldownEnd(Date.now() + cooldownMs);
 
             toast({

@@ -36,14 +36,22 @@ export const TwoFactorSetup = ({ onComplete, onSkip }: TwoFactorSetupProps) => {
     ]);
     const { toast } = useToast();
 
-    const handleCopySecret = () => {
-        navigator.clipboard.writeText(secretKey);
-        toast({
-            title: 'Copied!',
-            description: 'Secret key copied to clipboard.',
-        });
+    const handleCopySecret = async () => {
+        try {
+            if (!navigator?.clipboard?.writeText) throw new Error('Clipboard unavailable');
+            await navigator.clipboard.writeText(secretKey);
+            toast({
+                title: 'Copied!',
+                description: 'Secret key copied to clipboard.',
+            });
+        } catch {
+            toast({
+                title: 'Copy failed',
+                description: 'Your browser blocked clipboard access. Copy the key manually.',
+                variant: 'destructive',
+            });
+        }
     };
-
     const handleCopyBackupCodes = () => {
         navigator.clipboard.writeText(backupCodes.join('\n'));
         toast({
@@ -53,10 +61,10 @@ export const TwoFactorSetup = ({ onComplete, onSkip }: TwoFactorSetupProps) => {
     };
 
     const handleVerify = async () => {
-        if (verificationCode.length !== 6) {
+        if (!/^\d{6}$/.test(verificationCode)) {
             toast({
                 title: 'Invalid code',
-                description: 'Please enter a 6-digit verification code.',
+                description: 'Enter a 6-digit numeric verification code.',
                 variant: 'destructive',
             });
             return;

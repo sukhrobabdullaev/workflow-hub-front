@@ -49,7 +49,14 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/landing" element={<Landing />} />
-          <Route path="/onboarding" element={<OnboardingFlow />} />
+          <Route
+            path="/onboarding"
+            element={
+              <ProtectedRoute>
+                <OnboardingFlow />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={
