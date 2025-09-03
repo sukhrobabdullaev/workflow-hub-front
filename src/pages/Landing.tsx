@@ -171,7 +171,6 @@ export const Landing = () => {
                         <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">Features</a>
                         <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
                         <a href="#testimonials" className="text-muted-foreground hover:text-foreground transition-colors">Testimonials</a>
-                        <Link to="/auth" className="text-muted-foreground hover:text-foreground transition-colors">Sign In</Link>
                     </div>
 
                     <div className="flex items-center space-x-4">

@@ -14,6 +14,7 @@ import { Analytics } from '@/pages/Analytics';
 import { Settings } from '@/pages/Settings';
 import { Auth } from '@/pages/Auth';
 import { Landing } from '@/pages/Landing';
+import { OnboardingFlow } from '@/pages/Onboarding';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient({
@@ -48,6 +49,7 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/landing" element={<Landing />} />
+          <Route path="/onboarding" element={<OnboardingFlow />} />
           <Route
             path="/dashboard"
             element={
