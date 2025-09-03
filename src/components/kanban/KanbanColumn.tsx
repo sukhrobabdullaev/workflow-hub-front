@@ -1,13 +1,16 @@
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { cn } from '@/lib/utils';
+import { QuickTaskCreator } from './QuickTaskCreator';
+import { Task } from '@/store/appStore';
 
 interface KanbanColumnProps {
-  id: string;
+  id: Task['status'];
   title: string;
   color: string;
   taskCount: number;
   children: React.ReactNode;
+  projectId?: string;
 }
 
 export const KanbanColumn: React.FC<KanbanColumnProps> = ({
@@ -16,6 +19,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   color,
   taskCount,
   children,
+  projectId,
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id,
@@ -37,7 +41,12 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         </div>
       </div>
 
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 space-y-3">
+        {children}
+
+        {/* Quick Task Creator */}
+        <QuickTaskCreator status={id} projectId={projectId} />
+      </div>
 
       {/* Drop zone indicator */}
       {isOver && (

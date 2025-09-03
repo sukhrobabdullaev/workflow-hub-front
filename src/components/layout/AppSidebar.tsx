@@ -10,16 +10,73 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useAuthStore } from '@/store/authStore';
 
-// Available icons from our limited set
-const menuItems = [
-  { title: 'Dashboard', url: '/dashboard', icon: 'dashboard' },
-  { title: 'Projects', url: '/projects', icon: 'chart-bar' },
-  { title: 'Project Board', url: '/project-management', icon: 'kanban' },
-  { title: 'Team', url: '/team', icon: 'users' },
-  { title: 'Analytics', url: '/analytics', icon: 'chart-pie' },
-  { title: 'Settings', url: '/settings', icon: 'settings' },
+// Navigation menu items organized by sections with clear connections to pages
+const navigationSections = [
+  {
+    label: 'Main',
+    items: [
+      {
+        title: 'Dashboard',
+        url: '/dashboard',
+        icon: 'dashboard',
+        description: 'Overview and quick actions'
+      },
+      {
+        title: 'Projects',
+        url: '/projects',
+        icon: 'folders',
+        description: 'Manage all projects'
+      },
+      {
+        title: 'Kanban Board',
+        url: '/project-management',
+        icon: 'kanban',
+        description: 'Task management board'
+      },
+    ]
+  },
+  {
+    label: 'Agile & Team',
+    items: [
+      {
+        title: 'Sprint Management',
+        url: '/sprints',
+        icon: 'sprint',
+        description: 'Agile sprint planning and tracking'
+      },
+      {
+        title: 'Team',
+        url: '/team',
+        icon: 'users',
+        description: 'Team members and collaboration'
+      },
+      {
+        title: 'Analytics',
+        url: '/analytics',
+        icon: 'chart-pie',
+        description: 'Reports and insights'
+      },
+    ]
+  },
+  {
+    label: 'Settings',
+    items: [
+      {
+        title: 'Settings',
+        url: '/settings',
+        icon: 'settings',
+        description: 'Account and preferences'
+      },
+    ]
+  }
 ];
 
 const IconComponent = ({
@@ -42,6 +99,18 @@ const IconComponent = ({
         <rect x="14" y="3" width="7" height="7" />
         <rect x="14" y="14" width="7" height="7" />
         <rect x="3" y="14" width="7" height="7" />
+      </svg>
+    ),
+    folders: (
+      <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
+        <path d="M2 10h20" />
       </svg>
     ),
     'chart-bar': (
@@ -95,6 +164,17 @@ const IconComponent = ({
         <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
       </svg>
     ),
+    sprint: (
+      <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+      </svg>
+    ),
     kanban: (
       <svg
         className={className}
@@ -118,10 +198,9 @@ export const AppSidebar = () => {
   const user = useAuthStore(state => state.user);
 
   const getNavClassName = ({ isActive }: { isActive: boolean }) =>
-    `${
-      isActive
-        ? 'bg-sidebar-accent text-sidebar-primary font-medium'
-        : 'hover:bg-sidebar-accent/50'
+    `${isActive
+      ? 'bg-sidebar-accent text-sidebar-primary font-medium'
+      : 'hover:bg-sidebar-accent/50'
     }`;
 
   const collapsed = !open;
@@ -177,32 +256,46 @@ export const AppSidebar = () => {
           </div>
         )}
 
-        <SidebarGroup className="flex-1">
-          <SidebarGroupLabel className="px-4 py-2 text-sidebar-foreground/60">
-            {!collapsed && 'Navigation'}
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map(item => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="mx-2">
-                    <NavLink
-                      to={item.url}
-                      className={getNavClassName}
-                      end={item.url === '/dashboard'}
-                    >
-                      <IconComponent
-                        name={item.icon}
-                        className="w-5 h-5 flex-shrink-0"
-                      />
-                      {!collapsed && <span className="ml-3">{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {navigationSections.map(section => (
+          <SidebarGroup key={section.label} className="flex-1">
+            <SidebarGroupLabel className="px-4 py-2 text-sidebar-foreground/60">
+              {!collapsed && section.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map(item => (
+                  <SidebarMenuItem key={item.title}>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SidebarMenuButton asChild className="mx-2">
+                            <NavLink
+                              to={item.url}
+                              className={getNavClassName}
+                              end={item.url === '/dashboard'}
+                            >
+                              <IconComponent
+                                name={item.icon}
+                                className="w-5 h-5 flex-shrink-0"
+                              />
+                              {!collapsed && <span className="ml-3">{item.title}</span>}
+                            </NavLink>
+                          </SidebarMenuButton>
+                        </TooltipTrigger>
+                        {collapsed && (
+                          <TooltipContent side="right" className="font-medium">
+                            <p>{item.title}</p>
+                            <p className="text-xs text-muted-foreground">{item.description}</p>
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                    </TooltipProvider>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
     </Sidebar>
   );

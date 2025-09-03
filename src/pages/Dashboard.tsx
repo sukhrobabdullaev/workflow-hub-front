@@ -7,14 +7,31 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useAuthStore } from '@/store/authStore';
 import { useAppStore } from '@/store/appStore';
 import {
   CreateProjectModal,
   CreateTaskModal,
   ViewReportsModal,
+  VideoRecordingModal,
 } from '@/components/modals';
 import { useNavigate } from 'react-router-dom';
+import { LiveUpdates } from '@/components/realtime/LiveUpdates';
+import { OnlineUsers } from '@/components/realtime/OnlineUsers';
+import {
+  Video,
+  Users,
+  CheckSquare,
+  FolderOpen,
+  MessageCircle,
+  Database,
+  BarChart3,
+  Zap,
+  Infinity,
+  Play,
+  Calendar
+} from 'lucide-react';
 
 // Simple chart component for demonstration
 const SimpleChart = ({
@@ -147,6 +164,41 @@ const ActivityItem = ({
   );
 };
 
+const FeatureCard = ({
+  icon,
+  title,
+  description,
+  status,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  status: 'active' | 'coming-soon';
+  onClick?: () => void;
+}) => (
+  <Card
+    className="group cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800"
+    onClick={onClick}
+  >
+    <CardContent className="p-6">
+      <div className="flex items-center gap-3 mb-3">
+        <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-200">
+          {icon}
+        </div>
+        <Badge
+          variant={status === 'active' ? 'default' : 'secondary'}
+          className="text-xs"
+        >
+          {status === 'active' ? 'Active' : 'Coming Soon'}
+        </Badge>
+      </div>
+      <h3 className="font-semibold text-lg mb-2">{title}</h3>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </CardContent>
+  </Card>
+);
+
 export const Dashboard = () => {
   const user = useAuthStore(state => state.user);
   const { projects, tasks, teamMembers } = useAppStore();
@@ -157,6 +209,7 @@ export const Dashboard = () => {
     useState(false);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const [isViewReportsModalOpen, setIsViewReportsModalOpen] = useState(false);
+  const [isVideoRecordingOpen, setIsVideoRecordingOpen] = useState(false);
 
   // Calculate metrics
   const activeProjects = projects.filter(p => p.status === 'active').length;
@@ -232,8 +285,79 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* Metrics Cards */}
+      {/* Feature Highlights Banner */}
+      <Card className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/50 dark:via-indigo-950/50 dark:to-purple-950/50 border-none shadow-lg">
+        <CardHeader className="text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Infinity className="w-6 h-6 text-primary" />
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Unlimited Everything - Free Forever!
+            </CardTitle>
+          </div>
+          <CardDescription className="text-lg">
+            Experience all premium features without any limitations
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center p-3 rounded-lg bg-white/50 dark:bg-gray-800/50">
+              <CheckSquare className="w-8 h-8 mx-auto mb-2 text-green-600" />
+              <div className="font-semibold">Unlimited Tasks</div>
+              <div className="text-sm text-muted-foreground">No limits on your productivity</div>
+            </div>
+            <div className="text-center p-3 rounded-lg bg-white/50 dark:bg-gray-800/50">
+              <Users className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+              <div className="font-semibold">Unlimited Users</div>
+              <div className="text-sm text-muted-foreground">Invite your entire team</div>
+            </div>
+            <div className="text-center p-3 rounded-lg bg-white/50 dark:bg-gray-800/50">
+              <FolderOpen className="w-8 h-8 mx-auto mb-2 text-purple-600" />
+              <div className="font-semibold">Unlimited Projects</div>
+              <div className="text-sm text-muted-foreground">Manage all your work</div>
+            </div>
+            <div className="text-center p-3 rounded-lg bg-white/50 dark:bg-gray-800/50">
+              <Database className="w-8 h-8 mx-auto mb-2 text-orange-600" />
+              <div className="font-semibold">100MB Storage</div>
+              <div className="text-sm text-muted-foreground">Generous file storage</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Core Features Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <FeatureCard
+          icon={<MessageCircle className="w-6 h-6" />}
+          title="Real-time Chat"
+          description="Instant team communication"
+          status="active"
+          onClick={() => navigate('/team')}
+        />
+        <FeatureCard
+          icon={<BarChart3 className="w-6 h-6" />}
+          title="Kanban Boards"
+          description="Visual project management"
+          status="active"
+          onClick={() => navigate('/projects')}
+        />
+        <FeatureCard
+          icon={<Calendar className="w-6 h-6" />}
+          title="Sprint Management"
+          description="Agile workflow tools"
+          status="active"
+          onClick={() => navigate('/analytics')}
+        />
+        <FeatureCard
+          icon={<Video className="w-6 h-6" />}
+          title="Video Recording"
+          description="In-app screen capture"
+          status="active"
+          onClick={() => setIsVideoRecordingOpen(true)}
+        />
+      </div>
+
+      {/* Enhanced Metrics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <MetricCard
           title="Active Projects"
           value={activeProjects}
@@ -258,32 +382,58 @@ export const Dashboard = () => {
           description="Tasks completed this month"
           trend="up"
         />
+        <MetricCard
+          title="Storage Used"
+          value="24.3MB"
+          description="of 100MB available"
+          trend="neutral"
+        />
       </div>
 
-      {/* Charts and Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Real-time Features & Analytics */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Live Updates */}
+        <div className="lg:col-span-1">
+          <LiveUpdates />
+        </div>
+
         {/* Progress Chart */}
         <Card className="lg:col-span-2 shadow-soft">
           <CardHeader>
-            <CardTitle>Project Progress</CardTitle>
-            <CardDescription>Weekly progress overview</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="w-5 h-5" />
+              Project Progress
+            </CardTitle>
+            <CardDescription>Weekly progress overview with real-time updates</CardDescription>
           </CardHeader>
           <CardContent>
             <SimpleChart data={progressData} type="line" />
           </CardContent>
         </Card>
 
-        {/* Task Status */}
+        {/* Online Team Members */}
+        <div className="lg:col-span-1">
+          <OnlineUsers />
+        </div>
+      </div>
+
+      {/* Enhanced Task Status & Sprint Management */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Task Status with Kanban Preview */}
         <Card className="shadow-soft">
           <CardHeader>
-            <CardTitle>Task Status</CardTitle>
-            <CardDescription>Current task distribution</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <CheckSquare className="w-5 h-5" />
+              Task Status
+            </CardTitle>
+            <CardDescription>Current sprint distribution</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {statusData.map(item => (
               <div
                 key={item.label}
-                className="flex items-center justify-between"
+                className="flex items-center justify-between cursor-pointer hover:bg-muted/50 p-2 rounded transition-colors"
+                onClick={() => navigate('/projects')}
               >
                 <span className="text-sm font-medium">{item.label}</span>
                 <div className="flex items-center gap-2">
@@ -299,30 +449,118 @@ export const Dashboard = () => {
                 </div>
               </div>
             ))}
+            <Button
+              variant="outline"
+              className="w-full mt-4"
+              onClick={() => navigate('/projects')}
+            >
+              <BarChart3 className="w-4 h-4 mr-2" />
+              View Kanban Board
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Sprint Management */}
+        <Card className="shadow-soft">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              Current Sprint
+            </CardTitle>
+            <CardDescription>Sprint 2.1 - Week 3 of 4</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span>Sprint Progress</span>
+                <span className="font-medium">68%</span>
+              </div>
+              <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full w-[68%] transition-all duration-300" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="p-3 bg-muted/50 rounded-lg">
+                <div className="text-lg font-bold text-green-600">12</div>
+                <div className="text-xs text-muted-foreground">Completed</div>
+              </div>
+              <div className="p-3 bg-muted/50 rounded-lg">
+                <div className="text-lg font-bold text-blue-600">6</div>
+                <div className="text-xs text-muted-foreground">Remaining</div>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => navigate('/analytics')}
+            >
+              <Zap className="w-4 h-4 mr-2" />
+              Sprint Planning
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Support & Features */}
+        <Card className="shadow-soft bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/50 dark:to-blue-950/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
+              <Zap className="w-5 h-5" />
+              24/7 Support
+            </CardTitle>
+            <CardDescription>Premium support included free</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center gap-2 text-sm">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span>Support team online</span>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Get instant help with our dedicated support team available around the clock.
+            </div>
+            <Button
+              variant="outline"
+              className="w-full border-green-200 text-green-700 hover:bg-green-50"
+              size="sm"
+            >
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Contact Support
+            </Button>
           </CardContent>
         </Card>
       </div>
 
-      {/* Recent Activity and Quick Actions */}
+      {/* Enhanced Recent Activity and Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Activity */}
         <Card className="lg:col-span-2 shadow-soft">
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Latest updates from your team</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="w-5 h-5" />
+              Recent Activity
+            </CardTitle>
+            <CardDescription>Latest updates from your team with real-time sync</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {recentActivities.map((activity, index) => (
               <ActivityItem key={index} {...activity} />
             ))}
+            <div className="flex items-center justify-center pt-3">
+              <Badge variant="secondary" className="text-xs">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2" />
+                Live updates active
+              </Badge>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Quick Actions */}
+        {/* Enhanced Quick Actions */}
         <Card className="shadow-soft">
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks and shortcuts</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Play className="w-5 h-5" />
+              Quick Actions
+            </CardTitle>
+            <CardDescription>Powerful tools at your fingertips</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <Button
@@ -331,15 +569,7 @@ export const Dashboard = () => {
               size="sm"
               onClick={() => setIsCreateTaskModalOpen(true)}
             >
-              <svg
-                className="w-4 h-4 mr-2"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
+              <CheckSquare className="w-4 h-4 mr-2" />
               Create New Task
             </Button>
             <Button
@@ -348,17 +578,17 @@ export const Dashboard = () => {
               size="sm"
               onClick={() => navigate('/projects')}
             >
-              <svg
-                className="w-4 h-4 mr-2"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-              </svg>
-              View All Projects
+              <FolderOpen className="w-4 h-4 mr-2" />
+              View Kanban Boards
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              size="sm"
+              onClick={() => setIsVideoRecordingOpen(true)}
+            >
+              <Video className="w-4 h-4 mr-2" />
+              Start Video Recording
             </Button>
             <Button
               variant="outline"
@@ -366,19 +596,8 @@ export const Dashboard = () => {
               size="sm"
               onClick={() => navigate('/team')}
             >
-              <svg
-                className="w-4 h-4 mr-2"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
-              Manage Team
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Team Chat
             </Button>
             <Button
               variant="outline"
@@ -386,17 +605,8 @@ export const Dashboard = () => {
               size="sm"
               onClick={() => navigate('/analytics')}
             >
-              <svg
-                className="w-4 h-4 mr-2"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
-                <path d="M22 12A10 10 0 0 0 12 2v10z" />
-              </svg>
-              View Analytics
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Sprint Planning
             </Button>
           </CardContent>
         </Card>
@@ -416,6 +626,11 @@ export const Dashboard = () => {
       <ViewReportsModal
         open={isViewReportsModalOpen}
         onOpenChange={setIsViewReportsModalOpen}
+      />
+
+      <VideoRecordingModal
+        open={isVideoRecordingOpen}
+        onOpenChange={setIsVideoRecordingOpen}
       />
     </div>
   );

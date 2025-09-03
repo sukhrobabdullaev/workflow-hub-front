@@ -106,6 +106,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
               title={column.title}
               color={column.color}
               taskCount={column.tasks.length}
+              projectId={projectId}
             >
               <SortableContext
                 items={column.tasks.map(task => task.id)}

@@ -1,5 +1,38 @@
 import { create } from "zustand";
 
+export interface TaskComment {
+  id: string;
+  taskId: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  content: string;
+  mentions: string[]; // User IDs mentioned in the comment
+  attachments: TaskAttachment[];
+  reactions: TaskReaction[];
+  timestamp: Date;
+  edited?: Date;
+  parentId?: string; // For reply threads
+}
+
+export interface TaskAttachment {
+  id: string;
+  name: string;
+  url: string;
+  type: "file" | "image" | "video" | "recording";
+  size: number;
+  uploadedBy: string;
+  uploadedAt: Date;
+}
+
+export interface TaskReaction {
+  id: string;
+  emoji: string;
+  userId: string;
+  userName: string;
+  timestamp: Date;
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -20,6 +53,10 @@ export interface Task {
   assignee?: string;
   dueDate?: string;
   projectId: string;
+  sprintId?: string; // Connect task to sprint
+  storyPoints?: number; // For sprint velocity calculation
+  comments?: TaskComment[];
+  attachments?: TaskAttachment[];
 }
 
 export interface TeamMember {
@@ -31,10 +68,28 @@ export interface TeamMember {
   status: "active" | "away" | "offline";
 }
 
+export interface Sprint {
+  id: string;
+  name: string;
+  goal: string;
+  startDate: string;
+  endDate: string;
+  status: "planning" | "active" | "completed" | "cancelled";
+  projectId: string;
+  totalTasks: number;
+  completedTasks: number;
+  inProgressTasks: number;
+  todoTasks: number;
+  velocity: number;
+  burndownData: number[];
+  taskIds: string[]; // Tasks assigned to this sprint
+}
+
 interface AppState {
   projects: Project[];
   tasks: Task[];
   teamMembers: TeamMember[];
+  sprints: Sprint[];
   sidebarCollapsed: boolean;
   currentProject: string | null;
 
@@ -48,6 +103,37 @@ interface AppState {
   updateTask: (id: string, data: Partial<Task>) => void;
   deleteTask: (id: string) => void;
   moveTask: (taskId: string, newStatus: Task["status"]) => void;
+
+  // Sprint Actions
+  addSprint: (sprint: Omit<Sprint, "id">) => void;
+  updateSprint: (id: string, data: Partial<Sprint>) => void;
+  deleteSprint: (id: string) => void;
+  startSprint: (id: string) => void;
+  completeSprint: (id: string) => void;
+
+  // Sprint-Task Connection Actions
+  assignTaskToSprint: (taskId: string, sprintId: string) => void;
+  removeTaskFromSprint: (taskId: string) => void;
+  getSprintTasks: (sprintId: string) => Task[];
+  updateSprintProgress: (sprintId: string) => void;
+
+  // Comment Actions
+  addComment: (
+    taskId: string,
+    comment: Omit<TaskComment, "id" | "timestamp">
+  ) => void;
+  updateComment: (commentId: string, content: string) => void;
+  deleteComment: (commentId: string) => void;
+  addReaction: (
+    commentId: string,
+    reaction: Omit<TaskReaction, "id" | "timestamp">
+  ) => void;
+  removeReaction: (commentId: string, userId: string, emoji: string) => void;
+  addAttachment: (
+    taskId: string,
+    attachment: Omit<TaskAttachment, "id" | "uploadedAt">
+  ) => void;
+  removeAttachment: (taskId: string, attachmentId: string) => void;
 }
 
 // Mock data
@@ -144,6 +230,58 @@ const mockTasks: Task[] = [
     priority: "high",
     assignee: "2",
     projectId: "1",
+    comments: [
+      {
+        id: "c1",
+        taskId: "1",
+        userId: "2",
+        userName: "Sarah Chen",
+        content:
+          "Initial wireframes are complete! 🎨 Take a look and let me know your thoughts.",
+        mentions: [],
+        attachments: [],
+        reactions: [
+          {
+            id: "r1",
+            emoji: "👍",
+            userId: "1",
+            userName: "Alex Rodriguez",
+            timestamp: new Date("2025-01-15T10:30:00Z"),
+          },
+          {
+            id: "r2",
+            emoji: "🎉",
+            userId: "3",
+            userName: "Emily Johnson",
+            timestamp: new Date("2025-01-15T11:00:00Z"),
+          },
+        ],
+        timestamp: new Date("2025-01-15T09:00:00Z"),
+      },
+      {
+        id: "c2",
+        taskId: "1",
+        userId: "1",
+        userName: "Alex Rodriguez",
+        content:
+          "Looks great! The color scheme really pops. @Sarah Chen can we adjust the hero section slightly?",
+        mentions: ["2"],
+        attachments: [],
+        reactions: [],
+        timestamp: new Date("2025-01-15T10:30:00Z"),
+      },
+    ],
+    attachments: [
+      {
+        id: "a1",
+        name: "homepage-mockup-v1.pdf",
+        url: "/mock-files/homepage-mockup-v1.pdf",
+        type: "file",
+        size: 1248576,
+        uploadedBy: "2",
+        uploadedAt: new Date("2025-01-15T09:00:00Z"),
+      },
+    ],
   },
   {
     id: "2",
@@ -153,6 +291,20 @@ const mockTasks: Task[] = [
     priority: "high",
     assignee: "1",
     projectId: "1",
+    comments: [
+      {
+        id: "c3",
+        taskId: "2",
+        userId: "1",
+        userName: "Alex Rodriguez",
+        content:
+          "Working on the responsive breakpoints. Should be ready for review by EOD.",
+        mentions: [],
+        attachments: [],
+        reactions: [],
+        timestamp: new Date("2025-01-16T14:00:00Z"),
+      },
+    ],
   },
   {
     id: "3",
@@ -262,10 +414,62 @@ const mockTeamMembers: TeamMember[] = [
   },
 ];
 
+const mockSprints: Sprint[] = [
+  {
+    id: "1",
+    name: "Sprint 2.3",
+    goal: "Complete user authentication and implement task commenting system",
+    startDate: "2025-01-20",
+    endDate: "2025-02-03",
+    status: "active",
+    projectId: "1",
+    totalTasks: 18,
+    completedTasks: 12,
+    inProgressTasks: 4,
+    todoTasks: 2,
+    velocity: 8.5,
+    burndownData: [18, 16, 14, 12, 10, 8, 6, 4, 2, 0],
+    taskIds: [],
+  },
+  {
+    id: "2",
+    name: "Sprint 2.2",
+    goal: "Kanban board enhancements and team collaboration features",
+    startDate: "2025-01-06",
+    endDate: "2025-01-19",
+    status: "completed",
+    projectId: "1",
+    totalTasks: 15,
+    completedTasks: 15,
+    inProgressTasks: 0,
+    todoTasks: 0,
+    velocity: 9.2,
+    burndownData: [15, 13, 11, 9, 7, 5, 3, 1, 0],
+    taskIds: [],
+  },
+  {
+    id: "3",
+    name: "Sprint 2.4",
+    goal: "Analytics dashboard and reporting features",
+    startDate: "2025-02-04",
+    endDate: "2025-02-17",
+    status: "planning",
+    projectId: "1",
+    totalTasks: 0,
+    completedTasks: 0,
+    inProgressTasks: 0,
+    todoTasks: 0,
+    velocity: 0,
+    burndownData: [],
+    taskIds: [],
+  },
+];
+
 export const useAppStore = create<AppState>((set) => ({
   projects: mockProjects,
   tasks: mockTasks,
   teamMembers: mockTeamMembers,
+  sprints: mockSprints,
   sidebarCollapsed: false,
   currentProject: null,
 
@@ -323,5 +527,211 @@ export const useAppStore = create<AppState>((set) => ({
         t.id === taskId ? { ...t, status: newStatus } : t
       ),
     }));
+  },
+
+  // Comment Management
+  addComment: (taskId, commentData) => {
+    const newComment: TaskComment = {
+      ...commentData,
+      id: Date.now().toString(),
+      timestamp: new Date(),
+    };
+
+    set((state) => ({
+      tasks: state.tasks.map((t) =>
+        t.id === taskId
+          ? { ...t, comments: [...(t.comments || []), newComment] }
+          : t
+      ),
+    }));
+  },
+
+  updateComment: (commentId, content) => {
+    set((state) => ({
+      tasks: state.tasks.map((t) => ({
+        ...t,
+        comments: t.comments?.map((c) =>
+          c.id === commentId ? { ...c, content, edited: new Date() } : c
+        ),
+      })),
+    }));
+  },
+
+  deleteComment: (commentId) => {
+    set((state) => ({
+      tasks: state.tasks.map((t) => ({
+        ...t,
+        comments: t.comments?.filter((c) => c.id !== commentId),
+      })),
+    }));
+  },
+
+  addReaction: (commentId, reactionData) => {
+    const newReaction: TaskReaction = {
+      ...reactionData,
+      id: Date.now().toString(),
+      timestamp: new Date(),
+    };
+
+    set((state) => ({
+      tasks: state.tasks.map((t) => ({
+        ...t,
+        comments: t.comments?.map((c) => {
+          if (c.id === commentId) {
+            // Remove existing reaction from same user with same emoji
+            const filteredReactions = c.reactions.filter(
+              (r) =>
+                !(
+                  r.userId === reactionData.userId &&
+                  r.emoji === reactionData.emoji
+                )
+            );
+            return { ...c, reactions: [...filteredReactions, newReaction] };
+          }
+          return c;
+        }),
+      })),
+    }));
+  },
+
+  removeReaction: (commentId, userId, emoji) => {
+    set((state) => ({
+      tasks: state.tasks.map((t) => ({
+        ...t,
+        comments: t.comments?.map((c) =>
+          c.id === commentId
+            ? {
+                ...c,
+                reactions: c.reactions.filter(
+                  (r) => !(r.userId === userId && r.emoji === emoji)
+                ),
+              }
+            : c
+        ),
+      })),
+    }));
+  },
+
+  addAttachment: (taskId, attachmentData) => {
+    const newAttachment: TaskAttachment = {
+      ...attachmentData,
+      id: Date.now().toString(),
+      uploadedAt: new Date(),
+    };
+
+    set((state) => ({
+      tasks: state.tasks.map((t) =>
+        t.id === taskId
+          ? { ...t, attachments: [...(t.attachments || []), newAttachment] }
+          : t
+      ),
+    }));
+  },
+
+  removeAttachment: (taskId, attachmentId) => {
+    set((state) => ({
+      tasks: state.tasks.map((t) =>
+        t.id === taskId
+          ? {
+              ...t,
+              attachments: t.attachments?.filter((a) => a.id !== attachmentId),
+            }
+          : t
+      ),
+    }));
+  },
+
+  // Sprint Actions
+  addSprint: (sprintData) => {
+    const newSprint: Sprint = {
+      ...sprintData,
+      id: Date.now().toString(),
+    };
+    set((state) => ({ sprints: [...state.sprints, newSprint] }));
+  },
+
+  updateSprint: (id, data) => {
+    set((state) => ({
+      sprints: state.sprints.map((s) => (s.id === id ? { ...s, ...data } : s)),
+    }));
+  },
+
+  deleteSprint: (id) => {
+    set((state) => ({
+      sprints: state.sprints.filter((s) => s.id !== id),
+    }));
+  },
+
+  startSprint: (id) => {
+    set((state) => ({
+      sprints: state.sprints.map((s) =>
+        s.id === id ? { ...s, status: "active" as const } : s
+      ),
+    }));
+  },
+
+  completeSprint: (id) => {
+    set((state) => ({
+      sprints: state.sprints.map((s) =>
+        s.id === id ? { ...s, status: "completed" as const } : s
+      ),
+    }));
+  },
+
+  // Sprint-Task Connection Actions
+  assignTaskToSprint: (taskId, sprintId) => {
+    set((state) => {
+      const updatedTasks = state.tasks.map((t) =>
+        t.id === taskId ? { ...t, sprintId } : t
+      );
+      return { tasks: updatedTasks };
+    });
+  },
+
+  removeTaskFromSprint: (taskId) => {
+    set((state) => {
+      const updatedTasks = state.tasks.map((t) =>
+        t.id === taskId ? { ...t, sprintId: undefined } : t
+      );
+      return { tasks: updatedTasks };
+    });
+  },
+
+  getSprintTasks: (sprintId) => {
+    const state = useAppStore.getState();
+    return state.tasks.filter((task) => task.sprintId === sprintId);
+  },
+
+  updateSprintProgress: (sprintId) => {
+    set((state) => {
+      const sprintTasks = state.tasks.filter(
+        (task) => task.sprintId === sprintId
+      );
+      const totalTasks = sprintTasks.length;
+      const completedTasks = sprintTasks.filter(
+        (task) => task.status === "done"
+      ).length;
+      const inProgressTasks = sprintTasks.filter(
+        (task) => task.status === "in-progress"
+      ).length;
+      const todoTasks = sprintTasks.filter(
+        (task) => task.status === "todo"
+      ).length;
+
+      const updatedSprints = state.sprints.map((sprint) =>
+        sprint.id === sprintId
+          ? {
+              ...sprint,
+              totalTasks,
+              completedTasks,
+              inProgressTasks,
+              todoTasks,
+              taskIds: sprintTasks.map((task) => task.id),
+            }
+          : sprint
+      );
+
+      return { sprints: updatedSprints };
+    });
   },
 }));

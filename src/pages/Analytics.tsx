@@ -6,7 +6,24 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { useAppStore } from '@/store/appStore';
+import {
+  BarChart3,
+  Calendar,
+  Target,
+  TrendingUp,
+  Users,
+  Clock,
+  PlayCircle,
+  PauseCircle,
+  CheckCircle,
+  AlertCircle,
+  Zap,
+  Timer
+} from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Enhanced chart component
 const Chart = ({
@@ -131,7 +148,7 @@ const Chart = ({
 };
 
 export const Analytics = () => {
-  const { projects, tasks } = useAppStore();
+  const { projects, tasks, teamMembers } = useAppStore();
 
   // Sample analytics data
   const weeklyProgress = [45, 52, 61, 58, 67, 73, 68];
@@ -146,202 +163,407 @@ export const Analytics = () => {
     projects.reduce((acc, p) => acc + p.progress, 0) / totalProjects
   );
 
+  // Sprint Management Data
+  const currentSprint = {
+    name: "Sprint 2.3",
+    startDate: "2025-01-20",
+    endDate: "2025-02-03",
+    totalTasks: 18,
+    completedTasks: 12,
+    inProgressTasks: 4,
+    todoTasks: 2,
+    velocity: 8.5,
+    burndownData: [18, 16, 14, 12, 10, 8, 6, 4, 2, 0]
+  };
+
+  const sprintProgress = (currentSprint.completedTasks / currentSprint.totalTasks) * 100;
+  const daysRemaining = Math.ceil((new Date(currentSprint.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+            <BarChart3 className="w-8 h-8" />
+            Analytics & Sprint Management
+          </h1>
           <p className="text-muted-foreground mt-2">
-            Insights and performance metrics for your projects
+            Comprehensive insights and agile sprint management
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline">Export Data</Button>
+          <Button variant="outline">
+            <Target className="w-4 h-4 mr-2" />
+            Export Data
+          </Button>
           <Button className="bg-gradient-primary hover:opacity-90">
+            <TrendingUp className="w-4 h-4 mr-2" />
             Generate Report
           </Button>
         </div>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="shadow-soft">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Overall Progress
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{overallProgress}%</div>
-            <p className="text-xs text-muted-foreground">Across all projects</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-soft">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Active Projects
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{activeProjects}</div>
-            <p className="text-xs text-muted-foreground">
-              Out of {totalProjects} total
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-soft">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Completed Tasks
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {tasks.filter(t => t.status === 'done').length}
-            </div>
-            <p className="text-xs text-muted-foreground">This month</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-soft">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Team Efficiency
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">87%</div>
-            <p className="text-xs text-muted-foreground">
-              Average productivity
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Analytics & Sprint Tabs */}
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <BarChart3 className="w-4 h-4" />
+            Overview
+          </TabsTrigger>
+          <TabsTrigger value="sprints" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            Sprint Management
+          </TabsTrigger>
+          <TabsTrigger value="performance" className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4" />
+            Performance
+          </TabsTrigger>
+          <TabsTrigger value="reports" className="flex items-center gap-2">
+            <Target className="w-4 h-4" />
+            Reports
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="shadow-soft">
-          <CardHeader>
-            <CardTitle>Weekly Progress</CardTitle>
-            <CardDescription>
-              Project completion trends over the past week
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Chart data={weeklyProgress} type="area" />
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-soft">
-          <CardHeader>
-            <CardTitle>Monthly Task Distribution</CardTitle>
-            <CardDescription>
-              Task completion throughout the year
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Chart data={monthlyTasks} type="bar" />
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-soft">
-          <CardHeader>
-            <CardTitle>Team Performance</CardTitle>
-            <CardDescription>
-              Individual team member productivity scores
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Chart data={teamPerformance} type="line" />
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-soft">
-          <CardHeader>
-            <CardTitle>Project Completion Rates</CardTitle>
-            <CardDescription>
-              Progress across different projects
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Chart data={projectCompletion} type="bar" />
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Detailed Analytics Table */}
-      <Card className="shadow-soft">
-        <CardHeader>
-          <CardTitle>Project Details</CardTitle>
-          <CardDescription>
-            Comprehensive project analytics and statistics
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-3">Project</th>
-                  <th className="text-left p-3">Status</th>
-                  <th className="text-left p-3">Progress</th>
-                  <th className="text-left p-3">Tasks</th>
-                  <th className="text-left p-3">Team Size</th>
-                  <th className="text-left p-3">Due Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {projects.map(project => {
-                  const projectTasks = tasks.filter(
-                    t => t.projectId === project.id
-                  );
-                  const completedTasks = projectTasks.filter(
-                    t => t.status === 'done'
-                  ).length;
-
-                  return (
-                    <tr key={project.id} className="border-b hover:bg-muted/50">
-                      <td className="p-3 font-medium">{project.name}</td>
-                      <td className="p-3">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs ${
-                            project.status === 'active'
-                              ? 'bg-success/10 text-success'
-                              : project.status === 'completed'
-                                ? 'bg-primary/10 text-primary'
-                                : project.status === 'planning'
-                                  ? 'bg-warning/10 text-warning'
-                                  : 'bg-muted text-muted-foreground'
-                          }`}
-                        >
-                          {project.status}
-                        </span>
-                      </td>
-                      <td className="p-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-16 h-2 bg-muted rounded-full">
-                            <div
-                              className="h-full bg-gradient-primary rounded-full"
-                              style={{ width: `${project.progress}%` }}
-                            />
-                          </div>
-                          <span className="text-xs">{project.progress}%</span>
-                        </div>
-                      </td>
-                      <td className="p-3">
-                        {completedTasks}/{projectTasks.length}
-                      </td>
-                      <td className="p-3">{project.teamMembers.length}</td>
-                      <td className="p-3">
-                        {new Date(project.dueDate).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        <TabsContent value="overview" className="space-y-6 mt-6">
+          {/* Key Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Card className="shadow-soft">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  <Target className="w-4 h-4" />
+                  Overall Progress
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{overallProgress}%</div>
+                <p className="text-xs text-muted-foreground">Across all projects</p>
+              </CardContent>
+            </Card>
+            <Card className="shadow-soft">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Active Projects
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{activeProjects}</div>
+                <p className="text-xs text-muted-foreground">
+                  Out of {totalProjects} total
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="shadow-soft">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Completed Tasks
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {tasks.filter(t => t.status === 'done').length}
+                </div>
+                <p className="text-xs text-muted-foreground">This month</p>
+              </CardContent>
+            </Card>
+            <Card className="shadow-soft">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Team Efficiency
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">87%</div>
+                <p className="text-xs text-muted-foreground">
+                  Average productivity
+                </p>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle>Weekly Progress</CardTitle>
+                <CardDescription>
+                  Project completion trends over the past week
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Chart data={weeklyProgress} type="area" />
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle>Monthly Task Distribution</CardTitle>
+                <CardDescription>
+                  Task completion throughout the year
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Chart data={monthlyTasks} type="bar" />
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle>Team Performance</CardTitle>
+                <CardDescription>
+                  Individual team member productivity scores
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Chart data={teamPerformance} type="line" />
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle>Project Completion Rates</CardTitle>
+                <CardDescription>
+                  Progress across different projects
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Chart data={projectCompletion} type="bar" />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Detailed Analytics Table */}
+          <Card className="shadow-soft">
+            <CardHeader>
+              <CardTitle>Project Details</CardTitle>
+              <CardDescription>
+                Comprehensive project analytics and statistics
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-3">Project</th>
+                      <th className="text-left p-3">Status</th>
+                      <th className="text-left p-3">Progress</th>
+                      <th className="text-left p-3">Tasks</th>
+                      <th className="text-left p-3">Team Size</th>
+                      <th className="text-left p-3">Due Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {projects.map(project => {
+                      const projectTasks = tasks.filter(
+                        t => t.projectId === project.id
+                      );
+                      const completedTasks = projectTasks.filter(
+                        t => t.status === 'done'
+                      ).length;
+
+                      return (
+                        <tr key={project.id} className="border-b hover:bg-muted/50">
+                          <td className="p-3 font-medium">{project.name}</td>
+                          <td className="p-3">
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs ${project.status === 'active'
+                                  ? 'bg-success/10 text-success'
+                                  : project.status === 'completed'
+                                    ? 'bg-primary/10 text-primary'
+                                    : project.status === 'planning'
+                                      ? 'bg-warning/10 text-warning'
+                                      : 'bg-muted text-muted-foreground'
+                                }`}
+                            >
+                              {project.status}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            <div className="flex items-center gap-2">
+                              <div className="w-16 h-2 bg-muted rounded-full">
+                                <div
+                                  className="h-full bg-gradient-primary rounded-full"
+                                  style={{ width: `${project.progress}%` }}
+                                />
+                              </div>
+                              <span className="text-xs">{project.progress}%</span>
+                            </div>
+                          </td>
+                          <td className="p-3">
+                            {completedTasks}/{projectTasks.length}
+                          </td>
+                          <td className="p-3">{project.teamMembers.length}</td>
+                          <td className="p-3">
+                            {new Date(project.dueDate).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="sprints" className="space-y-6 mt-6">
+          {/* Current Sprint Overview */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2 shadow-soft">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Zap className="w-5 h-5" />
+                      {currentSprint.name}
+                    </CardTitle>
+                    <CardDescription>
+                      {new Date(currentSprint.startDate).toLocaleDateString()} - {new Date(currentSprint.endDate).toLocaleDateString()}
+                    </CardDescription>
+                  </div>
+                  <div className="flex gap-2">
+                    <Badge variant="outline" className="flex items-center gap-1">
+                      <Timer className="w-3 h-3" />
+                      {daysRemaining} days left
+                    </Badge>
+                    <Badge className="bg-green-500">
+                      <PlayCircle className="w-3 h-3 mr-1" />
+                      Active
+                    </Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium">Sprint Progress</span>
+                      <span className="text-sm text-muted-foreground">
+                        {currentSprint.completedTasks}/{currentSprint.totalTasks} tasks
+                      </span>
+                    </div>
+                    <Progress value={sprintProgress} className="h-3" />
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>0%</span>
+                      <span className="font-medium">{Math.round(sprintProgress)}%</span>
+                      <span>100%</span>
+                    </div>
+                  </div>
+
+                  {/* Sprint Burndown Chart */}
+                  <div>
+                    <h4 className="text-sm font-medium mb-3">Burndown Chart</h4>
+                    <div className="h-32 w-full">
+                      <Chart data={currentSprint.burndownData} type="line" />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle className="text-lg">Sprint Metrics</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                    <CheckCircle className="w-6 h-6 mx-auto mb-1 text-green-600" />
+                    <div className="text-lg font-bold text-green-600">{currentSprint.completedTasks}</div>
+                    <div className="text-xs text-muted-foreground">Completed</div>
+                  </div>
+                  <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+                    <PlayCircle className="w-6 h-6 mx-auto mb-1 text-blue-600" />
+                    <div className="text-lg font-bold text-blue-600">{currentSprint.inProgressTasks}</div>
+                    <div className="text-xs text-muted-foreground">In Progress</div>
+                  </div>
+                  <div className="text-center p-3 bg-gray-50 dark:bg-gray-950/20 rounded-lg">
+                    <PauseCircle className="w-6 h-6 mx-auto mb-1 text-gray-600" />
+                    <div className="text-lg font-bold text-gray-600">{currentSprint.todoTasks}</div>
+                    <div className="text-xs text-muted-foreground">To Do</div>
+                  </div>
+                  <div className="text-center p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
+                    <TrendingUp className="w-6 h-6 mx-auto mb-1 text-purple-600" />
+                    <div className="text-lg font-bold text-purple-600">{currentSprint.velocity}</div>
+                    <div className="text-xs text-muted-foreground">Velocity</div>
+                  </div>
+                </div>
+
+                <div className="space-y-3 pt-4 border-t">
+                  <Button className="w-full" variant="outline">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Plan Next Sprint
+                  </Button>
+                  <Button className="w-full" variant="outline">
+                    <Target className="w-4 h-4 mr-2" />
+                    Sprint Retrospective
+                  </Button>
+                  <Button className="w-full bg-gradient-primary">
+                    <Zap className="w-4 h-4 mr-2" />
+                    Sprint Actions
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="performance" className="space-y-6 mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Team Performance
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Chart data={teamPerformance} type="bar" />
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
+                  Monthly Progress
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Chart data={monthlyTasks} type="area" />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="reports" className="space-y-6 mt-6">
+          <Card className="shadow-soft">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="w-5 h-5" />
+                Custom Reports
+              </CardTitle>
+              <CardDescription>Generate detailed reports for stakeholders</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Button variant="outline" className="h-20 flex-col">
+                  <BarChart3 className="w-6 h-6 mb-2" />
+                  Project Report
+                </Button>
+                <Button variant="outline" className="h-20 flex-col">
+                  <Zap className="w-6 h-6 mb-2" />
+                  Sprint Report
+                </Button>
+                <Button variant="outline" className="h-20 flex-col">
+                  <Users className="w-6 h-6 mb-2" />
+                  Team Report
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

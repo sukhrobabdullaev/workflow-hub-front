@@ -9,6 +9,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Dashboard } from '@/pages/Dashboard';
 import { Projects } from '@/pages/Projects';
 import { ProjectManagement } from '@/pages/ProjectManagement';
+import { SprintManagement } from '@/pages/SprintManagement';
 import { Team } from '@/pages/Team';
 import { Analytics } from '@/pages/Analytics';
 import { Settings } from '@/pages/Settings';
@@ -83,6 +84,16 @@ const App = () => (
               <ProtectedRoute>
                 <AppLayout>
                   <ProjectManagement />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sprints"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <SprintManagement />
                 </AppLayout>
               </ProtectedRoute>
             }
