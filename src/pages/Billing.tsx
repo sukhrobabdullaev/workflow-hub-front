@@ -1,11 +1,15 @@
-import { useState } from 'react';
-import { useAuthStore } from '@/store/authStore';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Table,
   TableBody,
@@ -14,30 +18,24 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import { useAuthStore } from '@/store/authStore';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  CreditCard,
-  Download,
-  Calendar,
-  Users,
-  Zap,
-  Crown,
-  Shield,
+  Building,
   Check,
+  CreditCard,
+  Crown,
+  DollarSign,
+  Download,
+  FileText,
+  Shield,
   Star,
   TrendingUp,
-  Building,
-  FileText,
-  DollarSign,
+  Users,
+  Zap,
 } from 'lucide-react';
+import { useState } from 'react';
 
 const plans = [
   {
@@ -213,7 +211,7 @@ export const Billing = () => {
                     Current Plan: Professional
                   </CardTitle>
                   <CardDescription>
-                    You're on the Professional plan with full access to premium features
+                    You&apos;re on the Professional plan with full access to premium features
                   </CardDescription>
                 </div>
                 <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
@@ -535,8 +533,8 @@ export const Billing = () => {
           <DialogHeader>
             <DialogTitle>Upgrade to {selectedPlan?.name}</DialogTitle>
             <DialogDescription>
-              Confirm your plan upgrade. You'll be charged immediately and your new features will be
-              available right away.
+              Confirm your plan upgrade. You&apos;ll be charged immediately and your new features
+              will be available right away.
             </DialogDescription>
           </DialogHeader>
           {selectedPlan && (

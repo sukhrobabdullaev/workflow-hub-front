@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { PlayCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AnimatePresence, motion } from 'framer-motion';
+import { PlayCircle, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface DemoVideoProps {
   onClose?: () => void;
@@ -76,7 +76,7 @@ export const DemoVideo = ({ onClose }: DemoVideoProps) => {
                       { title: 'Projects', delay: 0 },
                       { title: 'Analytics', delay: 0.5 },
                       { title: 'Team', delay: 1 },
-                    ].map((feature, index) => (
+                    ].map((feature, _) => (
                       <motion.div
                         key={feature.title}
                         initial={{ opacity: 0, y: 20 }}

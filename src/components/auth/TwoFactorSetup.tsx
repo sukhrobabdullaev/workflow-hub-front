@@ -1,20 +1,19 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import {
+  AlertTriangle,
+  CheckCircle,
+  Copy,
+  Download,
+  QrCode,
   Shield,
   Smartphone,
-  Copy,
-  CheckCircle,
-  AlertTriangle,
-  QrCode,
-  Download,
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface TwoFactorSetupProps {
   onComplete: () => void;
@@ -150,8 +149,8 @@ export const TwoFactorSetup = ({ onComplete, onSkip }: TwoFactorSetupProps) => {
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              We recommend enabling 2FA to keep your workspace secure, especially if you're working
-              with sensitive data.
+              We recommend enabling 2FA to keep your workspace secure, especially if you&apos;re
+              working with sensitive data.
             </AlertDescription>
           </Alert>
 
@@ -205,7 +204,7 @@ export const TwoFactorSetup = ({ onComplete, onSkip }: TwoFactorSetupProps) => {
                 <div>
                   <p className="text-sm font-medium">Manual entry key</p>
                   <p className="text-xs text-muted-foreground">
-                    Can't scan? Enter this key manually
+                    Can&apos;t scan? Enter this key manually
                   </p>
                 </div>
                 <Button variant="outline" size="sm" onClick={handleCopySecret}>
@@ -227,7 +226,7 @@ export const TwoFactorSetup = ({ onComplete, onSkip }: TwoFactorSetupProps) => {
               onClick={() => setStep('verify')}
               className="bg-gradient-primary w-full hover:opacity-90"
             >
-              I've scanned the QR code
+              I&apos;ve scanned the QR code
             </Button>
 
             <Button variant="outline" onClick={() => setStep('intro')} className="w-full">

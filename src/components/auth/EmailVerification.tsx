@@ -1,11 +1,9 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, ArrowLeft, CheckCircle, Clock, RefreshCw } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowLeft, CheckCircle, Clock, Mail, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
 
 interface EmailVerificationProps {
   email: string;
@@ -84,7 +82,7 @@ export const EmailVerification = ({
         <div>
           <CardTitle className="text-2xl font-bold">Verify your email</CardTitle>
           <CardDescription className="mt-2">
-            We've sent a verification link to{' '}
+            We&apos;ve sent a verification link to{' '}
             <span className="font-medium text-foreground">{email}</span>
           </CardDescription>
         </div>
@@ -107,7 +105,7 @@ export const EmailVerification = ({
 
         <div className="space-y-3">
           <p className="text-center text-sm text-muted-foreground">
-            Didn't receive the email? Check your spam folder or
+            Didn&apos;t receive the email? Check your spam folder or
           </p>
 
           <Button

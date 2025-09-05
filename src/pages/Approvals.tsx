@@ -1,21 +1,20 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Textarea } from '@/components/ui/textarea';
-import { useAuthStore } from '@/store/authStore';
-import { format } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { useAuthStore } from '@/store/authStore';
+import { format } from 'date-fns';
+import { useState } from 'react';
 
 // Mock data for approvals
 const pendingApprovals = [
@@ -149,7 +148,9 @@ export const Approvals = () => {
           <CardContent className="pt-6">
             <div className="text-center">
               <h2 className="mb-2 text-xl font-semibold">Access Restricted</h2>
-              <p className="text-muted-foreground">You don't have permission to view approvals.</p>
+              <p className="text-muted-foreground">
+                You don&apos;t have permission to view approvals.
+              </p>
             </div>
           </CardContent>
         </Card>

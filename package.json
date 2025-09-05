@@ -13,7 +13,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "prepare": "husky install",
+    "prepare": "husky install .husky",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "build:analyze": "npm run build && npx vite-bundle-analyzer"

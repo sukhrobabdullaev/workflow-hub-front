@@ -1,23 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { useAppStore } from '@/store/appStore';
-import {
-  BarChart3,
-  Calendar,
-  Target,
-  TrendingUp,
-  Users,
-  Clock,
-  PlayCircle,
-  PauseCircle,
-  CheckCircle,
-  AlertCircle,
-  Zap,
-  Timer,
-} from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAppStore } from '@/store/appStore';
+import { BarChart3, Target, TrendingUp, Users, Zap } from 'lucide-react';
 
 // Enhanced chart component
 const Chart = ({
@@ -108,7 +93,7 @@ const Chart = ({
 };
 
 export const Analytics = () => {
-  const { projects, tasks, teamMembers } = useAppStore();
+  const { projects, tasks } = useAppStore();
 
   // Sample analytics data
   const weeklyProgress = [45, 52, 61, 58, 67, 73, 68];

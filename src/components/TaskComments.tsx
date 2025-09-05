@@ -1,19 +1,6 @@
-import { useState, useRef, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ImagePreviewModal } from '@/components/ImagePreviewModal';
+import { VideoRecordingModal } from '@/components/modals/VideoRecordingModal';
+import { RecordingLinkModal } from '@/components/RecordingLinkModal';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,34 +11,38 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Send,
-  Smile,
-  Paperclip,
-  Video,
-  Image,
-  File,
-  Download,
-  MoreVertical,
-  Edit,
-  Trash2,
-  Reply,
-  AtSign,
-  MessageCircle,
-  Eye,
-  Heart,
-  ThumbsUp,
-  Laugh,
-  Angry,
-  Plus,
-  Link,
-} from 'lucide-react';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { toast } from '@/components/ui/sonner';
+import { Textarea } from '@/components/ui/textarea';
 import { useAppStore, type Task, type TaskComment, type TeamMember } from '@/store/appStore';
 import { useAuthStore } from '@/store/authStore';
-import { VideoRecordingModal } from '@/components/modals/VideoRecordingModal';
-import { RecordingLinkModal } from '@/components/RecordingLinkModal';
-import { ImagePreviewModal } from '@/components/ImagePreviewModal';
-import { toast } from '@/components/ui/sonner';
+import {
+  Download,
+  Edit,
+  File,
+  Image,
+  Link,
+  MessageCircle,
+  MoreVertical,
+  Paperclip,
+  Reply,
+  Send,
+  Smile,
+  Trash2,
+  Video,
+} from 'lucide-react';
+import { useCallback, useRef, useState } from 'react';
 
 interface TaskCommentsProps {
   task: Task;
@@ -167,7 +158,7 @@ export const TaskComments = ({ task, className }: TaskCommentsProps) => {
     toast.success('Comment deleted successfully');
   };
 
-  const handleReaction = (commentId: string, emoji: string, userName: string) => {
+  const handleReaction = (commentId: string, emoji: string) => {
     if (!user) return;
 
     // Check if user already reacted with this emoji

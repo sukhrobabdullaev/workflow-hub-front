@@ -1,23 +1,11 @@
-import { useState, useEffect } from 'react';
-import { motion, useInView } from 'framer-motion';
-import {
-  ArrowRight,
-  CheckCircle,
-  Star,
-  Users,
-  Zap,
-  Shield,
-  BarChart3,
-  Layers,
-  PlayCircle,
-  ChevronDown,
-} from 'lucide-react';
+import { DemoVideo } from '@/components/DemoVideo';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { ArrowRight, BarChart3, CheckCircle, Layers, Shield, Star, Users, Zap } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { DemoVideo } from '@/components/DemoVideo';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -413,11 +401,13 @@ export const Landing = () => {
                         <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    <p className="mb-6 text-lg leading-relaxed">"{testimonial.content}"</p>
+                    <p className="mb-6 text-lg leading-relaxed">
+                      &quot;{testimonial.content}&quot;
+                    </p>
                     <div className="flex items-center">
                       <img
-                        src={testimonial.avatar}
-                        alt={testimonial.name}
+                        src={`${testimonial.avatar}`}
+                        alt={`${testimonial.name} avatar`}
                         className="mr-4 h-12 w-12 rounded-full"
                       />
                       <div>
@@ -451,7 +441,7 @@ export const Landing = () => {
               variants={fadeInUp}
               className="mx-auto max-w-3xl text-xl text-muted-foreground"
             >
-              Choose the plan that's right for your team. Always know what you'll pay.
+              Choose the plan that&apos;s right for your team. Always know what you&apos;ll pay.
             </motion.p>
           </motion.div>
 

@@ -1,31 +1,30 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useAuthStore } from '@/store/authStore';
-import { useAppStore } from '@/store/appStore';
 import {
   CreateProjectModal,
   CreateTaskModal,
-  ViewReportsModal,
   VideoRecordingModal,
+  ViewReportsModal,
 } from '@/components/modals';
-import { useNavigate } from 'react-router-dom';
 import { LiveUpdates } from '@/components/realtime/LiveUpdates';
 import { OnlineUsers } from '@/components/realtime/OnlineUsers';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAppStore } from '@/store/appStore';
+import { useAuthStore } from '@/store/authStore';
 import {
-  Video,
-  Users,
-  CheckSquare,
-  FolderOpen,
-  MessageCircle,
-  Database,
   BarChart3,
-  Zap,
+  CheckSquare,
+  Database,
+  FolderOpen,
   Infinity,
+  MessageCircle,
   Play,
-  Calendar,
+  Users,
+  Video,
+  Zap,
 } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Simple chart component for demonstration
 const SimpleChart = ({ data, type = 'bar' }: { data: number[]; type?: 'bar' | 'line' }) => {
@@ -250,7 +249,7 @@ export const Dashboard = () => {
             Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Here's what's happening with your projects today.
+            Here&apos;s what&apos;s happening with your projects today.
           </p>
         </div>
         <div className="flex gap-3">

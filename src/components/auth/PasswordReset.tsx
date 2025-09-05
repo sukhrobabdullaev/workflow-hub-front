@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
+import { ArrowLeft, CheckCircle, Key, Mail } from 'lucide-react';
+import { useState } from 'react';
 import { PasswordStrengthInput } from './PasswordStrengthInput';
-import { Key, ArrowLeft, CheckCircle, Mail } from 'lucide-react';
 
 interface PasswordResetProps {
   onBack: () => void;
@@ -16,7 +16,6 @@ interface PasswordResetProps {
 export const PasswordReset = ({ onBack, onResetComplete }: PasswordResetProps) => {
   const [step, setStep] = useState<'request' | 'sent' | 'reset'>('request');
   const [email, setEmail] = useState('');
-  const [resetToken, setResetToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -97,7 +96,6 @@ export const PasswordReset = ({ onBack, onResetComplete }: PasswordResetProps) =
 
   // Mock function to simulate clicking email link
   const simulateEmailClick = () => {
-    setResetToken('demo-token-123');
     setStep('reset');
     toast({
       title: 'Reset link clicked!',
@@ -115,7 +113,7 @@ export const PasswordReset = ({ onBack, onResetComplete }: PasswordResetProps) =
           <div>
             <CardTitle className="text-2xl font-bold">Reset your password</CardTitle>
             <CardDescription className="mt-2">
-              Enter your email address and we'll send you a reset link
+              Enter your email address and we&apos;ll send you a reset link
             </CardDescription>
           </div>
         </CardHeader>
@@ -184,7 +182,7 @@ export const PasswordReset = ({ onBack, onResetComplete }: PasswordResetProps) =
           <div>
             <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
             <CardDescription className="mt-2">
-              We've sent password reset instructions to{' '}
+              We&apos;ve sent password reset instructions to{' '}
               <span className="font-medium text-foreground">{email}</span>
             </CardDescription>
           </div>

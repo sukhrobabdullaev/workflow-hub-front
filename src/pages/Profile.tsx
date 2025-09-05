@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { useAuthStore } from '@/store/authStore';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { User, Shield, Bell, Eye, Camera, Save, Users, Crown, UserCheck } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { useAuthStore } from '@/store/authStore';
+import { Bell, Camera, Crown, Eye, Save, Shield, User, UserCheck, Users } from 'lucide-react';
+import { useState } from 'react';
 
 const getRoleIcon = (role: string) => {
   switch (role) {
@@ -580,7 +580,7 @@ export const Profile = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium">Activity Status</p>
-                      <p className="text-sm text-muted-foreground">Show when you're online</p>
+                      <p className="text-sm text-muted-foreground">Show when you&apos;re online</p>
                     </div>
                     <Switch
                       checked={privacy.activityStatus}

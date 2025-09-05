@@ -1,29 +1,4 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useAppStore, type Project } from '@/store/appStore';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  Kanban,
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  BarChart3,
-  Users,
-  CheckSquare,
-  FolderOpen,
-  Calendar,
-  Eye,
-} from 'lucide-react';
 import { CreateProjectModal } from '@/components/modals';
-import { KanbanBoard } from '@/components/kanban/KanbanBoard';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,8 +9,29 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import { useAppStore, type Project } from '@/store/appStore';
+import {
+  BarChart3,
+  Calendar,
+  Edit,
+  FolderOpen,
+  Kanban,
+  MoreHorizontal,
+  Trash2,
+} from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -69,7 +65,7 @@ export const Projects = () => {
   const handleEditProject = (project: Project, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedProject(project);
-    // TODO: Implement edit functionality with store
+    console.log(selectedProject);
     toast({
       title: 'Edit Project',
       description: 'Edit functionality coming soon',
@@ -258,8 +254,8 @@ export const Projects = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the project "
-                  {projectToDelete?.name}" and all associated data.
+                  This action cannot be undone. This will permanently delete the project
+                  {projectToDelete?.name} and all associated data.
                   {projectToDelete &&
                     tasks.filter(task => task.projectId === projectToDelete.id).length > 0 && (
                       <span className="mt-2 block font-medium text-red-600">
@@ -344,8 +340,8 @@ export const Projects = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Project</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete <strong>"{projectToDelete?.name}"</strong>? This
-              action cannot be undone.
+              Are you sure you want to delete <strong>{projectToDelete?.name}</strong>? This action
+              cannot be undone.
               {projectToDelete &&
                 tasks.filter(task => task.projectId === projectToDelete.id).length > 0 && (
                   <span className="mt-2 block font-medium text-red-600">

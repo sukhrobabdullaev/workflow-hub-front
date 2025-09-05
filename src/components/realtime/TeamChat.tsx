@@ -1,13 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, Smile, Paperclip, MoreVertical, Hash, AtSign, MessageCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
-import { useAppStore } from '@/store/appStore';
+import { AtSign, Hash, MessageCircle, MoreVertical, Paperclip, Send, Smile } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ChatMessage {
   id: string;
@@ -70,7 +69,6 @@ export const TeamChat = ({ className }: TeamChatProps) => {
   ]);
 
   const user = useAuthStore(state => state.user);
-  const { teamMembers } = useAppStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 

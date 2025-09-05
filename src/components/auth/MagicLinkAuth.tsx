@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowLeft, CheckCircle, Mail } from 'lucide-react';
+import { useState } from 'react';
 
 interface MagicLinkAuthProps {
   onBack: () => void;
@@ -75,7 +75,7 @@ export const MagicLinkAuth = ({ onBack }: MagicLinkAuthProps) => {
           <div>
             <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
             <CardDescription className="mt-2">
-              We've sent a secure sign-in link to{' '}
+              We&apos;ve sent a secure sign-in link to{' '}
               <span className="font-medium text-foreground">{email}</span>
             </CardDescription>
           </div>
@@ -97,7 +97,7 @@ export const MagicLinkAuth = ({ onBack }: MagicLinkAuthProps) => {
 
           <div className="space-y-3 text-center">
             <p className="text-sm text-muted-foreground">
-              Didn't receive the email? Check your spam folder or
+              Didn&apos;t receive the email? Check your spam folder or
             </p>
             <Button
               variant="outline"
@@ -129,7 +129,7 @@ export const MagicLinkAuth = ({ onBack }: MagicLinkAuthProps) => {
       <CardHeader className="space-y-1">
         <CardTitle className="text-center text-2xl font-bold">Sign in with magic link</CardTitle>
         <CardDescription className="text-center">
-          We'll send a secure link to your email - no password needed
+          We&apos;ll send a secure link to your email - no password needed
         </CardDescription>
       </CardHeader>
       <CardContent>

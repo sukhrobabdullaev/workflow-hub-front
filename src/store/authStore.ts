@@ -68,7 +68,7 @@ export const useAuthStore = create<AuthState>()(
       register: async (name: string, email: string, password: string) => {
         // Mock registration - TODO: Replace with API call
         await new Promise(resolve => setTimeout(resolve, 1000));
-
+        console.log(password);
         const newUser: User = {
           id: Date.now().toString(),
           name,

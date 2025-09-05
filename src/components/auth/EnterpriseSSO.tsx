@@ -1,28 +1,21 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthStore } from '@/store/authStore';
-import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
-  Building2,
   ArrowLeft,
-  Shield,
-  Globe,
+  Building2,
   CheckCircle,
   ExternalLink,
+  Globe,
   Loader2,
+  Shield,
 } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface EnterpriseSSOProps {
   onBack: () => void;
@@ -40,10 +33,17 @@ const popularProviders = [
 export const EnterpriseSSO = ({ onBack }: EnterpriseSSOProps) => {
   const [method, setMethod] = useState<'domain' | 'provider' | 'manual'>('domain');
   const [domain, setDomain] = useState('');
-  const [selectedProvider, setSelectedProvider] = useState('');
   const [ssoUrl, setSsoUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [discoveredSSO, setDiscoveredSSO] = useState<any>(null);
+  interface DiscoveredSSO {
+    hasSSO: boolean;
+    provider: string;
+    ssoUrl: string;
+    entityId: string;
+    logo: string;
+  }
+
+  const [discoveredSSO, setDiscoveredSSO] = useState<DiscoveredSSO | null>(null);
 
   const { toast } = useToast();
   const socialAuth = useAuthStore(state => state.socialAuth);
@@ -82,7 +82,7 @@ export const EnterpriseSSO = ({ onBack }: EnterpriseSSOProps) => {
     }
   };
 
-  const initiateSSOLogin = async (provider?: string, url?: string) => {
+  const initiateSSOLogin = async (provider?: string) => {
     setIsLoading(true);
     try {
       // Simulate SSO redirect and callback
@@ -134,7 +134,7 @@ export const EnterpriseSSO = ({ onBack }: EnterpriseSSOProps) => {
         <div>
           <CardTitle className="text-2xl font-bold">Enterprise Sign-On</CardTitle>
           <CardDescription className="mt-2">
-            Sign in with your organization's identity provider
+            Sign in with your organization&apos;s identity provider
           </CardDescription>
         </div>
       </CardHeader>
@@ -151,7 +151,7 @@ export const EnterpriseSSO = ({ onBack }: EnterpriseSSOProps) => {
               key={id}
               variant={method === id ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setMethod(id as any)}
+              onClick={() => setMethod(id as 'domain' | 'provider' | 'manual')}
               className="flex h-auto flex-col py-3"
             >
               <Icon className="mb-1 h-4 w-4" />

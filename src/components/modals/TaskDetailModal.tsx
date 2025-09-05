@@ -1,4 +1,8 @@
-import { useState, useEffect } from 'react';
+import { TaskComments } from '@/components/TaskComments';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Dialog,
   DialogContent,
@@ -6,12 +10,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -19,26 +20,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
-import {
-  CalendarIcon,
-  Edit,
-  MessageCircle,
-  User,
-  Clock,
-  Flag,
-  CheckSquare,
-  X,
-  Save,
-} from 'lucide-react';
-import { format } from 'date-fns';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { useAppStore, type Task } from '@/store/appStore';
-import { useToast } from '@/hooks/use-toast';
-import { TaskComments } from '@/components/TaskComments';
+import { format } from 'date-fns';
+import {
+  CalendarIcon,
+  CheckSquare,
+  Clock,
+  Edit,
+  Flag,
+  MessageCircle,
+  Save,
+  User,
+  X,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface TaskDetailModalProps {
   open: boolean;

@@ -1,4 +1,7 @@
-import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -6,13 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Mail, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
+import { AlertCircle, CheckCircle, Clock, Mail } from 'lucide-react';
+import React from 'react';
 
 interface TeamMember {
   id: string;
@@ -94,7 +94,7 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
         <DialogHeader>
           <DialogTitle>Team Member Profile</DialogTitle>
           <DialogDescription>
-            View {member.name}'s profile details and task assignments
+            View {member.name}&apos;s profile details and task assignments
           </DialogDescription>
         </DialogHeader>
 

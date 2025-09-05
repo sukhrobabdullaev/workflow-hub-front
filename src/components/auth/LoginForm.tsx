@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuthStore } from '@/store/authStore';
 import { useToast } from '@/hooks/use-toast';
-import { SocialLogin } from './SocialLogin';
+import { useAuthStore } from '@/store/authStore';
+import { Building2, Eye, EyeOff, Wand2 } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MagicLinkAuth } from './MagicLinkAuth';
-import { Eye, EyeOff, Wand2, Building2 } from 'lucide-react';
+import { SocialLogin } from './SocialLogin';
 
 interface LoginFormProps {
   onToggleMode: () => void;
@@ -173,7 +173,7 @@ export const LoginForm = ({ onToggleMode, onForgotPassword, onEnterpriseSSO }: L
 
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <button
               type="button"
               onClick={onToggleMode}

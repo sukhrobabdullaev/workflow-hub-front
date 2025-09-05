@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { TaskDetailModal } from '@/components/modals';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Task } from '@/store/appStore';
-import { useAppStore } from '@/store/appStore';
-import { cn } from '@/lib/utils';
-import {
-  Calendar,
-  User,
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  MessageCircle,
-  Paperclip,
-  Eye,
-} from 'lucide-react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { EditTaskModal, TaskDetailModal } from '@/components/modals';
+import { cn } from '@/lib/utils';
+import { Task, useAppStore } from '@/store/appStore';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import {
+  Calendar,
+  Edit,
+  Eye,
+  MessageCircle,
+  MoreHorizontal,
+  Paperclip,
+  Trash2,
+  User,
+} from 'lucide-react';
+import React, { useState } from 'react';
 
 interface KanbanCardProps {
   task: Task;
@@ -44,7 +43,7 @@ const getPriorityColor = (priority: string) => {
 };
 
 export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
-  const { teamMembers, deleteTask } = useAppStore();
+  const { teamMembers } = useAppStore();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [showActions, setShowActions] = useState(false);
 

@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { EmailVerification } from '@/components/auth/EmailVerification';
+import { EnterpriseSSO } from '@/components/auth/EnterpriseSSO';
 import { LoginForm } from '@/components/auth/LoginForm';
+import { PasswordReset } from '@/components/auth/PasswordReset';
 import { RegisterForm } from '@/components/auth/RegisterForm';
 import { TwoFactorSetup } from '@/components/auth/TwoFactorSetup';
-import { EmailVerification } from '@/components/auth/EmailVerification';
-import { PasswordReset } from '@/components/auth/PasswordReset';
-import { EnterpriseSSO } from '@/components/auth/EnterpriseSSO';
-import { Layers, ArrowLeft, Shield, Users, Zap, Award, Building2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowLeft, Award, Layers, Shield, Users, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 type AuthFlow =
@@ -31,7 +31,6 @@ export const Auth = () => {
     setUserEmail(email);
     setCurrentFlow('email-verification');
   };
-  const showTwoFactor = () => setCurrentFlow('two-factor');
   const showEnterpriseSSO = () => setCurrentFlow('enterprise-sso');
   const backToLogin = () => setCurrentFlow('login');
 
@@ -71,7 +70,7 @@ export const Auth = () => {
       setCurrentFeature(prev => (prev + 1) % features.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [features.length]);
 
   const currentFeatureData = features[currentFeature];
 
@@ -132,7 +131,7 @@ export const Auth = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-5xl">
-                Transform your team's
+                Transform your team&apos;s
                 <br />
                 <span className="text-primary-foreground/80">productivity</span>
               </h1>
@@ -252,7 +251,7 @@ export const Auth = () => {
               <span className="text-2xl font-bold">WorkflowHub</span>
             </motion.div>
             <div className="space-y-1">
-              <p className="text-muted-foreground">Transform your team's productivity</p>
+              <p className="text-muted-foreground">Transform your team&apos;s productivity</p>
               {currentFlow !== 'login' && currentFlow !== 'register' && (
                 <p className="text-xs capitalize text-muted-foreground/70">
                   {currentFlow.replace('-', ' ')}
