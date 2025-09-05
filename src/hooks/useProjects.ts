@@ -17,10 +17,7 @@ export const queryKeys = {
 
 // Projects Hooks
 export const useProjects = (
-  options?: Omit<
-    UseQueryOptions<Project[], ApiError, Project[]>,
-    'queryKey' | 'queryFn'
-  >
+  options?: Omit<UseQueryOptions<Project[], ApiError, Project[]>, 'queryKey' | 'queryFn'>
 ) => {
   return useQuery({
     queryKey: queryKeys.projects,
@@ -32,10 +29,7 @@ export const useProjects = (
 
 export const useProject = (
   id: string,
-  options?: Omit<
-    UseQueryOptions<Project, ApiError, Project>,
-    'queryKey' | 'queryFn'
-  >
+  options?: Omit<UseQueryOptions<Project, ApiError, Project>, 'queryKey' | 'queryFn'>
 ) => {
   return useQuery({
     queryKey: queryKeys.project(id),
@@ -53,14 +47,10 @@ export const useCreateProject = (
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (projectData: Omit<Project, 'id'>) =>
-      projectsApi.createProject(projectData),
+    mutationFn: (projectData: Omit<Project, 'id'>) => projectsApi.createProject(projectData),
     onSuccess: newProject => {
       // Update projects cache
-      queryClient.setQueryData(queryKeys.projects, (old: Project[] = []) => [
-        ...old,
-        newProject,
-      ]);
+      queryClient.setQueryData(queryKeys.projects, (old: Project[] = []) => [...old, newProject]);
 
       toast({
         title: 'Success',
@@ -79,11 +69,7 @@ export const useCreateProject = (
 };
 
 export const useUpdateProject = (
-  options?: UseMutationOptions<
-    Project,
-    ApiError,
-    { id: string; data: Partial<Project> }
-  >
+  options?: UseMutationOptions<Project, ApiError, { id: string; data: Partial<Project> }>
 ) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -94,16 +80,11 @@ export const useUpdateProject = (
     onSuccess: updatedProject => {
       // Update projects cache
       queryClient.setQueryData(queryKeys.projects, (old: Project[] = []) =>
-        old.map(project =>
-          project.id === updatedProject.id ? updatedProject : project
-        )
+        old.map(project => (project.id === updatedProject.id ? updatedProject : project))
       );
 
       // Update individual project cache
-      queryClient.setQueryData(
-        queryKeys.project(updatedProject.id),
-        updatedProject
-      );
+      queryClient.setQueryData(queryKeys.project(updatedProject.id), updatedProject);
 
       toast({
         title: 'Success',
@@ -121,9 +102,7 @@ export const useUpdateProject = (
   });
 };
 
-export const useDeleteProject = (
-  options?: UseMutationOptions<void, ApiError, string>
-) => {
+export const useDeleteProject = (options?: UseMutationOptions<void, ApiError, string>) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 

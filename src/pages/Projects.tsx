@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAppStore, type Project } from '@/store/appStore';
@@ -20,7 +14,7 @@ import {
   CheckSquare,
   FolderOpen,
   Calendar,
-  Eye
+  Eye,
 } from 'lucide-react';
 import { CreateProjectModal } from '@/components/modals';
 import { KanbanBoard } from '@/components/kanban/KanbanBoard';
@@ -60,8 +54,7 @@ const getStatusColor = (status: string) => {
 
 export const Projects = () => {
   const { projects, teamMembers, setCurrentProject, tasks, deleteProject } = useAppStore();
-  const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] =
-    useState(false);
+  const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
@@ -93,9 +86,7 @@ export const Projects = () => {
     if (!projectToDelete) return;
 
     // Check if project has tasks
-    const projectTasks = tasks.filter(
-      task => task.projectId === projectToDelete.id
-    );
+    const projectTasks = tasks.filter(task => task.projectId === projectToDelete.id);
     if (projectTasks.length > 0) {
       toast({
         title: 'Cannot delete project',
@@ -124,14 +115,14 @@ export const Projects = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="animate-fade-in space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <FolderOpen className="w-8 h-8" />
+          <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
+            <FolderOpen className="h-8 w-8" />
             Projects & Kanban
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="mt-2 text-muted-foreground">
             Visual project management with unlimited Kanban boards
           </p>
         </div>
@@ -140,12 +131,12 @@ export const Projects = () => {
             className="bg-gradient-primary hover:opacity-90"
             onClick={() => setIsCreateProjectModalOpen(true)}
           >
-            <FolderOpen className="w-4 h-4 mr-2" />
+            <FolderOpen className="mr-2 h-4 w-4" />
             New Project
           </Button>
           <Link to="/project-management">
             <Button variant="outline">
-              <Kanban className="w-4 h-4 mr-2" />
+              <Kanban className="mr-2 h-4 w-4" />
               Full Kanban View
             </Button>
           </Link>
@@ -156,106 +147,103 @@ export const Projects = () => {
       <Tabs defaultValue="grid" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="grid" className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" />
+            <BarChart3 className="h-4 w-4" />
             Project Grid
           </TabsTrigger>
           <TabsTrigger value="calendar" className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
+            <Calendar className="h-4 w-4" />
             Timeline View
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="grid" className="space-y-6 mt-6">
+        <TabsContent value="grid" className="mt-6 space-y-6">
           {/* Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects && projects.map(project => (
-              <Card
-                key={project.id}
-                className="shadow-soft hover:shadow-elevated transition-all duration-200 cursor-pointer group"
-                onClick={() => handleProjectClick(project.id)}
-              >
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{project.name}</CardTitle>
-                    <div className="flex items-center gap-2">
-                      <Badge className={getStatusColor(project.status)}>
-                        {project.status}
-                      </Badge>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={e => e.stopPropagation()}
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={e => handleEditProject(project, e)}
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit Project
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={e => handleDeleteProject(project, e)}
-                            className="text-red-600 focus:text-red-600"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete Project
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </div>
-                  <CardDescription>{project.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span>Progress</span>
-                        <span>{project.progress}%</span>
-                      </div>
-                      <div className="w-full bg-muted rounded-full h-2">
-                        <div
-                          className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${project.progress}%` }}
-                        />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {projects &&
+              projects.map(project => (
+                <Card
+                  key={project.id}
+                  className="group cursor-pointer shadow-soft transition-all duration-200 hover:shadow-elevated"
+                  onClick={() => handleProjectClick(project.id)}
+                >
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg">{project.name}</CardTitle>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getStatusColor(project.status)}>{project.status}</Badge>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 opacity-0 transition-opacity group-hover:opacity-100"
+                              onClick={e => e.stopPropagation()}
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={e => handleEditProject(project, e)}>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit Project
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={e => handleDeleteProject(project, e)}
+                              className="text-red-600 focus:text-red-600"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete Project
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
+                    <CardDescription>{project.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <div className="mb-2 flex justify-between text-sm">
+                          <span>Progress</span>
+                          <span>{project.progress}%</span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-muted">
+                          <div
+                            className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${project.progress}%` }}
+                          />
+                        </div>
+                      </div>
 
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-2">Team</p>
-                      <div className="flex -space-x-2">
-                        {project.teamMembers.slice(0, 3).map(memberId => {
-                          const member = teamMembers.find(m => m.id === memberId);
-                          return member ? (
-                            <img
-                              key={member.id}
-                              src={member.avatar}
-                              alt={member.name}
-                              className="w-8 h-8 rounded-full border-2 border-background object-cover"
-                              title={member.name}
-                            />
-                          ) : null;
-                        })}
-                        {project?.teamMembers.length > 3 && (
-                          <div className="w-8 h-8 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs text-muted-foreground">
-                            +{project?.teamMembers.length - 3}
-                          </div>
-                        )}
+                      <div>
+                        <p className="mb-2 text-sm text-muted-foreground">Team</p>
+                        <div className="flex -space-x-2">
+                          {project.teamMembers.slice(0, 3).map(memberId => {
+                            const member = teamMembers.find(m => m.id === memberId);
+                            return member ? (
+                              <img
+                                key={member.id}
+                                src={member.avatar}
+                                alt={member.name}
+                                className="h-8 w-8 rounded-full border-2 border-background object-cover"
+                                title={member.name}
+                              />
+                            ) : null;
+                          })}
+                          {project?.teamMembers.length > 3 && (
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs text-muted-foreground">
+                              +{project?.teamMembers.length - 3}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Due: {new Date(project.dueDate).toLocaleDateString()}
                       </div>
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      Due: {new Date(project.dueDate).toLocaleDateString()}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
           </div>
 
           {/* Modals */}
@@ -270,20 +258,14 @@ export const Projects = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  project "{projectToDelete?.name}" and all associated data.
+                  This action cannot be undone. This will permanently delete the project "
+                  {projectToDelete?.name}" and all associated data.
                   {projectToDelete &&
-                    tasks.filter(task => task.projectId === projectToDelete.id)
-                      .length > 0 && (
-                      <span className="block mt-2 text-red-600 font-medium">
+                    tasks.filter(task => task.projectId === projectToDelete.id).length > 0 && (
+                      <span className="mt-2 block font-medium text-red-600">
                         Warning: This project has{' '}
-                        {
-                          tasks.filter(
-                            task => task.projectId === projectToDelete.id
-                          ).length
-                        }{' '}
-                        tasks. Please delete or move all tasks before deleting the
-                        project.
+                        {tasks.filter(task => task.projectId === projectToDelete.id).length} tasks.
+                        Please delete or move all tasks before deleting the project.
                       </span>
                     )}
                 </AlertDialogDescription>
@@ -294,8 +276,7 @@ export const Projects = () => {
                   onClick={confirmDeleteProject}
                   disabled={
                     projectToDelete &&
-                    tasks.filter(task => task.projectId === projectToDelete.id)
-                      .length > 0
+                    tasks.filter(task => task.projectId === projectToDelete.id).length > 0
                   }
                   className="bg-red-600 hover:bg-red-700"
                 >
@@ -304,47 +285,47 @@ export const Projects = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-
         </TabsContent>
 
-
-        <TabsContent value="calendar" className="space-y-6 mt-6">
+        <TabsContent value="calendar" className="mt-6 space-y-6">
           {/* Timeline/Calendar View */}
           <Card className="shadow-soft">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
+                <Calendar className="h-5 w-5" />
                 Project Timeline
               </CardTitle>
               <CardDescription>Visual timeline of all your projects</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {projects && projects.map(project => (
-                  <div key={project.id} className="flex items-center gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h4 className="font-medium">{project.name}</h4>
-                        <Badge className={getStatusColor(project.status)}>
-                          {project.status}
-                        </Badge>
+                {projects &&
+                  projects.map(project => (
+                    <div
+                      key={project.id}
+                      className="flex items-center gap-4 rounded-lg border p-4 transition-colors hover:bg-muted/50"
+                    >
+                      <div className="flex-1">
+                        <div className="mb-2 flex items-center gap-2">
+                          <h4 className="font-medium">{project.name}</h4>
+                          <Badge className={getStatusColor(project.status)}>{project.status}</Badge>
+                        </div>
+                        <div className="mb-2 text-sm text-muted-foreground">
+                          Due: {new Date(project.dueDate).toLocaleDateString()}
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-muted">
+                          <div
+                            className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${project.progress}%` }}
+                          />
+                        </div>
                       </div>
-                      <div className="text-sm text-muted-foreground mb-2">
-                        Due: {new Date(project.dueDate).toLocaleDateString()}
-                      </div>
-                      <div className="w-full bg-muted rounded-full h-2">
-                        <div
-                          className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${project.progress}%` }}
-                        />
+                      <div className="text-right">
+                        <div className="text-lg font-bold">{project.progress}%</div>
+                        <div className="text-xs text-muted-foreground">Complete</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">{project.progress}%</div>
-                      <div className="text-xs text-muted-foreground">Complete</div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </CardContent>
           </Card>
@@ -363,21 +344,14 @@ export const Projects = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Project</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete{' '}
-              <strong>"{projectToDelete?.name}"</strong>? This action cannot be
-              undone.
+              Are you sure you want to delete <strong>"{projectToDelete?.name}"</strong>? This
+              action cannot be undone.
               {projectToDelete &&
-                tasks.filter(task => task.projectId === projectToDelete.id)
-                  .length > 0 && (
-                  <span className="block mt-2 text-red-600 font-medium">
+                tasks.filter(task => task.projectId === projectToDelete.id).length > 0 && (
+                  <span className="mt-2 block font-medium text-red-600">
                     Warning: This project has{' '}
-                    {
-                      tasks.filter(
-                        task => task.projectId === projectToDelete.id
-                      ).length
-                    }{' '}
-                    tasks. Please delete or move all tasks before deleting the
-                    project.
+                    {tasks.filter(task => task.projectId === projectToDelete.id).length} tasks.
+                    Please delete or move all tasks before deleting the project.
                   </span>
                 )}
             </AlertDialogDescription>
@@ -388,8 +362,7 @@ export const Projects = () => {
               onClick={confirmDeleteProject}
               disabled={
                 projectToDelete &&
-                tasks.filter(task => task.projectId === projectToDelete.id)
-                  .length > 0
+                tasks.filter(task => task.projectId === projectToDelete.id).length > 0
               }
               className="bg-red-600 hover:bg-red-700"
             >

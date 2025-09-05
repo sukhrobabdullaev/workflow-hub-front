@@ -4,13 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuthStore } from '@/store/authStore';
 import { useToast } from '@/hooks/use-toast';
 import { SocialLogin } from './SocialLogin';
@@ -23,7 +17,11 @@ interface RegisterFormProps {
   onEnterpriseSSO?: () => void;
 }
 
-export const RegisterForm = ({ onToggleMode, onRegistrationComplete, onEnterpriseSSO }: RegisterFormProps) => {
+export const RegisterForm = ({
+  onToggleMode,
+  onRegistrationComplete,
+  onEnterpriseSSO,
+}: RegisterFormProps) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -79,7 +77,7 @@ export const RegisterForm = ({ onToggleMode, onRegistrationComplete, onEnterpris
         } else {
           toast({
             title: 'Account created!',
-            description: 'Welcome to WorkflowHub! Let\'s set up your workspace.',
+            description: "Welcome to WorkflowHub! Let's set up your workspace.",
           });
           navigate('/onboarding');
         }
@@ -99,9 +97,7 @@ export const RegisterForm = ({ onToggleMode, onRegistrationComplete, onEnterpris
   return (
     <Card className="w-full max-w-md shadow-elevated">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
-          Create account
-        </CardTitle>
+        <CardTitle className="text-center text-2xl font-bold">Create account</CardTitle>
         <CardDescription className="text-center">
           Join thousands of teams using WorkflowHub
         </CardDescription>
@@ -113,13 +109,8 @@ export const RegisterForm = ({ onToggleMode, onRegistrationComplete, onEnterpris
         {/* Enterprise SSO Option */}
         {onEnterpriseSSO && (
           <div className="text-center">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={onEnterpriseSSO}
-            >
-              <Building2 className="w-4 h-4 mr-2" />
+            <Button type="button" variant="outline" className="w-full" onClick={onEnterpriseSSO}>
+              <Building2 className="mr-2 h-4 w-4" />
               Continue with Enterprise SSO
             </Button>
           </div>
@@ -177,7 +168,7 @@ export const RegisterForm = ({ onToggleMode, onRegistrationComplete, onEnterpris
               <Checkbox
                 id="terms"
                 checked={acceptTerms}
-                onCheckedChange={(checked) => setAcceptTerms(checked === true)}
+                onCheckedChange={checked => setAcceptTerms(checked === true)}
                 className="mt-1"
               />
               <Label htmlFor="terms" className="text-sm leading-5">
@@ -196,7 +187,7 @@ export const RegisterForm = ({ onToggleMode, onRegistrationComplete, onEnterpris
               <Checkbox
                 id="marketing"
                 checked={acceptMarketing}
-                onCheckedChange={(checked) => setAcceptMarketing(checked === true)}
+                onCheckedChange={checked => setAcceptMarketing(checked === true)}
                 className="mt-1"
               />
               <Label htmlFor="marketing" className="text-sm leading-5 text-muted-foreground">
@@ -207,7 +198,7 @@ export const RegisterForm = ({ onToggleMode, onRegistrationComplete, onEnterpris
 
           <Button
             type="submit"
-            className="w-full bg-gradient-primary hover:opacity-90"
+            className="bg-gradient-primary w-full hover:opacity-90"
             disabled={isLoading || !acceptTerms}
           >
             {isLoading ? 'Creating account...' : 'Create account'}
@@ -220,7 +211,7 @@ export const RegisterForm = ({ onToggleMode, onRegistrationComplete, onEnterpris
             <button
               type="button"
               onClick={onToggleMode}
-              className="text-primary font-medium hover:underline"
+              className="font-medium text-primary hover:underline"
             >
               Sign in
             </button>

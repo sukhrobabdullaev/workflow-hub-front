@@ -19,11 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -35,10 +31,7 @@ interface CreateTaskModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const CreateTaskModal = ({
-  open,
-  onOpenChange,
-}: CreateTaskModalProps) => {
+export const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -91,8 +84,7 @@ export const CreateTaskModal = ({
         status: formData.status,
         priority: formData.priority,
         projectId: formData.projectId,
-        assignee:
-          formData.assignee === 'unassigned' ? undefined : formData.assignee,
+        assignee: formData.assignee === 'unassigned' ? undefined : formData.assignee,
         dueDate: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : undefined,
       });
 
@@ -140,9 +132,7 @@ export const CreateTaskModal = ({
               id="title"
               placeholder="Enter task title"
               value={formData.title}
-              onChange={e =>
-                setFormData(prev => ({ ...prev, title: e.target.value }))
-              }
+              onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
               required
             />
           </div>
@@ -153,9 +143,7 @@ export const CreateTaskModal = ({
               id="description"
               placeholder="Enter task description"
               value={formData.description}
-              onChange={e =>
-                setFormData(prev => ({ ...prev, description: e.target.value }))
-              }
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
               rows={3}
             />
           </div>
@@ -176,9 +164,7 @@ export const CreateTaskModal = ({
               </div>
               <Select
                 value={formData.projectId}
-                onValueChange={value =>
-                  setFormData(prev => ({ ...prev, projectId: value }))
-                }
+                onValueChange={value => setFormData(prev => ({ ...prev, projectId: value }))}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select project" />
@@ -186,17 +172,18 @@ export const CreateTaskModal = ({
                 <SelectContent>
                   {availableProjects.map(project => (
                     <SelectItem key={project.id} value={project.id}>
-                      <div className="flex items-center justify-between w-full">
+                      <div className="flex w-full items-center justify-between">
                         <span>{project.name}</span>
                         <span
-                          className={`text-xs px-2 py-1 rounded-full font-medium ${project.status === 'active'
+                          className={`rounded-full px-2 py-1 text-xs font-medium ${
+                            project.status === 'active'
                               ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300'
                               : project.status === 'planning'
                                 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
                                 : project.status === 'on-hold'
                                   ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'
                                   : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                            }`}
+                          }`}
                         >
                           {project.status}
                         </span>
@@ -261,9 +248,7 @@ export const CreateTaskModal = ({
             <div className="space-y-2">
               <Label htmlFor="assignee">Assignee</Label>
               <Select
-                value={
-                  formData.assignee === '' ? 'unassigned' : formData.assignee
-                }
+                value={formData.assignee === '' ? 'unassigned' : formData.assignee}
                 onValueChange={value =>
                   setFormData(prev => ({
                     ...prev,

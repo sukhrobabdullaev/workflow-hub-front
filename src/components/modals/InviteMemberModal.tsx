@@ -28,10 +28,7 @@ interface InviteMemberModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
-  open,
-  onOpenChange,
-}) => {
+export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOpenChange }) => {
   const { toast } = useToast();
 
   // Email invitation state
@@ -83,9 +80,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   };
 
   const getValidEmails = () => {
-    return emailList.filter(
-      email => email.trim() && isValidEmail(email.trim())
-    );
+    return emailList.filter(email => email.trim() && isValidEmail(email.trim()));
   };
 
   const handleSendInvitations = async () => {
@@ -214,10 +209,10 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
         onOpenChange(open);
       }}
     >
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5" />
+            <Users className="h-5 w-5" />
             Invite Team Members
           </DialogTitle>
           <DialogDescription>
@@ -228,16 +223,16 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
         <Tabs defaultValue="email" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="email" className="flex items-center gap-2">
-              <Mail className="w-4 h-4" />
+              <Mail className="h-4 w-4" />
               Email Invitation
             </TabsTrigger>
             <TabsTrigger value="link" className="flex items-center gap-2">
-              <Link className="w-4 h-4" />
+              <Link className="h-4 w-4" />
               Invite Link
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="email" className="space-y-4 mt-6">
+          <TabsContent value="email" className="mt-6 space-y-4">
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label>Email Addresses *</Label>
@@ -250,9 +245,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                         value={email}
                         onChange={e => updateEmail(index, e.target.value)}
                         className={
-                          email.trim() && !isValidEmail(email.trim())
-                            ? 'border-red-500'
-                            : ''
+                          email.trim() && !isValidEmail(email.trim()) ? 'border-red-500' : ''
                         }
                       />
                       {emailList.length > 1 && (
@@ -262,19 +255,14 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                           onClick={() => removeEmailField(index)}
                           className="px-3"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="h-4 w-4" />
                         </Button>
                       )}
                     </div>
                   ))}
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={addEmailField}
-                  className="w-full"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
+                <Button variant="outline" size="sm" onClick={addEmailField} className="w-full">
+                  <Plus className="mr-2 h-4 w-4" />
                   Add Another Email
                 </Button>
                 <p className="text-sm text-muted-foreground">
@@ -316,7 +304,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                 </CardHeader>
                 <CardContent className="text-sm text-muted-foreground">
                   <p>Invitees will receive an email with:</p>
-                  <ul className="list-disc list-inside mt-2 space-y-1">
+                  <ul className="mt-2 list-inside list-disc space-y-1">
                     <li>Invitation to join your team</li>
                     <li>
                       Role:{' '}
@@ -332,7 +320,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
             </div>
           </TabsContent>
 
-          <TabsContent value="link" className="space-y-4 mt-6">
+          <TabsContent value="link" className="mt-6 space-y-4">
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -377,7 +365,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                   'Generating Link...'
                 ) : (
                   <>
-                    <Link className="w-4 h-4 mr-2" />
+                    <Link className="mr-2 h-4 w-4" />
                     Generate Invite Link
                   </>
                 )}
@@ -386,35 +374,25 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
               {generatedLink && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-sm flex items-center gap-2">
-                      <Check className="w-4 h-4 text-green-500" />
+                    <CardTitle className="flex items-center gap-2 text-sm">
+                      <Check className="h-4 w-4 text-green-500" />
                       Invite Link Generated
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex gap-2">
-                      <Input
-                        value={generatedLink}
-                        readOnly
-                        className="font-mono text-sm"
-                      />
+                      <Input value={generatedLink} readOnly className="font-mono text-sm" />
                       <Button
                         onClick={copyLinkToClipboard}
                         variant="outline"
                         size="sm"
                         className="px-3"
                       >
-                        {linkCopied ? (
-                          <Check className="w-4 h-4" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
+                        {linkCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                       </Button>
                     </div>
-                    <div className="text-sm text-muted-foreground space-y-1">
-                      <p>
-                        • Role: {roles.find(r => r.value === linkRole)?.label}
-                      </p>
+                    <div className="space-y-1 text-sm text-muted-foreground">
+                      <p>• Role: {roles.find(r => r.value === linkRole)?.label}</p>
                       <p>
                         • Expires:{' '}
                         {linkExpiry === 'never'
@@ -430,13 +408,12 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
               <Card className="bg-blue-50 dark:bg-blue-950/20">
                 <CardContent className="pt-4">
                   <div className="flex gap-3">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
+                    <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
                     <div className="text-sm text-blue-700 dark:text-blue-300">
-                      <p className="font-medium mb-1">Share this link safely</p>
+                      <p className="mb-1 font-medium">Share this link safely</p>
                       <p>
-                        Only share invite links with people you trust. Anyone
-                        with the link can join your team with the specified
-                        role.
+                        Only share invite links with people you trust. Anyone with the link can join
+                        your team with the specified role.
                       </p>
                     </div>
                   </div>
@@ -446,7 +423,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
           </TabsContent>
         </Tabs>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
@@ -455,18 +432,14 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
               <TabsContent value="email" className="contents">
                 <Button
                   onClick={handleSendInvitations}
-                  disabled={
-                    getValidEmails().length === 0 ||
-                    !selectedRole ||
-                    isEmailLoading
-                  }
+                  disabled={getValidEmails().length === 0 || !selectedRole || isEmailLoading}
                   className="min-w-[140px]"
                 >
                   {isEmailLoading ? (
                     'Sending...'
                   ) : (
                     <>
-                      <Send className="w-4 h-4 mr-2" />
+                      <Send className="mr-2 h-4 w-4" />
                       Send Invites
                     </>
                   )}

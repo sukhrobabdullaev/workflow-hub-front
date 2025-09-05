@@ -19,11 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -35,10 +31,7 @@ interface CreateProjectModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const CreateProjectModal = ({
-  open,
-  onOpenChange,
-}: CreateProjectModalProps) => {
+export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalProps) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -120,9 +113,7 @@ export const CreateProjectModal = ({
               id="name"
               placeholder="Enter project name"
               value={formData.title}
-              onChange={e =>
-                setFormData(prev => ({ ...prev, title: e.target.value }))
-              }
+              onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
               required
             />
           </div>
@@ -133,9 +124,7 @@ export const CreateProjectModal = ({
               id="description"
               placeholder="Enter project description"
               value={formData.description}
-              onChange={e =>
-                setFormData(prev => ({ ...prev, description: e.target.value }))
-              }
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
               rows={3}
             />
           </div>
@@ -147,11 +136,7 @@ export const CreateProjectModal = ({
               onValueChange={value =>
                 setFormData(prev => ({
                   ...prev,
-                  status: value as
-                    | 'planning'
-                    | 'active'
-                    | 'completed'
-                    | 'on-hold',
+                  status: value as 'planning' | 'active' | 'completed' | 'on-hold',
                 }))
               }
             >

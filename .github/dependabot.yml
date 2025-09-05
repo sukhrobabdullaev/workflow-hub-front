@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    assignees:
+      - 'sukhrobabdullaev' # Replace with your GitHub username
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+    groups:
+      react-ecosystem:
+        patterns:
+          - 'react*'
+          - '@types/react*'
+      testing-tools:
+        patterns:
+          - '@testing-library/*'
+          - 'vitest*'
+          - '@vitest/*'
+      dev-dependencies:
+        dependency-type: 'development'
+        update-types:
+          - 'minor'
+          - 'patch'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    assignees:
+      - 'sukhrobabdullaev' # Replace with your GitHub username

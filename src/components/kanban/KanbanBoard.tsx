@@ -8,10 +8,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useAppStore } from '@/store/appStore';
 import { Task } from '@/store/appStore';
 import { KanbanColumn } from './KanbanColumn';
@@ -22,10 +19,7 @@ interface KanbanBoardProps {
   tasks?: Task[];
 }
 
-export const KanbanBoard: React.FC<KanbanBoardProps> = ({
-  projectId,
-  tasks: propTasks,
-}) => {
+export const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, tasks: propTasks }) => {
   const { tasks: storeTasks, moveTask } = useAppStore();
   const [activeTask, setActiveTask] = React.useState<Task | null>(null);
 
@@ -39,15 +33,10 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
 
   // Use provided tasks or filter from store
   const filteredTasks =
-    propTasks ||
-    (projectId
-      ? storeTasks.filter(task => task.projectId === projectId)
-      : storeTasks);
+    propTasks || (projectId ? storeTasks.filter(task => task.projectId === projectId) : storeTasks);
 
   const todoTasks = filteredTasks.filter(task => task.status === 'todo');
-  const inProgressTasks = filteredTasks.filter(
-    task => task.status === 'in-progress'
-  );
+  const inProgressTasks = filteredTasks.filter(task => task.status === 'in-progress');
   const doneTasks = filteredTasks.filter(task => task.status === 'done');
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -93,12 +82,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
 
   return (
     <div className="h-full">
-      <DndContext
-        sensors={sensors}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-3">
           {columns.map(column => (
             <KanbanColumn
               key={column.id}

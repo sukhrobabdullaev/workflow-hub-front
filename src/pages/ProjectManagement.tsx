@@ -9,11 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { KanbanBoard } from '@/components/kanban';
@@ -22,11 +18,8 @@ import { Plus, Filter, Search, X } from 'lucide-react';
 import { CreateTaskModal } from '@/components/modals';
 
 export const ProjectManagement = () => {
-  const { projects, currentProject, setCurrentProject, tasks, teamMembers } =
-    useAppStore();
-  const [selectedProject, setSelectedProject] = useState<string | null>(
-    currentProject
-  );
+  const { projects, currentProject, setCurrentProject, tasks, teamMembers } = useAppStore();
+  const [selectedProject, setSelectedProject] = useState<string | null>(currentProject);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -79,9 +72,7 @@ export const ProjectManagement = () => {
     setSearchQuery('');
   };
 
-  const applyQuickFilter = (
-    type: 'my-tasks' | 'high-priority' | 'overdue' | 'completed'
-  ) => {
+  const applyQuickFilter = (type: 'my-tasks' | 'high-priority' | 'overdue' | 'completed') => {
     clearFilters();
     switch (type) {
       case 'my-tasks':
@@ -97,23 +88,18 @@ export const ProjectManagement = () => {
     }
   };
 
-  const selectedProjectData = selectedProject
-    ? projects.find(p => p.id === selectedProject)
-    : null;
+  const selectedProjectData = selectedProject ? projects.find(p => p.id === selectedProject) : null;
 
   // Apply all filters
   const filteredTasks = React.useMemo(() => {
-    let result = selectedProject
-      ? tasks.filter(task => task.projectId === selectedProject)
-      : tasks;
+    let result = selectedProject ? tasks.filter(task => task.projectId === selectedProject) : tasks;
 
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
         task =>
-          task.title.toLowerCase().includes(query) ||
-          task.description.toLowerCase().includes(query)
+          task.title.toLowerCase().includes(query) || task.description.toLowerCase().includes(query)
       );
     }
 
@@ -129,9 +115,7 @@ export const ProjectManagement = () => {
 
     // Apply assignee filter
     if (filters.assignee.length > 0) {
-      result = result.filter(
-        task => task.assignee && filters.assignee.includes(task.assignee)
-      );
+      result = result.filter(task => task.assignee && filters.assignee.includes(task.assignee));
     }
 
     return result;
@@ -151,16 +135,12 @@ export const ProjectManagement = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in h-full flex flex-col">
+    <div className="flex h-full animate-fade-in flex-col space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Project Management
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Manage tasks with Kanban board
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">Project Management</h1>
+          <p className="mt-2 text-muted-foreground">Manage tasks with Kanban board</p>
         </div>
         <div className="flex items-center gap-3">
           {!showSearch && (
@@ -170,7 +150,7 @@ export const ProjectManagement = () => {
               onClick={() => setShowSearch(true)}
               className="relative"
             >
-              <Search className="w-4 h-4 mr-2" />
+              <Search className="mr-2 h-4 w-4" />
               Search
               <kbd className="pointer-events-none ml-2 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
                 <span className="text-xs">⌘</span>K
@@ -184,13 +164,11 @@ export const ProjectManagement = () => {
                 size="sm"
                 className={hasActiveFilters ? 'border-primary' : ''}
               >
-                <Filter className="w-4 h-4 mr-2" />
+                <Filter className="mr-2 h-4 w-4" />
                 Filter
                 {hasActiveFilters && (
                   <Badge variant="secondary" className="ml-2 h-5 px-1.5">
-                    {filters.status.length +
-                      filters.priority.length +
-                      filters.assignee.length}
+                    {filters.status.length + filters.priority.length + filters.assignee.length}
                   </Badge>
                 )}
               </Button>
@@ -200,13 +178,8 @@ export const ProjectManagement = () => {
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium">Filters</h4>
                   {hasActiveFilters && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={clearFilters}
-                      className="h-8 px-2"
-                    >
-                      <X className="w-4 h-4 mr-1" />
+                    <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 px-2">
+                      <X className="mr-1 h-4 w-4" />
                       Clear
                     </Button>
                   )}
@@ -225,24 +198,17 @@ export const ProjectManagement = () => {
                       },
                       { value: 'done', label: 'Done', color: 'bg-green-100' },
                     ].map(status => (
-                      <div
-                        key={status.value}
-                        className="flex items-center space-x-2"
-                      >
+                      <div key={status.value} className="flex items-center space-x-2">
                         <Checkbox
                           id={`status-${status.value}`}
                           checked={filters.status.includes(status.value)}
-                          onCheckedChange={() =>
-                            handleFilterChange('status', status.value)
-                          }
+                          onCheckedChange={() => handleFilterChange('status', status.value)}
                         />
                         <Label
                           htmlFor={`status-${status.value}`}
-                          className="text-sm flex items-center gap-2"
+                          className="flex items-center gap-2 text-sm"
                         >
-                          <div
-                            className={`w-2 h-2 rounded-full ${status.color}`}
-                          />
+                          <div className={`h-2 w-2 rounded-full ${status.color}`} />
                           {status.label}
                         </Label>
                       </div>
@@ -271,24 +237,17 @@ export const ProjectManagement = () => {
                         color: 'bg-gray-100 text-gray-800',
                       },
                     ].map(priority => (
-                      <div
-                        key={priority.value}
-                        className="flex items-center space-x-2"
-                      >
+                      <div key={priority.value} className="flex items-center space-x-2">
                         <Checkbox
                           id={`priority-${priority.value}`}
                           checked={filters.priority.includes(priority.value)}
-                          onCheckedChange={() =>
-                            handleFilterChange('priority', priority.value)
-                          }
+                          onCheckedChange={() => handleFilterChange('priority', priority.value)}
                         />
                         <Label
                           htmlFor={`priority-${priority.value}`}
-                          className="text-sm flex items-center gap-2"
+                          className="flex items-center gap-2 text-sm"
                         >
-                          <Badge
-                            className={`h-4 px-1.5 text-xs ${priority.color}`}
-                          >
+                          <Badge className={`h-4 px-1.5 text-xs ${priority.color}`}>
                             {priority.label}
                           </Badge>
                         </Label>
@@ -302,21 +261,13 @@ export const ProjectManagement = () => {
                   <Label className="text-sm font-medium">Assignee</Label>
                   <div className="space-y-2">
                     {teamMembers.map(member => (
-                      <div
-                        key={member.id}
-                        className="flex items-center space-x-2"
-                      >
+                      <div key={member.id} className="flex items-center space-x-2">
                         <Checkbox
                           id={`assignee-${member.id}`}
                           checked={filters.assignee.includes(member.id)}
-                          onCheckedChange={() =>
-                            handleFilterChange('assignee', member.id)
-                          }
+                          onCheckedChange={() => handleFilterChange('assignee', member.id)}
                         />
-                        <Label
-                          htmlFor={`assignee-${member.id}`}
-                          className="text-sm"
-                        >
+                        <Label htmlFor={`assignee-${member.id}`} className="text-sm">
                           {member.name}
                         </Label>
                       </div>
@@ -330,7 +281,7 @@ export const ProjectManagement = () => {
             className="bg-gradient-primary hover:opacity-90"
             onClick={() => setIsCreateTaskModalOpen(true)}
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="mr-2 h-4 w-4" />
             New Task
           </Button>
         </div>
@@ -338,8 +289,8 @@ export const ProjectManagement = () => {
 
       {/* Search Bar */}
       {showSearch && (
-        <div className="flex items-center gap-2 p-4 bg-muted/30 rounded-lg">
-          <Search className="w-4 h-4 text-muted-foreground" />
+        <div className="flex items-center gap-2 rounded-lg bg-muted/30 p-4">
+          <Search className="h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search tasks by title or description..."
             value={searchQuery}
@@ -348,7 +299,7 @@ export const ProjectManagement = () => {
             autoFocus
           />
           {searchQuery && (
-            <span className="text-xs text-muted-foreground whitespace-nowrap">
+            <span className="whitespace-nowrap text-xs text-muted-foreground">
               {filteredTasks.length} result
               {filteredTasks.length !== 1 ? 's' : ''}
             </span>
@@ -361,19 +312,16 @@ export const ProjectManagement = () => {
               setSearchQuery('');
             }}
           >
-            <X className="w-4 h-4" />
+            <X className="h-4 w-4" />
           </Button>
         </div>
       )}
 
       {/* Project Selector and Stats */}
-      <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
+      <div className="flex items-center gap-4 rounded-lg bg-muted/30 p-4">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">Project:</span>
-          <Select
-            value={selectedProject || 'all'}
-            onValueChange={handleProjectSelect}
-          >
+          <Select value={selectedProject || 'all'} onValueChange={handleProjectSelect}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select project" />
             </SelectTrigger>
@@ -398,7 +346,7 @@ export const ProjectManagement = () => {
         )}
 
         {hasActiveFilters && (
-          <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+          <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1">
             <span className="text-sm font-medium text-primary">
               {filteredTasks.length} of{' '}
               {selectedProject
@@ -412,7 +360,7 @@ export const ProjectManagement = () => {
               onClick={clearFilters}
               className="h-6 w-6 p-0 hover:bg-primary/20"
             >
-              <X className="w-3 h-3" />
+              <X className="h-3 w-3" />
             </Button>
           </div>
         )}
@@ -445,7 +393,7 @@ export const ProjectManagement = () => {
           </Button>
         </div>
 
-        <div className="flex items-center gap-4 ml-auto">
+        <div className="ml-auto flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm">
             <span className="text-muted-foreground">Total:</span>
             <Badge variant="outline">{taskStats.total}</Badge>
@@ -472,35 +420,29 @@ export const ProjectManagement = () => {
       </div>
 
       {/* Kanban Board */}
-      <div className="flex-1 min-h-0">
+      <div className="min-h-0 flex-1">
         {filteredTasks.length === 0 && hasActiveFilters ? (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-4">
-              <Search className="w-8 h-8 text-muted-foreground" />
+          <div className="flex h-full flex-col items-center justify-center text-center">
+            <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
+              <Search className="h-8 w-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">No tasks found</h3>
-            <p className="text-muted-foreground mb-4 max-w-md">
-              No tasks match your current search and filter criteria. Try
-              adjusting your filters or search terms.
+            <h3 className="mb-2 text-lg font-semibold">No tasks found</h3>
+            <p className="mb-4 max-w-md text-muted-foreground">
+              No tasks match your current search and filter criteria. Try adjusting your filters or
+              search terms.
             </p>
             <Button onClick={clearFilters} variant="outline">
               Clear all filters
             </Button>
           </div>
         ) : (
-          <KanbanBoard
-            projectId={selectedProject || undefined}
-            tasks={filteredTasks}
-          />
+          <KanbanBoard projectId={selectedProject || undefined} tasks={filteredTasks} />
         )}
       </div>
 
       {/* Create Task Modal */}
 
-      <CreateTaskModal
-        open={isCreateTaskModalOpen}
-        onOpenChange={setIsCreateTaskModalOpen}
-      />
+      <CreateTaskModal open={isCreateTaskModalOpen} onOpenChange={setIsCreateTaskModalOpen} />
     </div>
   );
 };

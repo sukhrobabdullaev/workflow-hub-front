@@ -1,7 +1,6 @@
 import { Project } from '@/store/appStore';
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:3030/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3030/api/v1';
 
 // API Error class
 export class ApiError extends Error {
@@ -16,10 +15,7 @@ export class ApiError extends Error {
 }
 
 // Generic fetch wrapper with error handling
-async function apiRequest<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
+async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
   const config: RequestInit = {

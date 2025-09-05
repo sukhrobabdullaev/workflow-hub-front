@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+.env
+.env.local
+.env.production
+.env.staging
+coverage
+*.log
+.DS_Store
+.vscode/settings.json
+.idea
+*.tsbuildinfo

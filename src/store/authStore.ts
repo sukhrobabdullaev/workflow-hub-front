@@ -1,12 +1,12 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface User {
   id: string;
   name: string;
   email: string;
   avatar?: string;
-  role: "admin" | "manager" | "member";
+  role: 'admin' | 'manager' | 'member';
   companyName?: string;
   companySize?: string;
   industry?: string;
@@ -30,20 +30,20 @@ interface AuthState {
 // Mock user data for demo
 const mockUsers: User[] = [
   {
-    id: "1",
-    name: "John Smith",
-    email: "john@workflowhub.com",
+    id: '1',
+    name: 'John Smith',
+    email: 'john@workflowhub.com',
     avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    role: "admin",
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    role: 'admin',
   },
   {
-    id: "2",
-    name: "Sarah Johnson",
-    email: "sarah@workflowhub.com",
+    id: '2',
+    name: 'Sarah Johnson',
+    email: 'sarah@workflowhub.com',
     avatar:
-      "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-    role: "manager",
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+    role: 'manager',
   },
 ];
 
@@ -55,10 +55,10 @@ export const useAuthStore = create<AuthState>()(
 
       login: async (email: string, password: string) => {
         // Mock authentication - in real app, this would call an API
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const user = mockUsers.find((u) => u.email === email);
-        if (user && password === "password") {
+        const user = mockUsers.find(u => u.email === email);
+        if (user && password === 'password') {
           set({ user, isAuthenticated: true });
           return true;
         }
@@ -67,13 +67,13 @@ export const useAuthStore = create<AuthState>()(
 
       register: async (name: string, email: string, password: string) => {
         // Mock registration - TODO: Replace with API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         const newUser: User = {
           id: Date.now().toString(),
           name,
           email,
-          role: "member",
+          role: 'member',
           twoFactorEnabled: false,
           onboardingCompleted: false,
         };
@@ -84,14 +84,14 @@ export const useAuthStore = create<AuthState>()(
 
       socialAuth: async (provider: string, userData: Partial<User>) => {
         // Mock social authentication
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         const newUser: User = {
           id: Date.now().toString(),
           name: userData.name || `${provider} User`,
           email: userData.email || `user@${provider}.com`,
           avatar: userData.avatar,
-          role: "member",
+          role: 'member',
           twoFactorEnabled: false,
           onboardingCompleted: false,
         };
@@ -137,7 +137,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: "auth-storage",
+      name: 'auth-storage',
     }
   )
 );

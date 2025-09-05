@@ -79,24 +79,18 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
 
   const memberTasks = tasks.filter(task => task.assignee === member.id);
   const completedTasks = memberTasks.filter(task => task.status === 'done');
-  const inProgressTasks = memberTasks.filter(
-    task => task.status === 'in-progress'
-  );
+  const inProgressTasks = memberTasks.filter(task => task.status === 'in-progress');
   const todoTasks = memberTasks.filter(task => task.status === 'todo');
 
   const completionRate =
-    memberTasks.length > 0
-      ? (completedTasks.length / memberTasks.length) * 100
-      : 0;
+    memberTasks.length > 0 ? (completedTasks.length / memberTasks.length) * 100 : 0;
 
   // Get projects the member is working on
-  const memberProjects = projects.filter(project =>
-    project.teamMembers.includes(member.id)
-  );
+  const memberProjects = projects.filter(project => project.teamMembers.includes(member.id));
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Team Member Profile</DialogTitle>
           <DialogDescription>
@@ -106,11 +100,11 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
 
         <div className="space-y-6">
           {/* Profile Header */}
-          <div className="flex items-center gap-6 p-6 bg-muted/30 rounded-lg">
+          <div className="flex items-center gap-6 rounded-lg bg-muted/30 p-6">
             <div className="relative">
-              <Avatar className="w-20 h-20">
+              <Avatar className="h-20 w-20">
                 <AvatarImage src={member.avatar} alt={member.name} />
-                <AvatarFallback className="bg-primary/10 text-primary text-2xl">
+                <AvatarFallback className="bg-primary/10 text-2xl text-primary">
                   {member.name
                     .split(' ')
                     .map(n => n[0])
@@ -118,65 +112,55 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
                 </AvatarFallback>
               </Avatar>
               <div
-                className={`absolute -bottom-2 -right-2 w-6 h-6 rounded-full border-2 border-background ${getStatusIndicator(member.status)}`}
+                className={`absolute -bottom-2 -right-2 h-6 w-6 rounded-full border-2 border-background ${getStatusIndicator(member.status)}`}
               />
             </div>
             <div className="flex-1">
               <h3 className="text-2xl font-bold">{member.name}</h3>
               <p className="text-lg text-muted-foreground">{member.role}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <Mail className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  {member.email}
-                </span>
+              <div className="mt-2 flex items-center gap-2">
+                <Mail className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">{member.email}</span>
               </div>
-              <Badge className={`mt-2 ${getStatusColor(member.status)}`}>
-                {member.status}
-              </Badge>
+              <Badge className={`mt-2 ${getStatusColor(member.status)}`}>{member.status}</Badge>
             </div>
           </div>
 
           {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                <CardTitle className="flex items-center gap-2 text-sm font-medium">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
                   Completed Tasks
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-600">
-                  {completedTasks.length}
-                </div>
+                <div className="text-2xl font-bold text-green-600">{completedTasks.length}</div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-blue-500" />
+                <CardTitle className="flex items-center gap-2 text-sm font-medium">
+                  <Clock className="h-4 w-4 text-blue-500" />
                   In Progress
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-600">
-                  {inProgressTasks.length}
-                </div>
+                <div className="text-2xl font-bold text-blue-600">{inProgressTasks.length}</div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-orange-500" />
+                <CardTitle className="flex items-center gap-2 text-sm font-medium">
+                  <AlertCircle className="h-4 w-4 text-orange-500" />
                   To Do
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-orange-600">
-                  {todoTasks.length}
-                </div>
+                <div className="text-2xl font-bold text-orange-600">{todoTasks.length}</div>
               </CardContent>
             </Card>
           </div>
@@ -184,9 +168,7 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
           {/* Completion Rate */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">
-                Task Completion Rate
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Task Completion Rate</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -196,8 +178,7 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
                 </div>
                 <Progress value={completionRate} className="h-2" />
                 <p className="text-xs text-muted-foreground">
-                  {completedTasks.length} of {memberTasks.length} tasks
-                  completed
+                  {completedTasks.length} of {memberTasks.length} tasks completed
                 </p>
               </div>
             </CardContent>
@@ -206,9 +187,7 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
           {/* Projects */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">
-                Active Projects
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
             </CardHeader>
             <CardContent>
               {memberProjects.length > 0 ? (
@@ -216,13 +195,11 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
                   {memberProjects.map(project => (
                     <div
                       key={project.id}
-                      className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                      className="flex items-center justify-between rounded-lg bg-muted/30 p-3"
                     >
                       <div>
                         <h4 className="font-medium">{project.name}</h4>
-                        <p className="text-sm text-muted-foreground">
-                          {project.description}
-                        </p>
+                        <p className="text-sm text-muted-foreground">{project.description}</p>
                       </div>
                       <div className="text-right">
                         <Badge
@@ -238,7 +215,7 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
                         >
                           {project.status}
                         </Badge>
-                        <div className="text-sm text-muted-foreground mt-1">
+                        <div className="mt-1 text-sm text-muted-foreground">
                           {project.progress}% complete
                         </div>
                       </div>
@@ -246,9 +223,7 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">
-                  No active projects
-                </p>
+                <p className="text-sm text-muted-foreground">No active projects</p>
               )}
             </CardContent>
           </Card>
@@ -256,9 +231,7 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
           {/* Recent Tasks */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">
-                Recent Tasks
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Recent Tasks</CardTitle>
             </CardHeader>
             <CardContent>
               {memberTasks.length > 0 ? (
@@ -266,18 +239,16 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
                   {memberTasks.slice(0, 5).map(task => (
                     <div
                       key={task.id}
-                      className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                      className="flex items-center justify-between rounded-lg bg-muted/30 p-3"
                     >
                       <div className="flex-1">
                         <h4 className="font-medium">{task.title}</h4>
-                        <p className="text-sm text-muted-foreground line-clamp-1">
+                        <p className="line-clamp-1 text-sm text-muted-foreground">
                           {task.description}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge className={getPriorityColor(task.priority)}>
-                          {task.priority}
-                        </Badge>
+                        <Badge className={getPriorityColor(task.priority)}>{task.priority}</Badge>
                         <Badge
                           className={`${
                             task.status === 'done'
@@ -297,15 +268,13 @@ export const TeamMemberProfileModal: React.FC<TeamMemberProfileModalProps> = ({
                     </div>
                   ))}
                   {memberTasks.length > 5 && (
-                    <p className="text-sm text-muted-foreground text-center pt-2">
+                    <p className="pt-2 text-center text-sm text-muted-foreground">
                       And {memberTasks.length - 5} more tasks...
                     </p>
                   )}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">
-                  No tasks assigned
-                </p>
+                <p className="text-sm text-muted-foreground">No tasks assigned</p>
               )}
             </CardContent>
           </Card>

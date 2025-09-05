@@ -8,7 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Task } from '@/store/appStore';
 import { useAppStore } from '@/store/appStore';
 import { cn } from '@/lib/utils';
-import { Calendar, User, Edit, Trash2, MoreHorizontal, MessageCircle, Paperclip, Eye } from 'lucide-react';
+import {
+  Calendar,
+  User,
+  Edit,
+  Trash2,
+  MoreHorizontal,
+  MessageCircle,
+  Paperclip,
+  Eye,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,23 +48,16 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [showActions, setShowActions] = useState(false);
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: task.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: task.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
-  const assignee = task.assignee
-    ? teamMembers.find(member => member.id === task.assignee)
-    : null;
+  const assignee = task.assignee ? teamMembers.find(member => member.id === task.assignee) : null;
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -85,8 +87,8 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
         style={style}
         {...attributes}
         className={cn(
-          'transition-all duration-200 hover:shadow-md relative group',
-          isDragging && 'opacity-50 shadow-lg scale-105'
+          'group relative transition-all duration-200 hover:shadow-md',
+          isDragging && 'scale-105 opacity-50 shadow-lg'
         )}
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => setShowActions(false)}
@@ -95,14 +97,15 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
         {/* Drag Handle */}
         <div
           {...listeners}
-          className="absolute top-2 left-2 w-4 h-4 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-50 hover:opacity-100 transition-opacity z-10 rounded flex items-center justify-center"
+          className="absolute left-2 top-2 z-10 flex h-4 w-4 cursor-grab items-center justify-center rounded opacity-0 transition-opacity hover:opacity-100 active:cursor-grabbing group-hover:opacity-50"
           style={{
-            background: 'repeating-linear-gradient(90deg, #ccc 0, #ccc 2px, transparent 2px, transparent 4px)'
+            background:
+              'repeating-linear-gradient(90deg, #ccc 0, #ccc 2px, transparent 2px, transparent 4px)',
           }}
         />
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-2">
-            <h4 className="font-medium text-sm leading-tight">{task.title}</h4>
+            <h4 className="text-sm font-medium leading-tight">{task.title}</h4>
             <div className="flex items-center gap-1">
               <Badge className={cn('text-xs', getPriorityColor(task.priority))}>
                 {task.priority}
@@ -115,7 +118,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
                     variant="ghost"
                     size="sm"
                     className={cn(
-                      'h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity',
+                      'h-6 w-6 p-0 opacity-0 transition-opacity group-hover:opacity-100',
                       showActions && 'opacity-100'
                     )}
                     onClick={e => e.stopPropagation()}
@@ -124,7 +127,12 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setIsEditModalOpen(true); }}>
+                  <DropdownMenuItem
+                    onClick={e => {
+                      e.stopPropagation();
+                      setIsEditModalOpen(true);
+                    }}
+                  >
                     <Eye className="mr-2 h-4 w-4" />
                     View Details
                   </DropdownMenuItem>
@@ -144,9 +152,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
             </div>
           </div>
           {task.description && (
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-              {task.description}
-            </p>
+            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{task.description}</p>
           )}
         </CardHeader>
 
@@ -155,8 +161,8 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
             <div className="flex items-center gap-2">
               {assignee && (
                 <div className="flex items-center gap-1">
-                  <User className="w-3 h-3 text-muted-foreground" />
-                  <Avatar className="w-6 h-6">
+                  <User className="h-3 w-3 text-muted-foreground" />
+                  <Avatar className="h-6 w-6">
                     <AvatarImage src={assignee.avatar} alt={assignee.name} />
                     <AvatarFallback className="text-xs">
                       {assignee.name
@@ -171,14 +177,14 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
               {/* Comments and Attachments Indicators */}
               <div className="flex items-center gap-2">
                 {(task.comments?.length || 0) > 0 && (
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded">
-                    <MessageCircle className="w-3 h-3" />
+                  <div className="flex items-center gap-1 rounded bg-muted/50 px-2 py-1 text-xs text-muted-foreground">
+                    <MessageCircle className="h-3 w-3" />
                     <span>{task.comments?.length}</span>
                   </div>
                 )}
                 {(task.attachments?.length || 0) > 0 && (
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded">
-                    <Paperclip className="w-3 h-3" />
+                  <div className="flex items-center gap-1 rounded bg-muted/50 px-2 py-1 text-xs text-muted-foreground">
+                    <Paperclip className="h-3 w-3" />
                     <span>{task.attachments?.length}</span>
                   </div>
                 )}
@@ -187,7 +193,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
 
             {task.dueDate && (
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Calendar className="w-3 h-3" />
+                <Calendar className="h-3 w-3" />
                 <span>{new Date(task.dueDate).toLocaleDateString()}</span>
               </div>
             )}
@@ -195,11 +201,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
         </CardContent>
       </Card>
 
-      <TaskDetailModal
-        open={isEditModalOpen}
-        onOpenChange={setIsEditModalOpen}
-        task={task}
-      />
+      <TaskDetailModal open={isEditModalOpen} onOpenChange={setIsEditModalOpen} task={task} />
     </>
   );
 };

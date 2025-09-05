@@ -19,10 +19,7 @@ interface ViewReportsModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const ViewReportsModal = ({
-  open,
-  onOpenChange,
-}: ViewReportsModalProps) => {
+export const ViewReportsModal = ({ open, onOpenChange }: ViewReportsModalProps) => {
   const { projects, tasks, teamMembers } = useAppStore();
   const [selectedTab, setSelectedTab] = useState('overview');
 
@@ -37,17 +34,14 @@ export const ViewReportsModal = ({
     return new Date(t.dueDate) < new Date() && t.status !== 'done';
   });
 
-  const completionRate =
-    totalTasks > 0 ? (completedTasks.length / totalTasks) * 100 : 0;
+  const completionRate = totalTasks > 0 ? (completedTasks.length / totalTasks) * 100 : 0;
 
   // Team productivity
   const teamProductivity = teamMembers.map(member => {
     const memberTasks = tasks.filter(t => t.assignee === member.id);
     const completedMemberTasks = memberTasks.filter(t => t.status === 'done');
     const productivityRate =
-      memberTasks.length > 0
-        ? (completedMemberTasks.length / memberTasks.length) * 100
-        : 0;
+      memberTasks.length > 0 ? (completedMemberTasks.length / memberTasks.length) * 100 : 0;
 
     return {
       ...member,
@@ -97,7 +91,7 @@ export const ViewReportsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[800px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5" />
@@ -108,11 +102,7 @@ export const ViewReportsModal = ({
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs
-          value={selectedTab}
-          onValueChange={setSelectedTab}
-          className="w-full"
-        >
+        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
@@ -120,70 +110,55 @@ export const ViewReportsModal = ({
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Projects
-                  </CardTitle>
+                  <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{projects.length}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {activeProjects.length} active
-                  </p>
+                  <p className="text-xs text-muted-foreground">{activeProjects.length} active</p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Tasks
-                  </CardTitle>
+                  <CardTitle className="text-sm font-medium">Total Tasks</CardTitle>
                   <Clock className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{totalTasks}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {completedTasks.length} completed
-                  </p>
+                  <p className="text-xs text-muted-foreground">{completedTasks.length} completed</p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Completion Rate
-                  </CardTitle>
+                  <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">
-                    {Math.round(completionRate)}%
-                  </div>
+                  <div className="text-2xl font-bold">{Math.round(completionRate)}%</div>
                   <Progress value={completionRate} className="mt-2" />
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Team Members
-                  </CardTitle>
+                  <CardTitle className="text-sm font-medium">Team Members</CardTitle>
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{teamMembers.length}</div>
                   <p className="text-xs text-muted-foreground">
-                    {teamMembers.filter(m => m.status === 'active').length}{' '}
-                    active
+                    {teamMembers.filter(m => m.status === 'active').length} active
                   </p>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <Card>
                 <CardHeader>
                   <CardTitle>Task Status Breakdown</CardTitle>
@@ -218,13 +193,10 @@ export const ViewReportsModal = ({
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {taskPriorityData.map(item => (
-                    <div
-                      key={item.priority}
-                      className="flex items-center justify-between"
-                    >
+                    <div key={item.priority} className="flex items-center justify-between">
                       <span className="text-sm">{item.priority}</span>
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${item.color}`} />
+                        <div className={`h-3 w-3 rounded-full ${item.color}`} />
                         <Badge variant="outline">{item.count}</Badge>
                       </div>
                     </div>
@@ -244,10 +216,10 @@ export const ViewReportsModal = ({
                   {projectStatusData.map(item => (
                     <div
                       key={item.status}
-                      className="flex items-center justify-between p-3 rounded-lg border"
+                      className="flex items-center justify-between rounded-lg border p-3"
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${item.color}`} />
+                        <div className={`h-3 w-3 rounded-full ${item.color}`} />
                         <span className="font-medium">{item.status}</span>
                       </div>
                       <Badge variant="outline">{item.count}</Badge>
@@ -266,9 +238,7 @@ export const ViewReportsModal = ({
                   <div key={project.id} className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{project.name}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {project.progress}%
-                      </span>
+                      <span className="text-sm text-muted-foreground">{project.progress}%</span>
                     </div>
                     <Progress value={project.progress} />
                   </div>
@@ -286,11 +256,11 @@ export const ViewReportsModal = ({
                 {teamProductivity.map(member => (
                   <div
                     key={member.id}
-                    className="flex items-center justify-between p-3 rounded-lg border"
+                    className="flex items-center justify-between rounded-lg border p-3"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                        <span className="text-white text-sm font-medium">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
+                        <span className="text-sm font-medium text-white">
                           {member.name
                             .split(' ')
                             .map(n => n[0])
@@ -299,9 +269,7 @@ export const ViewReportsModal = ({
                       </div>
                       <div>
                         <p className="font-medium">{member.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {member.role}
-                        </p>
+                        <p className="text-sm text-muted-foreground">{member.role}</p>
                       </div>
                     </div>
                     <div className="text-right">

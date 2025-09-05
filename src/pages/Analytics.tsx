@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -21,7 +15,7 @@ import {
   CheckCircle,
   AlertCircle,
   Zap,
-  Timer
+  Timer,
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -54,40 +48,19 @@ const Chart = ({
 
     return (
       <div className="h-48 w-full">
-        <svg viewBox="0 0 100 100" className="w-full h-full">
+        <svg viewBox="0 0 100 100" className="h-full w-full">
           <defs>
             <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop
-                offset="0%"
-                stopColor="hsl(var(--primary))"
-                stopOpacity="0.3"
-              />
-              <stop
-                offset="100%"
-                stopColor="hsl(var(--primary))"
-                stopOpacity="0.05"
-              />
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.05" />
             </linearGradient>
           </defs>
           <polygon points={areaPoints} fill="url(#areaGradient)" />
-          <polyline
-            points={points}
-            fill="none"
-            stroke="hsl(var(--primary))"
-            strokeWidth="2"
-          />
+          <polyline points={points} fill="none" stroke="hsl(var(--primary))" strokeWidth="2" />
           {data.map((value, index) => {
             const x = (index / (data.length - 1)) * 100;
             const y = 100 - (value / max) * 70 - 10;
-            return (
-              <circle
-                key={index}
-                cx={x}
-                cy={y}
-                r="2"
-                fill="hsl(var(--primary))"
-              />
-            );
+            return <circle key={index} cx={x} cy={y} r="2" fill="hsl(var(--primary))" />;
           })}
         </svg>
       </div>
@@ -105,25 +78,12 @@ const Chart = ({
 
     return (
       <div className="h-48 w-full">
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <polyline
-            points={points}
-            fill="none"
-            stroke="hsl(var(--primary))"
-            strokeWidth="2"
-          />
+        <svg viewBox="0 0 100 100" className="h-full w-full">
+          <polyline points={points} fill="none" stroke="hsl(var(--primary))" strokeWidth="2" />
           {data.map((value, index) => {
             const x = (index / (data.length - 1)) * 100;
             const y = 100 - (value / max) * 80 - 10;
-            return (
-              <circle
-                key={index}
-                cx={x}
-                cy={y}
-                r="3"
-                fill="hsl(var(--primary))"
-              />
-            );
+            return <circle key={index} cx={x} cy={y} r="3" fill="hsl(var(--primary))" />;
           })}
         </svg>
       </div>
@@ -131,14 +91,14 @@ const Chart = ({
   }
 
   return (
-    <div className="h-48 flex items-end justify-center gap-2 px-4">
+    <div className="flex h-48 items-end justify-center gap-2 px-4">
       {data.map((value, index) => (
         <div
           key={index}
-          className="bg-gradient-primary rounded-t-sm flex-1 min-w-0 transition-all duration-300 hover:opacity-80 relative group"
+          className="bg-gradient-primary group relative min-w-0 flex-1 rounded-t-sm transition-all duration-300 hover:opacity-80"
           style={{ height: `${(value / max) * 100}%`, minHeight: '8px' }}
         >
-          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-foreground text-background text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 transform rounded bg-foreground px-2 py-1 text-xs text-background opacity-0 transition-opacity group-hover:opacity-100">
             {value}
           </div>
         </div>
@@ -164,24 +124,22 @@ export const Analytics = () => {
   );
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="animate-fade-in space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <BarChart3 className="w-8 h-8" />
+          <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
+            <BarChart3 className="h-8 w-8" />
             Analytics & Reports
           </h1>
-          <p className="text-muted-foreground mt-2">
-            Comprehensive insights and project analytics
-          </p>
+          <p className="mt-2 text-muted-foreground">Comprehensive insights and project analytics</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
-            <Target className="w-4 h-4 mr-2" />
+            <Target className="mr-2 h-4 w-4" />
             Export Data
           </Button>
           <Button className="bg-gradient-primary hover:opacity-90">
-            <TrendingUp className="w-4 h-4 mr-2" />
+            <TrendingUp className="mr-2 h-4 w-4" />
             Generate Report
           </Button>
         </div>
@@ -191,26 +149,26 @@ export const Analytics = () => {
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="overview" className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" />
+            <BarChart3 className="h-4 w-4" />
             Overview
           </TabsTrigger>
           <TabsTrigger value="performance" className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4" />
+            <TrendingUp className="h-4 w-4" />
             Performance
           </TabsTrigger>
           <TabsTrigger value="reports" className="flex items-center gap-2">
-            <Target className="w-4 h-4" />
+            <Target className="h-4 w-4" />
             Reports
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6 mt-6">
+        <TabsContent value="overview" className="mt-6 space-y-6">
           {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
             <Card className="shadow-soft">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <Target className="w-4 h-4" />
+                <CardTitle className="flex items-center gap-2 text-sm font-medium">
+                  <Target className="h-4 w-4" />
                   Overall Progress
                 </CardTitle>
               </CardHeader>
@@ -221,22 +179,16 @@ export const Analytics = () => {
             </Card>
             <Card className="shadow-soft">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Active Projects
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{activeProjects}</div>
-                <p className="text-xs text-muted-foreground">
-                  Out of {totalProjects} total
-                </p>
+                <p className="text-xs text-muted-foreground">Out of {totalProjects} total</p>
               </CardContent>
             </Card>
             <Card className="shadow-soft">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Completed Tasks
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Completed Tasks</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
@@ -247,27 +199,21 @@ export const Analytics = () => {
             </Card>
             <Card className="shadow-soft">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Team Efficiency
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Team Efficiency</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">87%</div>
-                <p className="text-xs text-muted-foreground">
-                  Average productivity
-                </p>
+                <p className="text-xs text-muted-foreground">Average productivity</p>
               </CardContent>
             </Card>
           </div>
 
           {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle>Weekly Progress</CardTitle>
-                <CardDescription>
-                  Project completion trends over the past week
-                </CardDescription>
+                <CardDescription>Project completion trends over the past week</CardDescription>
               </CardHeader>
               <CardContent>
                 <Chart data={weeklyProgress} type="area" />
@@ -277,9 +223,7 @@ export const Analytics = () => {
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle>Monthly Task Distribution</CardTitle>
-                <CardDescription>
-                  Task completion throughout the year
-                </CardDescription>
+                <CardDescription>Task completion throughout the year</CardDescription>
               </CardHeader>
               <CardContent>
                 <Chart data={monthlyTasks} type="bar" />
@@ -289,9 +233,7 @@ export const Analytics = () => {
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle>Team Performance</CardTitle>
-                <CardDescription>
-                  Individual team member productivity scores
-                </CardDescription>
+                <CardDescription>Individual team member productivity scores</CardDescription>
               </CardHeader>
               <CardContent>
                 <Chart data={teamPerformance} type="line" />
@@ -301,9 +243,7 @@ export const Analytics = () => {
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle>Project Completion Rates</CardTitle>
-                <CardDescription>
-                  Progress across different projects
-                </CardDescription>
+                <CardDescription>Progress across different projects</CardDescription>
               </CardHeader>
               <CardContent>
                 <Chart data={projectCompletion} type="bar" />
@@ -315,54 +255,49 @@ export const Analytics = () => {
           <Card className="shadow-soft">
             <CardHeader>
               <CardTitle>Project Details</CardTitle>
-              <CardDescription>
-                Comprehensive project analytics and statistics
-              </CardDescription>
+              <CardDescription>Comprehensive project analytics and statistics</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-3">Project</th>
-                      <th className="text-left p-3">Status</th>
-                      <th className="text-left p-3">Progress</th>
-                      <th className="text-left p-3">Tasks</th>
-                      <th className="text-left p-3">Team Size</th>
-                      <th className="text-left p-3">Due Date</th>
+                      <th className="p-3 text-left">Project</th>
+                      <th className="p-3 text-left">Status</th>
+                      <th className="p-3 text-left">Progress</th>
+                      <th className="p-3 text-left">Tasks</th>
+                      <th className="p-3 text-left">Team Size</th>
+                      <th className="p-3 text-left">Due Date</th>
                     </tr>
                   </thead>
                   <tbody>
                     {projects.map(project => {
-                      const projectTasks = tasks.filter(
-                        t => t.projectId === project.id
-                      );
-                      const completedTasks = projectTasks.filter(
-                        t => t.status === 'done'
-                      ).length;
+                      const projectTasks = tasks.filter(t => t.projectId === project.id);
+                      const completedTasks = projectTasks.filter(t => t.status === 'done').length;
 
                       return (
                         <tr key={project.id} className="border-b hover:bg-muted/50">
                           <td className="p-3 font-medium">{project.name}</td>
                           <td className="p-3">
                             <span
-                              className={`px-2 py-1 rounded-full text-xs ${project.status === 'active'
-                                ? 'bg-success/10 text-success'
-                                : project.status === 'completed'
-                                  ? 'bg-primary/10 text-primary'
-                                  : project.status === 'planning'
-                                    ? 'bg-warning/10 text-warning'
-                                    : 'bg-muted text-muted-foreground'
-                                }`}
+                              className={`rounded-full px-2 py-1 text-xs ${
+                                project.status === 'active'
+                                  ? 'bg-success/10 text-success'
+                                  : project.status === 'completed'
+                                    ? 'bg-primary/10 text-primary'
+                                    : project.status === 'planning'
+                                      ? 'bg-warning/10 text-warning'
+                                      : 'bg-muted text-muted-foreground'
+                              }`}
                             >
                               {project.status}
                             </span>
                           </td>
                           <td className="p-3">
                             <div className="flex items-center gap-2">
-                              <div className="w-16 h-2 bg-muted rounded-full">
+                              <div className="h-2 w-16 rounded-full bg-muted">
                                 <div
-                                  className="h-full bg-gradient-primary rounded-full"
+                                  className="bg-gradient-primary h-full rounded-full"
                                   style={{ width: `${project.progress}%` }}
                                 />
                               </div>
@@ -373,9 +308,7 @@ export const Analytics = () => {
                             {completedTasks}/{projectTasks.length}
                           </td>
                           <td className="p-3">{project.teamMembers.length}</td>
-                          <td className="p-3">
-                            {new Date(project.dueDate).toLocaleDateString()}
-                          </td>
+                          <td className="p-3">{new Date(project.dueDate).toLocaleDateString()}</td>
                         </tr>
                       );
                     })}
@@ -386,12 +319,12 @@ export const Analytics = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="performance" className="space-y-6 mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TabsContent value="performance" className="mt-6 space-y-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
+                  <Users className="h-5 w-5" />
                   Team Performance
                 </CardTitle>
               </CardHeader>
@@ -403,7 +336,7 @@ export const Analytics = () => {
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
+                  <TrendingUp className="h-5 w-5" />
                   Monthly Progress
                 </CardTitle>
               </CardHeader>
@@ -414,27 +347,27 @@ export const Analytics = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="reports" className="space-y-6 mt-6">
+        <TabsContent value="reports" className="mt-6 space-y-6">
           <Card className="shadow-soft">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Target className="w-5 h-5" />
+                <Target className="h-5 w-5" />
                 Custom Reports
               </CardTitle>
               <CardDescription>Generate detailed reports for stakeholders</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <Button variant="outline" className="h-20 flex-col">
-                  <BarChart3 className="w-6 h-6 mb-2" />
+                  <BarChart3 className="mb-2 h-6 w-6" />
                   Project Report
                 </Button>
                 <Button variant="outline" className="h-20 flex-col">
-                  <Zap className="w-6 h-6 mb-2" />
+                  <Zap className="mb-2 h-6 w-6" />
                   Sprint Report
                 </Button>
                 <Button variant="outline" className="h-20 flex-col">
-                  <Users className="w-6 h-6 mb-2" />
+                  <Users className="mb-2 h-6 w-6" />
                   Team Report
                 </Button>
               </div>

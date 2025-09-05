@@ -10,111 +10,113 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAuthStore } from '@/store/authStore';
 
 // Navigation menu items organized by sections with clear connections to pages
-const getNavigationSections = (userRole: string) => [
-  {
-    label: 'Main',
-    items: [
-      {
-        title: 'Dashboard',
-        url: '/dashboard',
-        icon: 'dashboard',
-        description: 'Overview and quick actions'
-      },
-      {
-        title: 'Projects',
-        url: '/projects',
-        icon: 'folders',
-        description: 'Manage all projects'
-      },
-      {
-        title: 'Kanban Board',
-        url: '/project-management',
-        icon: 'kanban',
-        description: 'Task management board'
-      },
-    ]
-  },
-  {
-    label: 'Agile & Team',
-    items: [
-      {
-        title: 'Team',
-        url: '/team',
-        icon: 'users',
-        description: 'Team members and collaboration'
-      },
-      {
-        title: 'Analytics',
-        url: '/analytics',
-        icon: 'chart-pie',
-        description: 'Reports and insights'
-      },
-    ]
-  },
-  {
-    label: 'Management',
-    items: [
-      ...(userRole === 'admin' || userRole === 'manager' ? [{
-        title: 'Reports',
-        url: '/reports',
-        icon: 'chart-bar',
-        description: 'Analytics and performance reports'
-      }] : []),
-      // ...(userRole === 'admin' || userRole === 'manager' ? [{
-      //   title: 'Approvals',
-      //   url: '/approvals',
-      //   icon: 'check-circle',
-      //   description: 'Review and approve requests'
-      // }] : []),
-      ...(userRole === 'admin' ? [{
-        title: 'User Management',
-        url: '/user-management',
-        icon: 'users-cog',
-        description: 'Manage users and permissions'
-      }] : []),
-      ...(userRole === 'admin' || userRole === 'manager' ? [{
-        title: 'Billing',
-        url: '/billing',
-        icon: 'credit-card',
-        description: 'Billing and subscription'
-      }] : []),
-    ].filter(Boolean)
-  },
-  {
-    label: 'Account',
-    items: [
-      {
-        title: 'Profile',
-        url: '/profile',
-        icon: 'user',
-        description: 'Personal profile and preferences'
-      },
-      {
-        title: 'Settings',
-        url: '/settings',
-        icon: 'settings',
-        description: 'Account and preferences'
-      },
-    ]
-  }
-].filter(section => section.items.length > 0);
+const getNavigationSections = (userRole: string) =>
+  [
+    {
+      label: 'Main',
+      items: [
+        {
+          title: 'Dashboard',
+          url: '/dashboard',
+          icon: 'dashboard',
+          description: 'Overview and quick actions',
+        },
+        {
+          title: 'Projects',
+          url: '/projects',
+          icon: 'folders',
+          description: 'Manage all projects',
+        },
+        {
+          title: 'Kanban Board',
+          url: '/project-management',
+          icon: 'kanban',
+          description: 'Task management board',
+        },
+      ],
+    },
+    {
+      label: 'Agile & Team',
+      items: [
+        {
+          title: 'Team',
+          url: '/team',
+          icon: 'users',
+          description: 'Team members and collaboration',
+        },
+        {
+          title: 'Analytics',
+          url: '/analytics',
+          icon: 'chart-pie',
+          description: 'Reports and insights',
+        },
+      ],
+    },
+    {
+      label: 'Management',
+      items: [
+        ...(userRole === 'admin' || userRole === 'manager'
+          ? [
+              {
+                title: 'Reports',
+                url: '/reports',
+                icon: 'chart-bar',
+                description: 'Analytics and performance reports',
+              },
+            ]
+          : []),
+        // ...(userRole === 'admin' || userRole === 'manager' ? [{
+        //   title: 'Approvals',
+        //   url: '/approvals',
+        //   icon: 'check-circle',
+        //   description: 'Review and approve requests'
+        // }] : []),
+        ...(userRole === 'admin'
+          ? [
+              {
+                title: 'User Management',
+                url: '/user-management',
+                icon: 'users-cog',
+                description: 'Manage users and permissions',
+              },
+            ]
+          : []),
+        ...(userRole === 'admin' || userRole === 'manager'
+          ? [
+              {
+                title: 'Billing',
+                url: '/billing',
+                icon: 'credit-card',
+                description: 'Billing and subscription',
+              },
+            ]
+          : []),
+      ].filter(Boolean),
+    },
+    {
+      label: 'Account',
+      items: [
+        {
+          title: 'Profile',
+          url: '/profile',
+          icon: 'user',
+          description: 'Personal profile and preferences',
+        },
+        {
+          title: 'Settings',
+          url: '/settings',
+          icon: 'settings',
+          description: 'Account and preferences',
+        },
+      ],
+    },
+  ].filter(section => section.items.length > 0);
 
-const IconComponent = ({
-  name,
-  className,
-}: {
-  name: string;
-  className?: string;
-}) => {
+const IconComponent = ({ name, className }: { name: string; className?: string }) => {
   const iconMap = {
     dashboard: (
       <svg
@@ -291,9 +293,8 @@ export const AppSidebar = () => {
   const user = useAuthStore(state => state.user);
 
   const getNavClassName = ({ isActive }: { isActive: boolean }) =>
-    `${isActive
-      ? 'bg-sidebar-accent text-sidebar-primary font-medium'
-      : 'hover:bg-sidebar-accent/50'
+    `${
+      isActive ? 'bg-sidebar-accent text-sidebar-primary font-medium' : 'hover:bg-sidebar-accent/50'
     }`;
 
   const collapsed = !open;
@@ -301,20 +302,18 @@ export const AppSidebar = () => {
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
-      <SidebarContent className="bg-sidebar border-r border-sidebar-border">
-        <div className="p-4 border-b border-sidebar-border">
+      <SidebarContent className="border-r border-sidebar-border bg-sidebar">
+        <div className="border-b border-sidebar-border p-4">
           <div className="flex items-center gap-3">
             <img
               src="/logo.png"
               alt="WorkflowHub Logo"
-              className={`w-8 h-8 ${collapsed ? 'mx-auto' : ''}`}
+              className={`h-8 w-8 ${collapsed ? 'mx-auto' : ''}`}
             />
 
             {!collapsed && (
               <div>
-                <h2 className="font-bold text-sidebar-foreground">
-                  WorkflowHub
-                </h2>
+                <h2 className="font-bold text-sidebar-foreground">WorkflowHub</h2>
                 <p className="text-xs text-sidebar-foreground/60">Enterprise</p>
               </div>
             )}
@@ -323,28 +322,22 @@ export const AppSidebar = () => {
 
         {/* User Profile */}
         {!collapsed && user && (
-          <div className="p-4 border-b border-sidebar-border">
+          <div className="border-b border-sidebar-border p-4">
             <div className="flex items-center gap-3">
               {user.avatar ? (
                 <img
                   src={user.avatar}
                   alt={user.name}
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="h-10 w-10 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                  <span className="text-primary font-medium text-sm">
-                    {user.name.charAt(0)}
-                  </span>
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                  <span className="text-sm font-medium text-primary">{user.name.charAt(0)}</span>
                 </div>
               )}
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-sidebar-foreground truncate">
-                  {user.name}
-                </p>
-                <p className="text-xs text-sidebar-foreground/60 capitalize">
-                  {user.role}
-                </p>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium text-sidebar-foreground">{user.name}</p>
+                <p className="text-xs capitalize text-sidebar-foreground/60">{user.role}</p>
               </div>
             </div>
           </div>
@@ -368,10 +361,7 @@ export const AppSidebar = () => {
                               className={getNavClassName}
                               end={item.url === '/dashboard'}
                             >
-                              <IconComponent
-                                name={item.icon}
-                                className="w-5 h-5 flex-shrink-0"
-                              />
+                              <IconComponent name={item.icon} className="h-5 w-5 flex-shrink-0" />
                               {!collapsed && <span className="ml-3">{item.title}</span>}
                             </NavLink>
                           </SidebarMenuButton>

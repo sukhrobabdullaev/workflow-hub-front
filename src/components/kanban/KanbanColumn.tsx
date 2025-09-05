@@ -29,14 +29,14 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        'flex flex-col rounded-lg p-4 min-h-[600px] transition-all duration-200',
+        'flex min-h-[600px] flex-col rounded-lg p-4 transition-all duration-200',
         color,
-        isOver && 'ring-2 ring-primary ring-opacity-50 bg-opacity-80'
+        isOver && 'bg-opacity-80 ring-2 ring-primary ring-opacity-50'
       )}
     >
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-lg">{title}</h3>
-        <div className="bg-primary/10 text-primary text-sm px-2 py-1 rounded-full min-w-[24px] text-center">
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-lg font-semibold">{title}</h3>
+        <div className="min-w-[24px] rounded-full bg-primary/10 px-2 py-1 text-center text-sm text-primary">
           {taskCount}
         </div>
       </div>
@@ -50,7 +50,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 
       {/* Drop zone indicator */}
       {isOver && (
-        <div className="mt-4 p-4 border-2 border-dashed border-primary/30 rounded-lg bg-primary/5 text-center text-sm text-muted-foreground">
+        <div className="mt-4 rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 p-4 text-center text-sm text-muted-foreground">
           Drop task here
         </div>
       )}

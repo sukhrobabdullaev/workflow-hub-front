@@ -65,11 +65,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
-  open,
-  onOpenChange,
-  member,
-}) => {
+export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({ open, onOpenChange, member }) => {
   const { tasks, projects, updateTask } = useAppStore();
   const { toast } = useToast();
 
@@ -175,22 +171,21 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="flex max-h-[90vh] max-w-4xl flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle>Assign Tasks to {member.name}</DialogTitle>
           <DialogDescription>
-            Select existing tasks from different projects to assign to{' '}
-            {member.name}
+            Select existing tasks from different projects to assign to {member.name}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-hidden flex flex-col space-y-4">
+        <div className="flex flex-1 flex-col space-y-4 overflow-hidden">
           {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="search">Search Tasks</Label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
                 <Input
                   id="search"
                   placeholder="Search by title or description..."
@@ -203,10 +198,7 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
 
             <div className="space-y-2">
               <Label>Filter by Project</Label>
-              <Select
-                value={selectedProject}
-                onValueChange={setSelectedProject}
-              >
+              <Select value={selectedProject} onValueChange={setSelectedProject}>
                 <SelectTrigger>
                   <SelectValue placeholder="All projects" />
                 </SelectTrigger>
@@ -238,24 +230,20 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
           </div>
 
           {/* Results Summary */}
-          <div className="flex items-center justify-between py-2 border-b">
+          <div className="flex items-center justify-between border-b py-2">
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground">
                 {availableTasks.length} available task
                 {availableTasks.length !== 1 ? 's' : ''}
               </span>
               {selectedTasks.length > 0 && (
-                <Badge variant="secondary">
-                  {selectedTasks.length} selected
-                </Badge>
+                <Badge variant="secondary">{selectedTasks.length} selected</Badge>
               )}
             </div>
             <div className="flex items-center gap-2">
               {availableTasks.length > 0 && (
                 <Button variant="outline" size="sm" onClick={handleSelectAll}>
-                  {selectedTasks.length === availableTasks.length
-                    ? 'Deselect All'
-                    : 'Select All'}
+                  {selectedTasks.length === availableTasks.length ? 'Deselect All' : 'Select All'}
                 </Button>
               )}
               <Button variant="ghost" size="sm" onClick={resetFilters}>
@@ -265,16 +253,14 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
           </div>
 
           {/* Task List */}
-          <div className="flex-1 overflow-y-auto space-y-3">
+          <div className="flex-1 space-y-3 overflow-y-auto">
             {availableTasks.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <AlertCircle className="w-12 h-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">
-                  No tasks available
-                </h3>
-                <p className="text-muted-foreground max-w-md">
-                  No tasks match your current filters, or all tasks are already
-                  assigned to {member.name}.
+                <AlertCircle className="mb-4 h-12 w-12 text-muted-foreground" />
+                <h3 className="mb-2 text-lg font-semibold">No tasks available</h3>
+                <p className="max-w-md text-muted-foreground">
+                  No tasks match your current filters, or all tasks are already assigned to{' '}
+                  {member.name}.
                 </p>
               </div>
             ) : (
@@ -286,9 +272,7 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
                   <Card
                     key={task.id}
                     className={`cursor-pointer transition-all ${
-                      isSelected
-                        ? 'ring-2 ring-primary bg-primary/5'
-                        : 'hover:bg-muted/50'
+                      isSelected ? 'bg-primary/5 ring-2 ring-primary' : 'hover:bg-muted/50'
                     }`}
                     onClick={() => handleTaskSelection(task.id, !isSelected)}
                   >
@@ -301,15 +285,11 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
                           }
                           onClick={e => e.stopPropagation()}
                         />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2 mb-2">
-                            <h4 className="font-medium leading-tight">
-                              {task.title}
-                            </h4>
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                              <Badge
-                                className={getPriorityColor(task.priority)}
-                              >
+                        <div className="min-w-0 flex-1">
+                          <div className="mb-2 flex items-start justify-between gap-2">
+                            <h4 className="font-medium leading-tight">{task.title}</h4>
+                            <div className="flex flex-shrink-0 items-center gap-2">
+                              <Badge className={getPriorityColor(task.priority)}>
                                 {task.priority}
                               </Badge>
                               <Badge className={getStatusColor(task.status)}>
@@ -323,7 +303,7 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
                           </div>
 
                           {task.description && (
-                            <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                            <p className="mb-2 line-clamp-2 text-sm text-muted-foreground">
                               {task.description}
                             </p>
                           )}
@@ -333,29 +313,25 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
                               {project && (
                                 <span className="flex items-center gap-1">
                                   <span>Project:</span>
-                                  <span className="font-medium">
-                                    {project.name}
-                                  </span>
+                                  <span className="font-medium">{project.name}</span>
                                 </span>
                               )}
                               {task.assignee ? (
                                 <span className="flex items-center gap-1">
-                                  <User className="w-3 h-3" />
+                                  <User className="h-3 w-3" />
                                   <span>Assigned</span>
                                 </span>
                               ) : (
                                 <span className="flex items-center gap-1">
-                                  <User className="w-3 h-3" />
+                                  <User className="h-3 w-3" />
                                   <span>Unassigned</span>
                                 </span>
                               )}
                             </div>
                             {task.dueDate && (
                               <span className="flex items-center gap-1">
-                                <Calendar className="w-3 h-3" />
-                                <span>
-                                  {new Date(task.dueDate).toLocaleDateString()}
-                                </span>
+                                <Calendar className="h-3 w-3" />
+                                <span>{new Date(task.dueDate).toLocaleDateString()}</span>
                               </span>
                             )}
                           </div>
@@ -370,17 +346,10 @@ export const AssignTaskModal: React.FC<AssignTaskModalProps> = ({
         </div>
 
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isLoading}
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
             Cancel
           </Button>
-          <Button
-            onClick={handleAssignTasks}
-            disabled={selectedTasks.length === 0 || isLoading}
-          >
+          <Button onClick={handleAssignTasks} disabled={selectedTasks.length === 0 || isLoading}>
             {isLoading
               ? 'Assigning...'
               : `Assign ${selectedTasks.length} Task${selectedTasks.length !== 1 ? 's' : ''}`}

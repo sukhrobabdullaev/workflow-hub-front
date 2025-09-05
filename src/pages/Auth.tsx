@@ -11,7 +11,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 
-type AuthFlow = 'login' | 'register' | 'email-verification' | 'password-reset' | 'two-factor' | 'enterprise-sso';
+type AuthFlow =
+  | 'login'
+  | 'register'
+  | 'email-verification'
+  | 'password-reset'
+  | 'two-factor'
+  | 'enterprise-sso';
 
 export const Auth = () => {
   const [currentFlow, setCurrentFlow] = useState<AuthFlow>('login');
@@ -34,33 +40,35 @@ export const Auth = () => {
     {
       icon: Shield,
       title: 'Enterprise Security',
-      description: 'Bank-level encryption, SSO, SAML, and compliance features to keep your data safe.',
-      stats: '99.9% uptime'
+      description:
+        'Bank-level encryption, SSO, SAML, and compliance features to keep your data safe.',
+      stats: '99.9% uptime',
     },
     {
       icon: Users,
       title: 'Team Collaboration',
-      description: 'Real-time collaboration tools that bring your team together, wherever they are.',
-      stats: '50% faster delivery'
+      description:
+        'Real-time collaboration tools that bring your team together, wherever they are.',
+      stats: '50% faster delivery',
     },
     {
       icon: Zap,
       title: 'Lightning Fast',
       description: 'Optimized performance with instant loading and real-time updates.',
-      stats: '<100ms response'
+      stats: '<100ms response',
     },
     {
       icon: Award,
       title: 'Industry Leading',
       description: 'Trusted by Fortune 500 companies and growing startups worldwide.',
-      stats: '100k+ teams'
-    }
+      stats: '100k+ teams',
+    },
   ];
 
   // Auto-rotate features every 4 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
+      setCurrentFeature(prev => (prev + 1) % features.length);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
@@ -68,41 +76,41 @@ export const Auth = () => {
   const currentFeatureData = features[currentFeature];
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="flex min-h-screen bg-background">
       {/* Left Side - Enhanced Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary via-primary to-primary/80 relative overflow-hidden">
+      <div className="relative hidden overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/80 lg:flex lg:w-1/2">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <motion.div
-            className="absolute top-1/4 left-1/4 w-32 h-32 bg-white/10 rounded-full blur-xl"
+            className="absolute left-1/4 top-1/4 h-32 w-32 rounded-full bg-white/10 blur-xl"
             animate={{
               x: [0, 30, 0],
               y: [0, -20, 0],
-              scale: [1, 1.1, 1]
+              scale: [1, 1.1, 1],
             }}
             transition={{ duration: 8, repeat: Infinity }}
           />
           <motion.div
-            className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-white/5 rounded-full blur-2xl"
+            className="absolute bottom-1/3 right-1/4 h-48 w-48 rounded-full bg-white/5 blur-2xl"
             animate={{
               x: [0, -20, 0],
               y: [0, 15, 0],
-              scale: [1, 0.9, 1]
+              scale: [1, 0.9, 1],
             }}
             transition={{ duration: 10, repeat: Infinity }}
           />
           <motion.div
-            className="absolute top-1/2 right-1/3 w-24 h-24 bg-white/20 rounded-full blur-lg"
+            className="absolute right-1/3 top-1/2 h-24 w-24 rounded-full bg-white/20 blur-lg"
             animate={{
               x: [0, 15, 0],
               y: [0, -10, 0],
-              scale: [1, 1.2, 1]
+              scale: [1, 1.2, 1],
             }}
             transition={{ duration: 6, repeat: Infinity }}
           />
         </div>
 
-        <div className="relative z-10 flex flex-col justify-center items-start p-12 text-primary-foreground w-full">
+        <div className="relative z-10 flex w-full flex-col items-start justify-center p-12 text-primary-foreground">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -110,9 +118,9 @@ export const Auth = () => {
             className="w-full max-w-lg"
           >
             {/* Logo and Brand */}
-            <div className="flex items-center space-x-3 mb-8">
-              <div className="w-12 h-12 bg-primary-foreground/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                <Layers className="w-7 h-7 text-primary-foreground" />
+            <div className="mb-8 flex items-center space-x-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-foreground/20 backdrop-blur-sm">
+                <Layers className="h-7 w-7 text-primary-foreground" />
               </div>
               <span className="text-3xl font-bold">WorkflowHub</span>
             </div>
@@ -123,7 +131,7 @@ export const Auth = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+              <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-5xl">
                 Transform your team's
                 <br />
                 <span className="text-primary-foreground/80">productivity</span>
@@ -140,20 +148,23 @@ export const Auth = () => {
                 transition={{ duration: 0.5 }}
                 className="mb-8"
               >
-                <div className="flex items-start space-x-4 p-6 bg-primary-foreground/10 backdrop-blur-sm rounded-2xl border border-primary-foreground/20">
-                  <div className="w-12 h-12 bg-primary-foreground/20 rounded-xl flex items-center justify-center">
-                    <currentFeatureData.icon className="w-6 h-6 text-primary-foreground" />
+                <div className="flex items-start space-x-4 rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-6 backdrop-blur-sm">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-foreground/20">
+                    <currentFeatureData.icon className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="mb-2 flex items-center justify-between">
                       <h3 className="text-xl font-semibold text-primary-foreground">
                         {currentFeatureData.title}
                       </h3>
-                      <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30">
+                      <Badge
+                        variant="secondary"
+                        className="border-primary-foreground/30 bg-primary-foreground/20 text-primary-foreground"
+                      >
                         {currentFeatureData.stats}
                       </Badge>
                     </div>
-                    <p className="text-primary-foreground/80 leading-relaxed">
+                    <p className="leading-relaxed text-primary-foreground/80">
                       {currentFeatureData.description}
                     </p>
                   </div>
@@ -162,15 +173,16 @@ export const Auth = () => {
             </AnimatePresence>
 
             {/* Feature dots indicator */}
-            <div className="flex space-x-2 mb-8">
+            <div className="mb-8 flex space-x-2">
               {features.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentFeature(index)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentFeature
-                    ? 'bg-primary-foreground w-6'
-                    : 'bg-primary-foreground/40 hover:bg-primary-foreground/60'
-                    }`}
+                  className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                    index === currentFeature
+                      ? 'w-6 bg-primary-foreground'
+                      : 'bg-primary-foreground/40 hover:bg-primary-foreground/60'
+                  }`}
                 />
               ))}
             </div>
@@ -178,25 +190,37 @@ export const Auth = () => {
             {/* Trust indicators */}
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <div className="w-5 h-5 bg-green-400 rounded-full flex items-center justify-center">
-                  <svg className="w-3 h-3 text-green-800" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-400">
+                  <svg className="h-3 w-3 text-green-800" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <span className="text-primary-foreground/80">Free 14-day trial</span>
               </div>
               <div className="flex items-center space-x-3">
-                <div className="w-5 h-5 bg-green-400 rounded-full flex items-center justify-center">
-                  <svg className="w-3 h-3 text-green-800" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-400">
+                  <svg className="h-3 w-3 text-green-800" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <span className="text-primary-foreground/80">No credit card required</span>
               </div>
               <div className="flex items-center space-x-3">
-                <div className="w-5 h-5 bg-green-400 rounded-full flex items-center justify-center">
-                  <svg className="w-3 h-3 text-green-800" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-400">
+                  <svg className="h-3 w-3 text-green-800" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <span className="text-primary-foreground/80">Cancel anytime</span>
@@ -207,32 +231,30 @@ export const Auth = () => {
       </div>
 
       {/* Right Side - Auth Form */}
-      <div className="flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-background/95">
+      <div className="flex flex-1 flex-col justify-center bg-gradient-to-b from-background to-background/95 px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full max-w-md mx-auto"
+          className="mx-auto w-full max-w-md"
         >
           {/* Mobile Header */}
-          <div className="lg:hidden text-center mb-8">
+          <div className="mb-8 text-center lg:hidden">
             <motion.div
-              className="flex items-center justify-center space-x-2 mb-4"
+              className="mb-4 flex items-center justify-center space-x-2"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <Layers className="w-6 h-6 text-primary-foreground" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
+                <Layers className="h-6 w-6 text-primary-foreground" />
               </div>
               <span className="text-2xl font-bold">WorkflowHub</span>
             </motion.div>
             <div className="space-y-1">
-              <p className="text-muted-foreground">
-                Transform your team's productivity
-              </p>
+              <p className="text-muted-foreground">Transform your team's productivity</p>
               {currentFlow !== 'login' && currentFlow !== 'register' && (
-                <p className="text-xs text-muted-foreground/70 capitalize">
+                <p className="text-xs capitalize text-muted-foreground/70">
                   {currentFlow.replace('-', ' ')}
                 </p>
               )}
@@ -242,8 +264,12 @@ export const Auth = () => {
           {/* Back to Landing Link */}
           <div className="mb-6 flex items-center justify-between">
             <Link to="/landing">
-              <Button variant="ghost" size="sm" className="p-0 h-auto font-normal text-muted-foreground hover:text-foreground transition-colors">
-                <ArrowLeft className="w-4 h-4 mr-2" />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-auto p-0 font-normal text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to home
               </Button>
             </Link>
@@ -253,10 +279,10 @@ export const Auth = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-0 h-auto font-normal text-muted-foreground hover:text-foreground transition-colors"
+                className="h-auto p-0 font-normal text-muted-foreground transition-colors hover:text-foreground"
                 onClick={backToLogin}
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to sign in
               </Button>
             )}
@@ -296,24 +322,14 @@ export const Auth = () => {
               )}
 
               {currentFlow === 'password-reset' && (
-                <PasswordReset
-                  onBack={backToLogin}
-                  onResetComplete={backToLogin}
-                />
+                <PasswordReset onBack={backToLogin} onResetComplete={backToLogin} />
               )}
 
               {currentFlow === 'two-factor' && (
-                <TwoFactorSetup
-                  onComplete={backToLogin}
-                  onSkip={backToLogin}
-                />
+                <TwoFactorSetup onComplete={backToLogin} onSkip={backToLogin} />
               )}
 
-              {currentFlow === 'enterprise-sso' && (
-                <EnterpriseSSO
-                  onBack={backToLogin}
-                />
-              )}
+              {currentFlow === 'enterprise-sso' && <EnterpriseSSO onBack={backToLogin} />}
             </motion.div>
           </AnimatePresence>
         </motion.div>

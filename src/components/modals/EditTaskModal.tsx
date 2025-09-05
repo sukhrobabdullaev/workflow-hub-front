@@ -19,11 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -46,11 +42,7 @@ interface EditTaskModalProps {
   task: Task | null;
 }
 
-export const EditTaskModal = ({
-  open,
-  onOpenChange,
-  task,
-}: EditTaskModalProps) => {
+export const EditTaskModal = ({ open, onOpenChange, task }: EditTaskModalProps) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -136,8 +128,7 @@ export const EditTaskModal = ({
         status: formData.status,
         priority: formData.priority,
         projectId: formData.projectId,
-        assignee:
-          formData.assignee === 'unassigned' ? undefined : formData.assignee,
+        assignee: formData.assignee === 'unassigned' ? undefined : formData.assignee,
         dueDate: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : undefined,
       });
 
@@ -194,9 +185,7 @@ export const EditTaskModal = ({
             <>
               <DialogHeader>
                 <DialogTitle>Edit Task</DialogTitle>
-                <DialogDescription>
-                  Update the task details below.
-                </DialogDescription>
+                <DialogDescription>Update the task details below.</DialogDescription>
               </DialogHeader>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -206,9 +195,7 @@ export const EditTaskModal = ({
                     id="title"
                     placeholder="Enter task title"
                     value={formData.title}
-                    onChange={e =>
-                      setFormData(prev => ({ ...prev, title: e.target.value }))
-                    }
+                    onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
                     required
                   />
                 </div>
@@ -245,9 +232,7 @@ export const EditTaskModal = ({
                     </div>
                     <Select
                       value={formData.projectId}
-                      onValueChange={value =>
-                        setFormData(prev => ({ ...prev, projectId: value }))
-                      }
+                      onValueChange={value => setFormData(prev => ({ ...prev, projectId: value }))}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select project" />
@@ -255,17 +240,18 @@ export const EditTaskModal = ({
                       <SelectContent>
                         {availableProjects.map(project => (
                           <SelectItem key={project.id} value={project.id}>
-                            <div className="flex items-center justify-between w-full">
+                            <div className="flex w-full items-center justify-between">
                               <span>{project.name}</span>
                               <span
-                                className={`text-xs px-2 py-1 rounded-full font-medium ${project.status === 'active'
+                                className={`rounded-full px-2 py-1 text-xs font-medium ${
+                                  project.status === 'active'
                                     ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300'
                                     : project.status === 'planning'
                                       ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
                                       : project.status === 'on-hold'
                                         ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'
                                         : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                                  }`}
+                                }`}
                               >
                                 {project.status}
                               </span>
@@ -330,11 +316,7 @@ export const EditTaskModal = ({
                   <div className="space-y-2">
                     <Label htmlFor="assignee">Assignee</Label>
                     <Select
-                      value={
-                        formData.assignee === ''
-                          ? 'unassigned'
-                          : formData.assignee
-                      }
+                      value={formData.assignee === '' ? 'unassigned' : formData.assignee}
                       onValueChange={value =>
                         setFormData(prev => ({
                           ...prev,
@@ -369,9 +351,7 @@ export const EditTaskModal = ({
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {selectedDate
-                          ? format(selectedDate, 'PPP')
-                          : 'Pick a date'}
+                        {selectedDate ? format(selectedDate, 'PPP') : 'Pick a date'}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
@@ -393,7 +373,7 @@ export const EditTaskModal = ({
                     disabled={isLoading}
                     className="mr-auto"
                   >
-                    <Trash2 className="w-4 h-4 mr-2" />
+                    <Trash2 className="mr-2 h-4 w-4" />
                     Delete
                   </Button>
                   <Button
@@ -424,8 +404,8 @@ export const EditTaskModal = ({
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the
-                task "{task.title}" from your project.
+                This action cannot be undone. This will permanently delete the task "{task.title}"
+                from your project.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

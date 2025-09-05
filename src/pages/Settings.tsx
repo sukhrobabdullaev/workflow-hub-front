@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 export const Settings = () => {
   const { user, updateProfile } = useAuthStore();
   const { toast } = useToast();
-  
+
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -30,23 +30,21 @@ export const Settings = () => {
     e.preventDefault();
     updateProfile(profileData);
     toast({
-      title: "Profile updated",
-      description: "Your profile has been successfully updated.",
+      title: 'Profile updated',
+      description: 'Your profile has been successfully updated.',
     });
   };
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-4xl">
+    <div className="max-w-4xl animate-fade-in space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground mt-2">
-          Manage your account settings and preferences
-        </p>
+        <p className="mt-2 text-muted-foreground">Manage your account settings and preferences</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Profile Settings */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           <Card className="shadow-soft">
             <CardHeader>
               <CardTitle>Profile Information</CardTitle>
@@ -55,29 +53,29 @@ export const Settings = () => {
             <CardContent className="space-y-6">
               {/* Avatar Section */}
               <div className="flex items-center gap-6">
-                <Avatar className="w-20 h-20">
+                <Avatar className="h-20 w-20">
                   <AvatarImage src={user?.avatar} alt={user?.name} />
-                  <AvatarFallback className="bg-primary/10 text-primary text-2xl">
+                  <AvatarFallback className="bg-primary/10 text-2xl text-primary">
                     {user?.name?.charAt(0) || 'U'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="space-y-2">
-                  <Button variant="outline" size="sm">Change Avatar</Button>
-                  <p className="text-xs text-muted-foreground">
-                    JPG, PNG or GIF (max. 2MB)
-                  </p>
+                  <Button variant="outline" size="sm">
+                    Change Avatar
+                  </Button>
+                  <p className="text-xs text-muted-foreground">JPG, PNG or GIF (max. 2MB)</p>
                 </div>
               </div>
 
               {/* Profile Form */}
               <form onSubmit={handleProfileUpdate} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
                     <Input
                       id="name"
                       value={profileData.name}
-                      onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                      onChange={e => setProfileData({ ...profileData, name: e.target.value })}
                       placeholder="Your full name"
                     />
                   </div>
@@ -87,7 +85,7 @@ export const Settings = () => {
                       id="email"
                       type="email"
                       value={profileData.email}
-                      onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                      onChange={e => setProfileData({ ...profileData, email: e.target.value })}
                       placeholder="your@email.com"
                     />
                   </div>
@@ -119,18 +117,24 @@ export const Settings = () => {
                   </div>
                   <Switch
                     checked={notifications.email}
-                    onCheckedChange={(checked) => setNotifications({...notifications, email: checked})}
+                    onCheckedChange={checked =>
+                      setNotifications({ ...notifications, email: checked })
+                    }
                   />
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Push Notifications</p>
-                    <p className="text-sm text-muted-foreground">Receive push notifications in browser</p>
+                    <p className="text-sm text-muted-foreground">
+                      Receive push notifications in browser
+                    </p>
                   </div>
                   <Switch
                     checked={notifications.push}
-                    onCheckedChange={(checked) => setNotifications({...notifications, push: checked})}
+                    onCheckedChange={checked =>
+                      setNotifications({ ...notifications, push: checked })
+                    }
                   />
                 </div>
 
@@ -141,18 +145,24 @@ export const Settings = () => {
                   </div>
                   <Switch
                     checked={notifications.weekly}
-                    onCheckedChange={(checked) => setNotifications({...notifications, weekly: checked})}
+                    onCheckedChange={checked =>
+                      setNotifications({ ...notifications, weekly: checked })
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Mentions & Comments</p>
-                    <p className="text-sm text-muted-foreground">Notify when mentioned or commented</p>
+                    <p className="text-sm text-muted-foreground">
+                      Notify when mentioned or commented
+                    </p>
                   </div>
                   <Switch
                     checked={notifications.mentions}
-                    onCheckedChange={(checked) => setNotifications({...notifications, mentions: checked})}
+                    onCheckedChange={checked =>
+                      setNotifications({ ...notifications, mentions: checked })
+                    }
                   />
                 </div>
               </div>
@@ -169,15 +179,15 @@ export const Settings = () => {
               <div className="space-y-4">
                 <div>
                   <Label>Change Password</Label>
-                  <p className="text-sm text-muted-foreground mb-3">
+                  <p className="mb-3 text-sm text-muted-foreground">
                     Update your password to keep your account secure
                   </p>
                   <Button variant="outline">Change Password</Button>
                 </div>
-                
+
                 <div className="border-t pt-4">
                   <Label>Two-Factor Authentication</Label>
-                  <p className="text-sm text-muted-foreground mb-3">
+                  <p className="mb-3 text-sm text-muted-foreground">
                     Add an extra layer of security to your account
                   </p>
                   <Button variant="outline">Enable 2FA</Button>
@@ -206,9 +216,15 @@ export const Settings = () => {
                   <p className="text-sm text-muted-foreground">Premium Plan</p>
                 </div>
                 <div className="text-sm">
-                  <p><span className="text-muted-foreground">Members:</span> 12/25</p>
-                  <p><span className="text-muted-foreground">Projects:</span> 8/50</p>
-                  <p><span className="text-muted-foreground">Storage:</span> 2.4GB/10GB</p>
+                  <p>
+                    <span className="text-muted-foreground">Members:</span> 12/25
+                  </p>
+                  <p>
+                    <span className="text-muted-foreground">Projects:</span> 8/50
+                  </p>
+                  <p>
+                    <span className="text-muted-foreground">Storage:</span> 2.4GB/10GB
+                  </p>
                 </div>
                 <Button variant="outline" size="sm" className="w-full">
                   Manage Organization
@@ -232,7 +248,11 @@ export const Settings = () => {
               <Button variant="outline" size="sm" className="w-full justify-start">
                 API Settings
               </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start text-destructive hover:text-destructive">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start text-destructive hover:text-destructive"
+              >
                 Delete Account
               </Button>
             </CardContent>

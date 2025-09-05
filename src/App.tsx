@@ -175,7 +175,8 @@ const App = () => (
             }
           />
           <Route path="*" element={<NotFound />} />
-        </Routes>        </BrowserRouter>
+        </Routes>{' '}
+      </BrowserRouter>
     </TooltipProvider>
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>

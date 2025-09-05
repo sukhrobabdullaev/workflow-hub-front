@@ -59,21 +59,9 @@
     --shadow-xl: 0 20px 25px -5px hsl(215 25% 15% / 0.1);
 
     /* Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(var(--primary)),
-      hsl(var(--primary-hover))
-    );
-    --gradient-surface: linear-gradient(
-      180deg,
-      hsl(var(--surface)),
-      hsl(215 20% 96%)
-    );
-    --gradient-hero: linear-gradient(
-      135deg,
-      hsl(var(--primary)),
-      hsl(225 100% 65%)
-    );
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)));
+    --gradient-surface: linear-gradient(180deg, hsl(var(--surface)), hsl(215 20% 96%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(225 100% 65%));
 
     /* Layout */
     --radius: 0.75rem;
@@ -162,7 +150,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
   }
 
   h1,
@@ -178,24 +166,20 @@
 @layer components {
   /* Animation utilities */
   .animate-fade-in {
-    @apply animate-in fade-in-0 duration-300;
+    @apply duration-300 animate-in fade-in-0;
   }
 
   .animate-slide-up {
-    @apply animate-in slide-in-from-bottom-4 duration-300;
+    @apply duration-300 animate-in slide-in-from-bottom-4;
   }
 
   .animate-scale-in {
-    @apply animate-in zoom-in-95 duration-200;
+    @apply duration-200 animate-in zoom-in-95;
   }
 
   /* Gradient utilities */
   .bg-gradient-primary {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--primary)) 0%,
-      hsl(var(--primary-hover)) 100%
-    );
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-hover)) 100%);
   }
 
   .bg-gradient-surface {
@@ -212,13 +196,17 @@
   }
 
   .shadow-elevated {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
   }
 
   .shadow-elevated:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
   }
 
   /* Custom scrollbars */
@@ -404,7 +392,9 @@
   }
 
   .dark .shadow-elevated {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
-      0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.3),
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
   }
 }

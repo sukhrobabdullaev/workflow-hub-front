@@ -4,13 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuthStore } from '@/store/authStore';
 import { useToast } from '@/hooks/use-toast';
 import { SocialLogin } from './SocialLogin';
@@ -49,8 +43,7 @@ export const LoginForm = ({ onToggleMode, onForgotPassword, onEnterpriseSSO }: L
       } else {
         toast({
           title: 'Login failed',
-          description:
-            'Invalid email or password. Try: john@workflowhub.com / password',
+          description: 'Invalid email or password. Try: john@workflowhub.com / password',
           variant: 'destructive',
         });
       }
@@ -80,9 +73,7 @@ export const LoginForm = ({ onToggleMode, onForgotPassword, onEnterpriseSSO }: L
   return (
     <Card className="w-full max-w-md shadow-elevated">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
-          Welcome back
-        </CardTitle>
+        <CardTitle className="text-center text-2xl font-bold">Welcome back</CardTitle>
         <CardDescription className="text-center">
           Sign in to your WorkflowHub account
         </CardDescription>
@@ -94,13 +85,8 @@ export const LoginForm = ({ onToggleMode, onForgotPassword, onEnterpriseSSO }: L
         {/* Enterprise SSO Option */}
         {onEnterpriseSSO && (
           <div className="text-center">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={onEnterpriseSSO}
-            >
-              <Building2 className="w-4 h-4 mr-2" />
+            <Button type="button" variant="outline" className="w-full" onClick={onEnterpriseSSO}>
+              <Building2 className="mr-2 h-4 w-4" />
               Continue with Enterprise SSO
             </Button>
           </div>
@@ -125,8 +111,8 @@ export const LoginForm = ({ onToggleMode, onForgotPassword, onEnterpriseSSO }: L
               <Button
                 type="button"
                 variant="link"
-                className="px-0 font-normal text-sm text-primary hover:underline"
-                onClick={() => onForgotPassword ? onForgotPassword() : setShowMagicLink(true)}
+                className="px-0 text-sm font-normal text-primary hover:underline"
+                onClick={() => (onForgotPassword ? onForgotPassword() : setShowMagicLink(true))}
               >
                 Forgot password?
               </Button>
@@ -144,13 +130,9 @@ export const LoginForm = ({ onToggleMode, onForgotPassword, onEnterpriseSSO }: L
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
               >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
           </div>
@@ -160,7 +142,7 @@ export const LoginForm = ({ onToggleMode, onForgotPassword, onEnterpriseSSO }: L
               <Checkbox
                 id="remember"
                 checked={rememberMe}
-                onCheckedChange={(checked) => setRememberMe(checked === true)}
+                onCheckedChange={checked => setRememberMe(checked === true)}
               />
               <Label
                 htmlFor="remember"
@@ -172,17 +154,17 @@ export const LoginForm = ({ onToggleMode, onForgotPassword, onEnterpriseSSO }: L
             <Button
               type="button"
               variant="link"
-              className="px-0 font-normal text-sm text-primary hover:underline"
+              className="px-0 text-sm font-normal text-primary hover:underline"
               onClick={() => setShowMagicLink(true)}
             >
-              <Wand2 className="w-3 h-3 mr-1" />
+              <Wand2 className="mr-1 h-3 w-3" />
               Magic link
             </Button>
           </div>
 
           <Button
             type="submit"
-            className="w-full bg-gradient-primary hover:opacity-90"
+            className="bg-gradient-primary w-full hover:opacity-90"
             disabled={isLoading}
           >
             {isLoading ? 'Signing in...' : 'Sign in'}
@@ -195,7 +177,7 @@ export const LoginForm = ({ onToggleMode, onForgotPassword, onEnterpriseSSO }: L
             <button
               type="button"
               onClick={onToggleMode}
-              className="text-primary font-medium hover:underline"
+              className="font-medium text-primary hover:underline"
             >
               Sign up
             </button>

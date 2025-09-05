@@ -19,11 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -46,11 +42,7 @@ interface EditProjectModalProps {
   project: Project | null;
 }
 
-export const EditProjectModal = ({
-  open,
-  onOpenChange,
-  project,
-}: EditProjectModalProps) => {
+export const EditProjectModal = ({ open, onOpenChange, project }: EditProjectModalProps) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -110,9 +102,7 @@ export const EditProjectModal = ({
         name: formData.name,
         description: formData.description,
         status: formData.status,
-        dueDate: selectedDate
-          ? format(selectedDate, 'yyyy-MM-dd')
-          : project.dueDate,
+        dueDate: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : project.dueDate,
       });
 
       toast({
@@ -181,9 +171,7 @@ export const EditProjectModal = ({
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Edit Project</DialogTitle>
-            <DialogDescription>
-              Update the project details below.
-            </DialogDescription>
+            <DialogDescription>Update the project details below.</DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -193,9 +181,7 @@ export const EditProjectModal = ({
                 id="name"
                 placeholder="Enter project name"
                 value={formData.name}
-                onChange={e =>
-                  setFormData(prev => ({ ...prev, name: e.target.value }))
-                }
+                onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 required
               />
             </div>
@@ -252,9 +238,7 @@ export const EditProjectModal = ({
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {selectedDate
-                        ? format(selectedDate, 'PPP')
-                        : 'Pick a date'}
+                      {selectedDate ? format(selectedDate, 'PPP') : 'Pick a date'}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -270,11 +254,11 @@ export const EditProjectModal = ({
             </div>
 
             {projectTasks.length > 0 && (
-              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
                 <p className="text-sm text-blue-800 dark:text-blue-200">
-                  <strong>Note:</strong> This project has {projectTasks.length}{' '}
-                  task{projectTasks.length !== 1 ? 's' : ''}. To delete this
-                  project, you must first delete or move all tasks.
+                  <strong>Note:</strong> This project has {projectTasks.length} task
+                  {projectTasks.length !== 1 ? 's' : ''}. To delete this project, you must first
+                  delete or move all tasks.
                 </p>
               </div>
             )}
@@ -287,7 +271,7 @@ export const EditProjectModal = ({
                 disabled={isLoading || projectTasks.length > 0}
                 className="mr-auto"
               >
-                <Trash2 className="w-4 h-4 mr-2" />
+                <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </Button>
               <Button
@@ -311,8 +295,8 @@ export const EditProjectModal = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              project "{project.name}" and cannot be recovered.
+              This action cannot be undone. This will permanently delete the project "{project.name}
+              " and cannot be recovered.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
