@@ -8,4 +8,3 @@ export { TeamMemberProfileModal } from "./TeamMemberProfileModal";
 export { AssignTaskModal } from "./AssignTaskModal";
 export { InviteMemberModal } from "./InviteMemberModal";
 export { VideoRecordingModal } from "./VideoRecordingModal";
-export { SprintTaskAssignment } from "./SprintTaskAssignment";

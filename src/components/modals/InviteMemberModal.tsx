@@ -48,12 +48,9 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   const [linkCopied, setLinkCopied] = useState(false);
 
   const roles = [
-    { value: 'developer', label: 'Developer' },
-    { value: 'designer', label: 'Designer' },
-    { value: 'manager', label: 'Project Manager' },
-    { value: 'tester', label: 'QA Tester' },
-    { value: 'analyst', label: 'Business Analyst' },
-    { value: 'devops', label: 'DevOps Engineer' },
+    { value: 'member', label: 'Member' },
+    { value: 'manager', label: 'Manager' },
+    { value: 'admin', label: 'Administrator' },
   ];
 
   const expiryOptions = [

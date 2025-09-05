@@ -154,14 +154,10 @@ export const Projects = () => {
 
       {/* Project Management Tabs */}
       <Tabs defaultValue="grid" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="grid" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
             Project Grid
-          </TabsTrigger>
-          <TabsTrigger value="kanban" className="flex items-center gap-2">
-            <Kanban className="w-4 h-4" />
-            Kanban Boards
           </TabsTrigger>
           <TabsTrigger value="calendar" className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
@@ -311,60 +307,6 @@ export const Projects = () => {
 
         </TabsContent>
 
-        <TabsContent value="kanban" className="space-y-6 mt-6">
-          {/* Kanban Boards for Each Project */}
-          <div className="space-y-8">
-            {projects && projects.filter(p => p.status === 'active').map(project => (
-              <Card key={project.id} className="shadow-soft">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="flex items-center gap-2">
-                        <Kanban className="w-5 h-5" />
-                        {project.name}
-                      </CardTitle>
-                      <CardDescription>{project.description}</CardDescription>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge className={getStatusColor(project.status)}>
-                        {project.status}
-                      </Badge>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleProjectClick(project.id)}
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Details
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <KanbanBoard projectId={project.id} />
-                </CardContent>
-              </Card>
-            ))}
-            {(!projects || projects.filter(p => p.status === 'active').length === 0) && (
-              <Card className="shadow-soft">
-                <CardContent className="text-center py-12">
-                  <Kanban className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-semibold mb-2">No Active Projects</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Create your first project to start using Kanban boards
-                  </p>
-                  <Button
-                    onClick={() => setIsCreateProjectModalOpen(true)}
-                    className="bg-gradient-primary hover:opacity-90"
-                  >
-                    <FolderOpen className="w-4 h-4 mr-2" />
-                    Create Project
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </TabsContent>
 
         <TabsContent value="calendar" className="space-y-6 mt-6">
           {/* Timeline/Calendar View */}

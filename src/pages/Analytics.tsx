@@ -163,32 +163,16 @@ export const Analytics = () => {
     projects.reduce((acc, p) => acc + p.progress, 0) / totalProjects
   );
 
-  // Sprint Management Data
-  const currentSprint = {
-    name: "Sprint 2.3",
-    startDate: "2025-01-20",
-    endDate: "2025-02-03",
-    totalTasks: 18,
-    completedTasks: 12,
-    inProgressTasks: 4,
-    todoTasks: 2,
-    velocity: 8.5,
-    burndownData: [18, 16, 14, 12, 10, 8, 6, 4, 2, 0]
-  };
-
-  const sprintProgress = (currentSprint.completedTasks / currentSprint.totalTasks) * 100;
-  const daysRemaining = Math.ceil((new Date(currentSprint.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
             <BarChart3 className="w-8 h-8" />
-            Analytics & Sprint Management
+            Analytics & Reports
           </h1>
           <p className="text-muted-foreground mt-2">
-            Comprehensive insights and agile sprint management
+            Comprehensive insights and project analytics
           </p>
         </div>
         <div className="flex gap-3">
@@ -203,16 +187,12 @@ export const Analytics = () => {
         </div>
       </div>
 
-      {/* Analytics & Sprint Tabs */}
+      {/* Analytics Tabs */}
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
             Overview
-          </TabsTrigger>
-          <TabsTrigger value="sprints" className="flex items-center gap-2">
-            <Zap className="w-4 h-4" />
-            Sprint Management
           </TabsTrigger>
           <TabsTrigger value="performance" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
@@ -367,12 +347,12 @@ export const Analytics = () => {
                           <td className="p-3">
                             <span
                               className={`px-2 py-1 rounded-full text-xs ${project.status === 'active'
-                                  ? 'bg-success/10 text-success'
-                                  : project.status === 'completed'
-                                    ? 'bg-primary/10 text-primary'
-                                    : project.status === 'planning'
-                                      ? 'bg-warning/10 text-warning'
-                                      : 'bg-muted text-muted-foreground'
+                                ? 'bg-success/10 text-success'
+                                : project.status === 'completed'
+                                  ? 'bg-primary/10 text-primary'
+                                  : project.status === 'planning'
+                                    ? 'bg-warning/10 text-warning'
+                                    : 'bg-muted text-muted-foreground'
                                 }`}
                             >
                               {project.status}
@@ -404,108 +384,6 @@ export const Analytics = () => {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="sprints" className="space-y-6 mt-6">
-          {/* Current Sprint Overview */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-2 shadow-soft">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <Zap className="w-5 h-5" />
-                      {currentSprint.name}
-                    </CardTitle>
-                    <CardDescription>
-                      {new Date(currentSprint.startDate).toLocaleDateString()} - {new Date(currentSprint.endDate).toLocaleDateString()}
-                    </CardDescription>
-                  </div>
-                  <div className="flex gap-2">
-                    <Badge variant="outline" className="flex items-center gap-1">
-                      <Timer className="w-3 h-3" />
-                      {daysRemaining} days left
-                    </Badge>
-                    <Badge className="bg-green-500">
-                      <PlayCircle className="w-3 h-3 mr-1" />
-                      Active
-                    </Badge>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium">Sprint Progress</span>
-                      <span className="text-sm text-muted-foreground">
-                        {currentSprint.completedTasks}/{currentSprint.totalTasks} tasks
-                      </span>
-                    </div>
-                    <Progress value={sprintProgress} className="h-3" />
-                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                      <span>0%</span>
-                      <span className="font-medium">{Math.round(sprintProgress)}%</span>
-                      <span>100%</span>
-                    </div>
-                  </div>
-
-                  {/* Sprint Burndown Chart */}
-                  <div>
-                    <h4 className="text-sm font-medium mb-3">Burndown Chart</h4>
-                    <div className="h-32 w-full">
-                      <Chart data={currentSprint.burndownData} type="line" />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-soft">
-              <CardHeader>
-                <CardTitle className="text-lg">Sprint Metrics</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
-                    <CheckCircle className="w-6 h-6 mx-auto mb-1 text-green-600" />
-                    <div className="text-lg font-bold text-green-600">{currentSprint.completedTasks}</div>
-                    <div className="text-xs text-muted-foreground">Completed</div>
-                  </div>
-                  <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-                    <PlayCircle className="w-6 h-6 mx-auto mb-1 text-blue-600" />
-                    <div className="text-lg font-bold text-blue-600">{currentSprint.inProgressTasks}</div>
-                    <div className="text-xs text-muted-foreground">In Progress</div>
-                  </div>
-                  <div className="text-center p-3 bg-gray-50 dark:bg-gray-950/20 rounded-lg">
-                    <PauseCircle className="w-6 h-6 mx-auto mb-1 text-gray-600" />
-                    <div className="text-lg font-bold text-gray-600">{currentSprint.todoTasks}</div>
-                    <div className="text-xs text-muted-foreground">To Do</div>
-                  </div>
-                  <div className="text-center p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
-                    <TrendingUp className="w-6 h-6 mx-auto mb-1 text-purple-600" />
-                    <div className="text-lg font-bold text-purple-600">{currentSprint.velocity}</div>
-                    <div className="text-xs text-muted-foreground">Velocity</div>
-                  </div>
-                </div>
-
-                <div className="space-y-3 pt-4 border-t">
-                  <Button className="w-full" variant="outline">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Plan Next Sprint
-                  </Button>
-                  <Button className="w-full" variant="outline">
-                    <Target className="w-4 h-4 mr-2" />
-                    Sprint Retrospective
-                  </Button>
-                  <Button className="w-full bg-gradient-primary">
-                    <Zap className="w-4 h-4 mr-2" />
-                    Sprint Actions
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </TabsContent>
 
         <TabsContent value="performance" className="space-y-6 mt-6">

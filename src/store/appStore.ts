@@ -53,8 +53,6 @@ export interface Task {
   assignee?: string;
   dueDate?: string;
   projectId: string;
-  sprintId?: string; // Connect task to sprint
-  storyPoints?: number; // For sprint velocity calculation
   comments?: TaskComment[];
   attachments?: TaskAttachment[];
 }
@@ -68,28 +66,10 @@ export interface TeamMember {
   status: "active" | "away" | "offline";
 }
 
-export interface Sprint {
-  id: string;
-  name: string;
-  goal: string;
-  startDate: string;
-  endDate: string;
-  status: "planning" | "active" | "completed" | "cancelled";
-  projectId: string;
-  totalTasks: number;
-  completedTasks: number;
-  inProgressTasks: number;
-  todoTasks: number;
-  velocity: number;
-  burndownData: number[];
-  taskIds: string[]; // Tasks assigned to this sprint
-}
-
 interface AppState {
   projects: Project[];
   tasks: Task[];
   teamMembers: TeamMember[];
-  sprints: Sprint[];
   sidebarCollapsed: boolean;
   currentProject: string | null;
 
@@ -103,19 +83,6 @@ interface AppState {
   updateTask: (id: string, data: Partial<Task>) => void;
   deleteTask: (id: string) => void;
   moveTask: (taskId: string, newStatus: Task["status"]) => void;
-
-  // Sprint Actions
-  addSprint: (sprint: Omit<Sprint, "id">) => void;
-  updateSprint: (id: string, data: Partial<Sprint>) => void;
-  deleteSprint: (id: string) => void;
-  startSprint: (id: string) => void;
-  completeSprint: (id: string) => void;
-
-  // Sprint-Task Connection Actions
-  assignTaskToSprint: (taskId: string, sprintId: string) => void;
-  removeTaskFromSprint: (taskId: string) => void;
-  getSprintTasks: (sprintId: string) => Task[];
-  updateSprintProgress: (sprintId: string) => void;
 
   // Comment Actions
   addComment: (
@@ -414,62 +381,10 @@ const mockTeamMembers: TeamMember[] = [
   },
 ];
 
-const mockSprints: Sprint[] = [
-  {
-    id: "1",
-    name: "Sprint 2.3",
-    goal: "Complete user authentication and implement task commenting system",
-    startDate: "2025-01-20",
-    endDate: "2025-02-03",
-    status: "active",
-    projectId: "1",
-    totalTasks: 18,
-    completedTasks: 12,
-    inProgressTasks: 4,
-    todoTasks: 2,
-    velocity: 8.5,
-    burndownData: [18, 16, 14, 12, 10, 8, 6, 4, 2, 0],
-    taskIds: [],
-  },
-  {
-    id: "2",
-    name: "Sprint 2.2",
-    goal: "Kanban board enhancements and team collaboration features",
-    startDate: "2025-01-06",
-    endDate: "2025-01-19",
-    status: "completed",
-    projectId: "1",
-    totalTasks: 15,
-    completedTasks: 15,
-    inProgressTasks: 0,
-    todoTasks: 0,
-    velocity: 9.2,
-    burndownData: [15, 13, 11, 9, 7, 5, 3, 1, 0],
-    taskIds: [],
-  },
-  {
-    id: "3",
-    name: "Sprint 2.4",
-    goal: "Analytics dashboard and reporting features",
-    startDate: "2025-02-04",
-    endDate: "2025-02-17",
-    status: "planning",
-    projectId: "1",
-    totalTasks: 0,
-    completedTasks: 0,
-    inProgressTasks: 0,
-    todoTasks: 0,
-    velocity: 0,
-    burndownData: [],
-    taskIds: [],
-  },
-];
-
 export const useAppStore = create<AppState>((set) => ({
   projects: mockProjects,
   tasks: mockTasks,
   teamMembers: mockTeamMembers,
-  sprints: mockSprints,
   sidebarCollapsed: false,
   currentProject: null,
 
@@ -639,99 +554,5 @@ export const useAppStore = create<AppState>((set) => ({
           : t
       ),
     }));
-  },
-
-  // Sprint Actions
-  addSprint: (sprintData) => {
-    const newSprint: Sprint = {
-      ...sprintData,
-      id: Date.now().toString(),
-    };
-    set((state) => ({ sprints: [...state.sprints, newSprint] }));
-  },
-
-  updateSprint: (id, data) => {
-    set((state) => ({
-      sprints: state.sprints.map((s) => (s.id === id ? { ...s, ...data } : s)),
-    }));
-  },
-
-  deleteSprint: (id) => {
-    set((state) => ({
-      sprints: state.sprints.filter((s) => s.id !== id),
-    }));
-  },
-
-  startSprint: (id) => {
-    set((state) => ({
-      sprints: state.sprints.map((s) =>
-        s.id === id ? { ...s, status: "active" as const } : s
-      ),
-    }));
-  },
-
-  completeSprint: (id) => {
-    set((state) => ({
-      sprints: state.sprints.map((s) =>
-        s.id === id ? { ...s, status: "completed" as const } : s
-      ),
-    }));
-  },
-
-  // Sprint-Task Connection Actions
-  assignTaskToSprint: (taskId, sprintId) => {
-    set((state) => {
-      const updatedTasks = state.tasks.map((t) =>
-        t.id === taskId ? { ...t, sprintId } : t
-      );
-      return { tasks: updatedTasks };
-    });
-  },
-
-  removeTaskFromSprint: (taskId) => {
-    set((state) => {
-      const updatedTasks = state.tasks.map((t) =>
-        t.id === taskId ? { ...t, sprintId: undefined } : t
-      );
-      return { tasks: updatedTasks };
-    });
-  },
-
-  getSprintTasks: (sprintId) => {
-    const state = useAppStore.getState();
-    return state.tasks.filter((task) => task.sprintId === sprintId);
-  },
-
-  updateSprintProgress: (sprintId) => {
-    set((state) => {
-      const sprintTasks = state.tasks.filter(
-        (task) => task.sprintId === sprintId
-      );
-      const totalTasks = sprintTasks.length;
-      const completedTasks = sprintTasks.filter(
-        (task) => task.status === "done"
-      ).length;
-      const inProgressTasks = sprintTasks.filter(
-        (task) => task.status === "in-progress"
-      ).length;
-      const todoTasks = sprintTasks.filter(
-        (task) => task.status === "todo"
-      ).length;
-
-      const updatedSprints = state.sprints.map((sprint) =>
-        sprint.id === sprintId
-          ? {
-              ...sprint,
-              totalTasks,
-              completedTasks,
-              inProgressTasks,
-              todoTasks,
-              taskIds: sprintTasks.map((task) => task.id),
-            }
-          : sprint
-      );
-
-      return { sprints: updatedSprints };
-    });
   },
 }));

@@ -19,7 +19,7 @@ import {
 import { useAuthStore } from '@/store/authStore';
 
 // Navigation menu items organized by sections with clear connections to pages
-const navigationSections = [
+const getNavigationSections = (userRole: string) => [
   {
     label: 'Main',
     items: [
@@ -47,12 +47,6 @@ const navigationSections = [
     label: 'Agile & Team',
     items: [
       {
-        title: 'Sprint Management',
-        url: '/sprints',
-        icon: 'sprint',
-        description: 'Agile sprint planning and tracking'
-      },
-      {
         title: 'Team',
         url: '/team',
         icon: 'users',
@@ -67,8 +61,43 @@ const navigationSections = [
     ]
   },
   {
-    label: 'Settings',
+    label: 'Management',
     items: [
+      ...(userRole === 'admin' || userRole === 'manager' ? [{
+        title: 'Reports',
+        url: '/reports',
+        icon: 'chart-bar',
+        description: 'Analytics and performance reports'
+      }] : []),
+      // ...(userRole === 'admin' || userRole === 'manager' ? [{
+      //   title: 'Approvals',
+      //   url: '/approvals',
+      //   icon: 'check-circle',
+      //   description: 'Review and approve requests'
+      // }] : []),
+      ...(userRole === 'admin' ? [{
+        title: 'User Management',
+        url: '/user-management',
+        icon: 'users-cog',
+        description: 'Manage users and permissions'
+      }] : []),
+      ...(userRole === 'admin' || userRole === 'manager' ? [{
+        title: 'Billing',
+        url: '/billing',
+        icon: 'credit-card',
+        description: 'Billing and subscription'
+      }] : []),
+    ].filter(Boolean)
+  },
+  {
+    label: 'Account',
+    items: [
+      {
+        title: 'Profile',
+        url: '/profile',
+        icon: 'user',
+        description: 'Personal profile and preferences'
+      },
       {
         title: 'Settings',
         url: '/settings',
@@ -77,7 +106,7 @@ const navigationSections = [
       },
     ]
   }
-];
+].filter(section => section.items.length > 0);
 
 const IconComponent = ({
   name,
@@ -188,6 +217,70 @@ const IconComponent = ({
         <rect x="17" y="3" width="5" height="8" />
       </svg>
     ),
+    user: (
+      <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    ),
+    'users-cog': (
+      <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+        <path d="M22 12h-4m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0" />
+        <path d="M14 8.5l2.5-2.5M14 15.5l2.5 2.5" />
+      </svg>
+    ),
+    'credit-card': (
+      <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+        <line x1="1" y1="10" x2="23" y2="10" />
+      </svg>
+    ),
+    calendar: (
+      <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+      </svg>
+    ),
+    'check-circle': (
+      <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+        <polyline points="22,4 12,14.01 9,11.01" />
+      </svg>
+    ),
   };
 
   return iconMap[name as keyof typeof iconMap] || iconMap.dashboard;
@@ -204,6 +297,7 @@ export const AppSidebar = () => {
     }`;
 
   const collapsed = !open;
+  const navigationSections = getNavigationSections(user?.role || 'member');
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">

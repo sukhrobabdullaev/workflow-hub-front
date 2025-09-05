@@ -7,10 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import {
-    Building2,
     Users,
     ArrowRight,
     Check,
@@ -200,8 +198,8 @@ export const OnboardingFlow = () => {
                                     key={goal.id}
                                     onClick={() => handleGoalToggle(goal.id)}
                                     className={`flex items-center space-x-3 p-4 rounded-lg border-2 text-left transition-all ${isSelected
-                                            ? 'border-primary bg-primary/5 text-primary'
-                                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                        ? 'border-primary bg-primary/5 text-primary'
+                                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                                         }`}
                                 >
                                     <Icon className={`w-5 h-5 ${isSelected ? 'text-primary' : 'text-gray-500'}`} />

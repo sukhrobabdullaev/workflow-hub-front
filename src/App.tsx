@@ -9,13 +9,18 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Dashboard } from '@/pages/Dashboard';
 import { Projects } from '@/pages/Projects';
 import { ProjectManagement } from '@/pages/ProjectManagement';
-import { SprintManagement } from '@/pages/SprintManagement';
 import { Team } from '@/pages/Team';
 import { Analytics } from '@/pages/Analytics';
 import { Settings } from '@/pages/Settings';
 import { Auth } from '@/pages/Auth';
 import { Landing } from '@/pages/Landing';
 import { OnboardingFlow } from '@/pages/Onboarding';
+import { Profile } from '@/pages/Profile';
+import { Billing } from '@/pages/Billing';
+import { UserManagement } from '@/pages/UserManagement';
+import { Reports } from '@/pages/Reports';
+import { ResourcePlanning } from '@/pages/ResourcePlanning';
+import { Approvals } from '@/pages/Approvals';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient({
@@ -89,16 +94,6 @@ const App = () => (
             }
           />
           <Route
-            path="/sprints"
-            element={
-              <ProtectedRoute>
-                <AppLayout>
-                  <SprintManagement />
-                </AppLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/team"
             element={
               <ProtectedRoute>
@@ -124,6 +119,57 @@ const App = () => (
               <ProtectedRoute>
                 <AppLayout>
                   <Settings />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Profile />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/billing"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Billing />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user-management"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <UserManagement />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Reports />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          {/*  */}
+          <Route
+            path="/approvals"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Approvals />
                 </AppLayout>
               </ProtectedRoute>
             }

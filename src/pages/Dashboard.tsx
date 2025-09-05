@@ -325,7 +325,7 @@ export const Dashboard = () => {
       </Card>
 
       {/* Core Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <FeatureCard
           icon={<MessageCircle className="w-6 h-6" />}
           title="Real-time Chat"
@@ -339,13 +339,6 @@ export const Dashboard = () => {
           description="Visual project management"
           status="active"
           onClick={() => navigate('/projects')}
-        />
-        <FeatureCard
-          icon={<Calendar className="w-6 h-6" />}
-          title="Sprint Management"
-          description="Agile workflow tools"
-          status="active"
-          onClick={() => navigate('/analytics')}
         />
         <FeatureCard
           icon={<Video className="w-6 h-6" />}
@@ -417,7 +410,7 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* Enhanced Task Status & Sprint Management */}
+      {/* Enhanced Task Status */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Task Status with Kanban Preview */}
         <Card className="shadow-soft">
@@ -426,7 +419,7 @@ export const Dashboard = () => {
               <CheckSquare className="w-5 h-5" />
               Task Status
             </CardTitle>
-            <CardDescription>Current sprint distribution</CardDescription>
+            <CardDescription>Current task distribution</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {statusData.map(item => (
@@ -456,46 +449,6 @@ export const Dashboard = () => {
             >
               <BarChart3 className="w-4 h-4 mr-2" />
               View Kanban Board
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Sprint Management */}
-        <Card className="shadow-soft">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="w-5 h-5" />
-              Current Sprint
-            </CardTitle>
-            <CardDescription>Sprint 2.1 - Week 3 of 4</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span>Sprint Progress</span>
-                <span className="font-medium">68%</span>
-              </div>
-              <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full w-[68%] transition-all duration-300" />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <div className="text-lg font-bold text-green-600">12</div>
-                <div className="text-xs text-muted-foreground">Completed</div>
-              </div>
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <div className="text-lg font-bold text-blue-600">6</div>
-                <div className="text-xs text-muted-foreground">Remaining</div>
-              </div>
-            </div>
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => navigate('/analytics')}
-            >
-              <Zap className="w-4 h-4 mr-2" />
-              Sprint Planning
             </Button>
           </CardContent>
         </Card>

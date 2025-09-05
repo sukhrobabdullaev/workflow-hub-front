@@ -8,14 +8,14 @@ import { Button } from '@/components/ui/button';
 import { Task } from '@/store/appStore';
 import { useAppStore } from '@/store/appStore';
 import { cn } from '@/lib/utils';
-import { Calendar, User, Edit, Trash2, MoreHorizontal, MessageCircle, Paperclip, Eye, Zap } from 'lucide-react';
+import { Calendar, User, Edit, Trash2, MoreHorizontal, MessageCircle, Paperclip, Eye } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { EditTaskModal, TaskDetailModal, SprintTaskAssignment } from '@/components/modals';
+import { EditTaskModal, TaskDetailModal } from '@/components/modals';
 
 interface KanbanCardProps {
   task: Task;
@@ -35,9 +35,8 @@ const getPriorityColor = (priority: string) => {
 };
 
 export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
-  const { teamMembers, deleteTask, sprints } = useAppStore();
+  const { teamMembers, deleteTask } = useAppStore();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isSprintAssignmentOpen, setIsSprintAssignmentOpen] = useState(false);
   const [showActions, setShowActions] = useState(false);
 
   const {
@@ -68,11 +67,6 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
     // For now, we'll open the edit modal which has the delete functionality
     // In the future, this could be a separate delete confirmation dialog
     setIsEditModalOpen(true);
-  };
-
-  const handleSprintAssignClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsSprintAssignmentOpen(true);
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
@@ -138,10 +132,6 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
                     <Edit className="mr-2 h-4 w-4" />
                     Edit Task
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleSprintAssignClick}>
-                    <Zap className="mr-2 h-4 w-4" />
-                    Assign to Sprint
-                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={handleDeleteClick}
                     className="text-red-600 focus:text-red-600"
@@ -178,16 +168,6 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
                 </div>
               )}
 
-              {/* Sprint Indicator */}
-              {task.sprintId && (
-                <div className="flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-                  <Zap className="w-3 h-3" />
-                  <span>
-                    {sprints.find(s => s.id === task.sprintId)?.name || 'Sprint'}
-                  </span>
-                </div>
-              )}
-
               {/* Comments and Attachments Indicators */}
               <div className="flex items-center gap-2">
                 {(task.comments?.length || 0) > 0 && (
@@ -218,12 +198,6 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
       <TaskDetailModal
         open={isEditModalOpen}
         onOpenChange={setIsEditModalOpen}
-        task={task}
-      />
-
-      <SprintTaskAssignment
-        isOpen={isSprintAssignmentOpen}
-        onClose={() => setIsSprintAssignmentOpen(false)}
         task={task}
       />
     </>
