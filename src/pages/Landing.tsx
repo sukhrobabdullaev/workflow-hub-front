@@ -1,4 +1,6 @@
 import { DemoVideo } from '@/components/DemoVideo';
+import { AppFooter } from '@/components/layout/AppFooter';
+import { LandingNavbar } from '@/components/layout/LandingNavbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,7 +9,6 @@ import {
   ArrowRight,
   BarChart3,
   CheckCircle,
-  Layers,
   MessageCircle,
   Shield,
   Star,
@@ -151,56 +152,7 @@ export const Landing = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <motion.nav
-        className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-          isScrolled ? 'border-b bg-background/95 backdrop-blur-sm' : 'bg-transparent'
-        }`}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <div className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <Layers className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold">WorkflowHub</span>
-          </div>
-
-          <div className="hidden items-center space-x-8 md:flex">
-            <a
-              href="#features"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Features
-            </a>
-            <a
-              href="#pricing"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Pricing
-            </a>
-            <a
-              href="#testimonials"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Testimonials
-            </a>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <Link to="/auth">
-              <Button variant="ghost">Sign In</Button>
-            </Link>
-            <Link to="/auth">
-              <Button className="bg-primary text-primary-foreground hover:bg-primary-hover">
-                Get Started
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </motion.nav>
+      <LandingNavbar isScrolled={isScrolled} />
 
       {/* Hero Section */}
       <section ref={heroRef} className="px-4 pb-20 pt-32">
@@ -756,101 +708,7 @@ export const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-muted px-4 py-12">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-            <div>
-              <div className="mb-4 flex items-center space-x-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                  <Layers className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <span className="text-xl font-bold">WorkflowHub</span>
-              </div>
-              <p className="text-muted-foreground">
-                The future of team collaboration and project management.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-4 font-semibold">Product</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Integrations
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    API
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-4 font-semibold">Company</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-4 font-semibold">Support</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Help Center
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Community
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Status
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2025 WorkflowHub. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <AppFooter />
     </div>
   );
 };

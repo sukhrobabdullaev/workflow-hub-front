@@ -173,6 +173,13 @@ const App = () => (
               </ProtectedRoute>
             }
           />
+
+          {/* Public Marketing Pages */}
+          {/* <Route path="/about" element={<About />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/careers" element={<Careers />} /> */}
+
           <Route path="*" element={<NotFound />} />
         </Routes>{' '}
       </BrowserRouter>
