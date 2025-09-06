@@ -3,7 +3,17 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion, useInView } from 'framer-motion';
-import { ArrowRight, BarChart3, CheckCircle, Layers, Shield, Star, Users, Zap } from 'lucide-react';
+import {
+  ArrowRight,
+  BarChart3,
+  CheckCircle,
+  Layers,
+  MessageCircle,
+  Shield,
+  Star,
+  Video,
+  Zap,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -39,40 +49,6 @@ export const Landing = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const features = [
-    {
-      icon: <Layers className="h-8 w-8" />,
-      title: 'Project Management',
-      description:
-        'Organize your work with powerful project boards, timelines, and task management.',
-    },
-    {
-      icon: <Users className="h-8 w-8" />,
-      title: 'Team Collaboration',
-      description: 'Work together seamlessly with real-time updates, comments, and file sharing.',
-    },
-    {
-      icon: <BarChart3 className="h-8 w-8" />,
-      title: 'Advanced Analytics',
-      description: "Get insights into your team's performance with detailed reports and metrics.",
-    },
-    {
-      icon: <Zap className="h-8 w-8" />,
-      title: 'Automation',
-      description: 'Streamline repetitive tasks with custom workflows and smart automation rules.',
-    },
-    {
-      icon: <Shield className="h-8 w-8" />,
-      title: 'Enterprise Security',
-      description: 'Keep your data safe with enterprise-grade security and compliance features.',
-    },
-    {
-      icon: <CheckCircle className="h-8 w-8" />,
-      title: 'Custom Workflows',
-      description: "Create workflows that match your team's unique processes and requirements.",
-    },
-  ];
-
   const testimonials = [
     {
       name: 'Sarah Chen',
@@ -100,50 +76,72 @@ export const Landing = () => {
 
   const pricingPlans = [
     {
-      name: 'Starter',
+      name: 'Free',
       price: '$0',
       period: 'forever',
       description: 'Perfect for small teams getting started',
       features: [
         'Up to 5 team members',
-        '3 projects',
+        'Up to 3 projects',
         'Basic task management',
+        'Simple kanban boards',
+        'Basic AI task suggestions',
         'Email support',
-        '1GB storage',
+        '10MB storage',
+        'Basic reporting',
       ],
       popular: false,
       buttonText: 'Get Started Free',
     },
     {
       name: 'Professional',
-      price: '$12',
+      price: '$8',
       period: 'per user/month',
-      description: 'Advanced features for growing teams',
+      description: 'AI-powered features for growing teams',
       features: [
         'Unlimited team members',
         'Unlimited projects',
-        'Advanced analytics',
-        'Priority support',
-        '100GB storage',
-        'Custom workflows',
+        'Unlimited tasks',
+        'Advanced kanban boards',
+        'AI Project Assistant',
+        'Smart task prioritization',
+        'AI-powered time estimation',
+        'Automated reporting',
+        'Real-time team chat',
+        'Video recording',
+        'Live updates & notifications',
+        'Advanced analytics with AI insights',
         'Time tracking',
+        '1GB storage per user',
+        'Priority support',
       ],
       popular: true,
       buttonText: 'Start Free Trial',
     },
     {
       name: 'Enterprise',
-      price: 'Custom',
-      period: 'contact sales',
-      description: 'Full control and security for large organizations',
+      price: '$18',
+      period: 'per user/month',
+      description: 'Full AI suite for large organizations',
       features: [
         'Everything in Professional',
-        'Advanced security',
+        'Advanced AI insights & predictions',
+        'Burnout prevention AI',
+        'Custom AI models',
+        'AI meeting transcription',
+        'Smart code review (for dev teams)',
+        'Auto-documentation generation',
+        'Advanced security & compliance',
         'Single Sign-On (SSO)',
-        'Dedicated account manager',
-        'Unlimited storage',
         'Custom integrations',
+        'API access',
+        'White-label options',
+        'Advanced user permissions',
+        'Dedicated account manager',
+        'Custom deployment',
+        'Unlimited storage',
         '24/7 phone support',
+        'SLA guarantee',
       ],
       popular: false,
       buttonText: 'Contact Sales',
@@ -215,7 +213,7 @@ export const Landing = () => {
           >
             <motion.div variants={fadeInUp}>
               <Badge className="mb-6 border-primary/20 bg-primary/10 px-4 py-2 text-primary">
-                ✨ New: AI-powered project insights now available
+                🚀 Smart Workflow: Intelligent project management that adapts to your team
               </Badge>
             </motion.div>
 
@@ -223,17 +221,17 @@ export const Landing = () => {
               variants={fadeInUp}
               className="mb-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-4xl font-bold text-transparent dark:from-gray-100 dark:via-gray-200 dark:to-gray-400 md:text-6xl lg:text-7xl"
             >
-              The future of team
+              Project management
               <br />
-              <span className="text-primary">collaboration</span>
+              <span className="text-primary">reimagined</span>
             </motion.h1>
 
             <motion.p
               variants={fadeInUp}
               className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-muted-foreground md:text-2xl"
             >
-              Streamline your workflow, boost productivity, and bring your team together with our
-              powerful project management platform.
+              The smartest project management platform with intelligent features that predict,
+              optimize, and automate your workflow. More powerful features at competitive pricing.
             </motion.p>
 
             <motion.div
@@ -258,7 +256,7 @@ export const Landing = () => {
             >
               <div className="flex items-center">
                 <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                Free 14-day trial
+                14-day free trial
               </div>
               <div className="flex items-center">
                 <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
@@ -327,8 +325,117 @@ export const Landing = () => {
         </motion.div>
       </section>
 
+      {/* Smart Features Banner */}
+      <section className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 px-4 py-16 dark:from-blue-950/50 dark:via-indigo-950/50 dark:to-purple-950/50">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <div className="mb-6 flex items-center justify-center gap-2">
+              <Zap className="h-8 w-8 text-primary" />
+              <h2 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-3xl font-bold text-transparent md:text-4xl">
+                Intelligent Project Management
+              </h2>
+            </div>
+            <p className="mx-auto mb-12 max-w-3xl text-lg text-muted-foreground">
+              Advanced features that help your team work smarter, not harder. Powerful automation
+              and insights at an affordable price.
+            </p>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                viewport={{ once: true }}
+                className="rounded-xl bg-white/60 p-6 backdrop-blur-sm dark:bg-gray-800/60"
+              >
+                <Zap className="mx-auto mb-4 h-12 w-12 text-blue-600" />
+                <h3 className="mb-2 text-xl font-semibold">Smart Project Assistant</h3>
+                <p className="text-muted-foreground">
+                  Intelligent suggestions and auto-generated templates
+                </p>
+                <div className="mt-3 text-sm font-medium text-blue-600">Pro: $8/user</div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="rounded-xl bg-white/60 p-6 backdrop-blur-sm dark:bg-gray-800/60"
+              >
+                <BarChart3 className="mx-auto mb-4 h-12 w-12 text-purple-600" />
+                <h3 className="mb-2 text-xl font-semibold">Predictive Analytics</h3>
+                <p className="text-muted-foreground">
+                  Smart insights and proactive recommendations
+                </p>
+                <div className="mt-3 text-sm font-medium text-purple-600">Pro: $8/user</div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="rounded-xl bg-white/60 p-6 backdrop-blur-sm dark:bg-gray-800/60"
+              >
+                <MessageCircle className="mx-auto mb-4 h-12 w-12 text-green-600" />
+                <h3 className="mb-2 text-xl font-semibold">Smart Communication</h3>
+                <p className="text-muted-foreground">
+                  Auto-summarize discussions into action items
+                </p>
+                <div className="mt-3 text-sm font-medium text-green-600">Pro: $8/user</div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                viewport={{ once: true }}
+                className="rounded-xl bg-white/60 p-6 backdrop-blur-sm dark:bg-gray-800/60"
+              >
+                <CheckCircle className="mx-auto mb-4 h-12 w-12 text-orange-600" />
+                <h3 className="mb-2 text-xl font-semibold">Intelligent Automation</h3>
+                <p className="text-muted-foreground">
+                  Auto-prioritize tasks and estimate timelines
+                </p>
+                <div className="mt-3 text-sm font-medium text-orange-600">Pro: $8/user</div>
+              </motion.div>
+            </div>
+
+            {/* Value Proposition */}
+            <div className="mt-12 rounded-xl bg-white/80 p-6 backdrop-blur-sm dark:bg-gray-800/80">
+              <h3 className="mb-4 text-xl font-semibold">Everything Your Team Needs</h3>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div className="text-center">
+                  <div className="text-lg font-semibold text-primary">Advanced Features</div>
+                  <div className="text-sm text-muted-foreground">
+                    Intelligent automation & insights
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-semibold text-primary">Fair Pricing</div>
+                  <div className="text-sm text-muted-foreground">No hidden fees or surprises</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-semibold text-primary">Great Support</div>
+                  <div className="text-sm text-muted-foreground">
+                    Dedicated team to help you succeed
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section id="features" ref={featuresRef} className="bg-muted/30 px-4 py-20">
+      <section id="features" ref={featuresRef} className="px-4 py-20">
         <div className="container mx-auto">
           <motion.div
             initial="initial"
@@ -337,14 +444,14 @@ export const Landing = () => {
             className="mb-16 text-center"
           >
             <motion.h2 variants={fadeInUp} className="mb-6 text-3xl font-bold md:text-5xl">
-              Everything you need to succeed
+              Intelligent Features That Set Us Apart
             </motion.h2>
             <motion.p
               variants={fadeInUp}
               className="mx-auto max-w-3xl text-xl text-muted-foreground"
             >
-              Powerful features designed to help teams of all sizes collaborate better and achieve
-              more.
+              Advanced intelligent capabilities at a fraction of the cost. More smart insights than
+              competitors, better pricing than the rest.
             </motion.p>
           </motion.div>
 
@@ -354,23 +461,137 @@ export const Landing = () => {
             animate={featuresInView ? 'animate' : 'initial'}
             className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
           >
-            {features.map((feature, index) => (
-              <motion.div key={index} variants={fadeInUp}>
-                <Card className="h-full border-0 bg-background/60 backdrop-blur-sm transition-all duration-300 hover:shadow-lg">
-                  <CardHeader>
-                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-                      {feature.icon}
-                    </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base leading-relaxed">
-                      {feature.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full border-0 bg-gradient-to-br from-blue-50 to-indigo-50 backdrop-blur-sm transition-all duration-300 hover:shadow-lg dark:from-blue-950/50 dark:to-indigo-950/50">
+                <CardHeader>
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 text-white">
+                    <BarChart3 className="h-8 w-8" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl">Smart Kanban Boards</CardTitle>
+                    <Badge variant="secondary" className="text-xs">
+                      Free
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base leading-relaxed">
+                    AI-enhanced kanban boards with automatic task prioritization and smart
+                    suggestions for workflow optimization.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full border-0 bg-gradient-to-br from-green-50 to-emerald-50 backdrop-blur-sm transition-all duration-300 hover:shadow-lg dark:from-green-950/50 dark:to-emerald-950/50">
+                <CardHeader>
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-600 text-white">
+                    <MessageCircle className="h-8 w-8" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl">AI-Powered Team Chat</CardTitle>
+                    <Badge variant="default" className="bg-primary text-xs">
+                      Pro
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base leading-relaxed">
+                    Smart chat that auto-summarizes discussions, extracts action items, and suggests
+                    relevant team members.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full border-0 bg-gradient-to-br from-purple-50 to-pink-50 backdrop-blur-sm transition-all duration-300 hover:shadow-lg dark:from-purple-950/50 dark:to-pink-950/50">
+                <CardHeader>
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-600 text-white">
+                    <Video className="h-8 w-8" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl">Smart Recording</CardTitle>
+                    <Badge variant="default" className="bg-primary text-xs">
+                      Pro
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base leading-relaxed">
+                    AI-enhanced video recording with automatic transcription and action item
+                    extraction from meetings.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full border-0 bg-gradient-to-br from-orange-50 to-red-50 backdrop-blur-sm transition-all duration-300 hover:shadow-lg dark:from-orange-950/50 dark:to-red-950/50">
+                <CardHeader>
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-600 text-white">
+                    <Zap className="h-8 w-8" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl">Predictive Insights</CardTitle>
+                    <Badge variant="default" className="bg-primary text-xs">
+                      Pro
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base leading-relaxed">
+                    AI predicts project timelines, identifies bottlenecks, and warns about potential
+                    burnout before it happens.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full border-0 bg-gradient-to-br from-cyan-50 to-blue-50 backdrop-blur-sm transition-all duration-300 hover:shadow-lg dark:from-cyan-950/50 dark:to-blue-950/50">
+                <CardHeader>
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-600 text-white">
+                    <BarChart3 className="h-8 w-8" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl">AI Analytics</CardTitle>
+                    <Badge variant="default" className="bg-primary text-xs">
+                      Pro
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base leading-relaxed">
+                    Advanced AI-driven analytics that auto-generate insights, reports, and
+                    recommendations for team performance.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full border-0 bg-gradient-to-br from-emerald-50 to-teal-50 backdrop-blur-sm transition-all duration-300 hover:shadow-lg dark:from-emerald-950/50 dark:to-teal-950/50">
+                <CardHeader>
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-600 text-white">
+                    <Shield className="h-8 w-8" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl">Smart Automation</CardTitle>
+                    <Badge variant="default" className="bg-primary text-xs">
+                      Pro
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base leading-relaxed">
+                    AI-powered automation that learns your team&apos;s patterns and suggests optimal
+                    workflows and task assignments.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -435,13 +656,13 @@ export const Landing = () => {
             className="mb-16 text-center"
           >
             <motion.h2 variants={fadeInUp} className="mb-6 text-3xl font-bold md:text-5xl">
-              Simple, transparent pricing
+              Better AI, Better Price
             </motion.h2>
             <motion.p
               variants={fadeInUp}
               className="mx-auto max-w-3xl text-xl text-muted-foreground"
             >
-              Choose the plan that&apos;s right for your team. Always know what you&apos;ll pay.
+              More AI features than Jira or ClickUp at a lower price. Start free, scale smart.
             </motion.p>
           </motion.div>
 
@@ -513,8 +734,8 @@ export const Landing = () => {
               Ready to transform your workflow?
             </h2>
             <p className="mx-auto mb-8 max-w-2xl text-xl text-muted-foreground">
-              Join thousands of teams who are already using WorkflowHub to collaborate better and
-              achieve more.
+              Start with our free plan and scale up as your team grows. Join thousands of teams
+              already using WorkflowHub to boost productivity.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link to="/auth">
@@ -522,12 +743,12 @@ export const Landing = () => {
                   size="lg"
                   className="bg-primary px-8 py-6 text-lg text-primary-foreground hover:bg-primary-hover"
                 >
-                  Start Your Free Trial
+                  Start Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
-                Schedule a Demo
+                View Pricing
               </Button>
             </div>
           </motion.div>

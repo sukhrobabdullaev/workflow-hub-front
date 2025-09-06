@@ -526,15 +526,6 @@ export const Dashboard = () => {
               <MessageCircle className="mr-2 h-4 w-4" />
               Team Chat
             </Button>
-            <Button
-              variant="outline"
-              className="w-full justify-start"
-              size="sm"
-              onClick={() => navigate('/analytics')}
-            >
-              <BarChart3 className="mr-2 h-4 w-4" />
-              Sprint Planning
-            </Button>
           </CardContent>
         </Card>
       </div>

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAppStore } from '@/store/appStore';
-import { BarChart3, Target, TrendingUp, Users, Zap } from 'lucide-react';
+import { BarChart3, Target, TrendingUp, Users } from 'lucide-react';
 
 // Enhanced chart component
 const Chart = ({
@@ -346,10 +346,6 @@ export const Analytics = () => {
                 <Button variant="outline" className="h-20 flex-col">
                   <BarChart3 className="mb-2 h-6 w-6" />
                   Project Report
-                </Button>
-                <Button variant="outline" className="h-20 flex-col">
-                  <Zap className="mb-2 h-6 w-6" />
-                  Sprint Report
                 </Button>
                 <Button variant="outline" className="h-20 flex-col">
                   <Users className="mb-2 h-6 w-6" />

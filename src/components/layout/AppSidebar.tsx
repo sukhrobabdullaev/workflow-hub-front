@@ -1,4 +1,3 @@
-import { NavLink } from 'react-router-dom';
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAuthStore } from '@/store/authStore';
+import { NavLink } from 'react-router-dom';
 
 // Navigation menu items organized by sections with clear connections to pages
 const getNavigationSections = (userRole: string) =>
@@ -193,17 +193,6 @@ const IconComponent = ({ name, className }: { name: string; className?: string }
       >
         <circle cx="12" cy="12" r="3" />
         <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
-      </svg>
-    ),
-    sprint: (
-      <svg
-        className={className}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
       </svg>
     ),
     kanban: (
