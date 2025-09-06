@@ -1,10 +1,13 @@
+export { AddColumnModal } from './AddColumnModal';
+export { AssignTaskModal } from './AssignTaskModal';
 export { CreateProjectModal } from './CreateProjectModal';
 export { CreateTaskModal } from './CreateTaskModal';
+export { DeleteColumnDialog } from './DeleteColumnDialog';
 export { EditProjectModal } from './EditProjectModal';
 export { EditTaskModal } from './EditTaskModal';
-export { TaskDetailModal } from './TaskDetailModal';
-export { ViewReportsModal } from './ViewReportsModal';
-export { TeamMemberProfileModal } from './TeamMemberProfileModal';
-export { AssignTaskModal } from './AssignTaskModal';
 export { InviteMemberModal } from './InviteMemberModal';
+export { TaskDetailModal } from './TaskDetailModal';
+export { TeamMemberProfileModal } from './TeamMemberProfileModal';
+export { UpgradeDialog } from './UpgradeDialog';
 export { VideoRecordingModal } from './VideoRecordingModal';
+export { ViewReportsModal } from './ViewReportsModal';

@@ -6,23 +6,15 @@ import {
 } from '@/components/modals';
 import { LiveUpdates } from '@/components/realtime/LiveUpdates';
 import { OnlineUsers } from '@/components/realtime/OnlineUsers';
+import { AIFeatureBanner } from '@/components/ui/AIFeatureBanner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { FreePlanBanner, PlanLimitIndicator } from '@/components/ui/plan-indicators';
 import { useAppStore } from '@/store/appStore';
 import { useAuthStore } from '@/store/authStore';
-import {
-  BarChart3,
-  CheckSquare,
-  Database,
-  FolderOpen,
-  Infinity,
-  MessageCircle,
-  Play,
-  Users,
-  Video,
-  Zap,
-} from 'lucide-react';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
+import { BarChart3, CheckSquare, FolderOpen, MessageCircle, Play, Video, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -187,7 +179,11 @@ const FeatureCard = ({
 export const Dashboard = () => {
   const user = useAuthStore(state => state.user);
   const { projects, tasks, teamMembers } = useAppStore();
+  const { getCurrentPlan } = useSubscriptionStore();
   const navigate = useNavigate();
+
+  const currentPlan = getCurrentPlan();
+  const isFreePlan = currentPlan.id === 'free';
 
   // Modal states
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
@@ -263,78 +259,103 @@ export const Dashboard = () => {
             View Reports
           </Button>
         </div>
+      </div>{' '}
+      {/* Free Plan Banner & Limits */}
+      <FreePlanBanner />
+      {/* AI Feature Usage Banner */}
+      <AIFeatureBanner />
+      {/* Plan Usage Indicators */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <PlanLimitIndicator feature="projects" />
+        <PlanLimitIndicator feature="teamMembers" />
+        <PlanLimitIndicator feature="storage" />
       </div>
-
-      {/* Feature Highlights Banner */}
-      <Card className="border-none bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 shadow-lg dark:from-blue-950/50 dark:via-indigo-950/50 dark:to-purple-950/50">
-        <CardHeader className="text-center">
-          <div className="mb-2 flex items-center justify-center gap-2">
-            <Infinity className="h-6 w-6 text-primary" />
-            <CardTitle className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent">
-              Unlimited Everything - Free Forever!
-            </CardTitle>
-          </div>
-          <CardDescription className="text-lg">
-            Experience all premium features without any limitations
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <div className="rounded-lg bg-white/50 p-3 text-center dark:bg-gray-800/50">
-              <CheckSquare className="mx-auto mb-2 h-8 w-8 text-green-600" />
-              <div className="font-semibold">Unlimited Tasks</div>
-              <div className="text-sm text-muted-foreground">No limits on your productivity</div>
-            </div>
-            <div className="rounded-lg bg-white/50 p-3 text-center dark:bg-gray-800/50">
-              <Users className="mx-auto mb-2 h-8 w-8 text-blue-600" />
-              <div className="font-semibold">Unlimited Users</div>
-              <div className="text-sm text-muted-foreground">Invite your entire team</div>
-            </div>
-            <div className="rounded-lg bg-white/50 p-3 text-center dark:bg-gray-800/50">
-              <FolderOpen className="mx-auto mb-2 h-8 w-8 text-purple-600" />
-              <div className="font-semibold">Unlimited Projects</div>
-              <div className="text-sm text-muted-foreground">Manage all your work</div>
-            </div>
-            <div className="rounded-lg bg-white/50 p-3 text-center dark:bg-gray-800/50">
-              <Database className="mx-auto mb-2 h-8 w-8 text-orange-600" />
-              <div className="font-semibold">100MB Storage</div>
-              <div className="text-sm text-muted-foreground">Generous file storage</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Core Features Grid */}
+      {/* Core Features Grid - Conditional based on plan */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <FeatureCard
-          icon={<MessageCircle className="h-6 w-6" />}
-          title="Real-time Chat"
-          description="Instant team communication"
-          status="active"
-          onClick={() => navigate('/team')}
-        />
+        {/* Basic features available to all plans */}
         <FeatureCard
           icon={<BarChart3 className="h-6 w-6" />}
           title="Kanban Boards"
-          description="Visual project management"
+          description={
+            isFreePlan ? 'Simple task organization' : 'Advanced visual project management'
+          }
           status="active"
           onClick={() => navigate('/projects')}
         />
         <FeatureCard
-          icon={<Video className="h-6 w-6" />}
-          title="Video Recording"
-          description="In-app screen capture"
+          icon={<CheckSquare className="h-6 w-6" />}
+          title="Task Management"
+          description={
+            isFreePlan ? 'Basic task tracking' : 'Advanced task management with automation'
+          }
           status="active"
-          onClick={() => setIsVideoRecordingOpen(true)}
+          onClick={() => setIsCreateTaskModalOpen(true)}
         />
-      </div>
+        <FeatureCard
+          icon={<FolderOpen className="h-6 w-6" />}
+          title="Projects"
+          description={
+            isFreePlan ? 'Up to 3 projects' : 'Unlimited projects with advanced features'
+          }
+          status="active"
+          onClick={() => setIsCreateProjectModalOpen(true)}
+        />
 
-      {/* Enhanced Metrics Cards */}
+        {/* Premium features - only show for paid plans */}
+        {!isFreePlan && (
+          <>
+            <FeatureCard
+              icon={<MessageCircle className="h-6 w-6" />}
+              title="Real-time Chat"
+              description="Instant team communication"
+              status="active"
+              onClick={() => navigate('/team')}
+            />
+            <FeatureCard
+              icon={<Video className="h-6 w-6" />}
+              title="Video Recording"
+              description="In-app screen capture"
+              status="active"
+              onClick={() => setIsVideoRecordingOpen(true)}
+            />
+            <FeatureCard
+              icon={<Zap className="h-6 w-6" />}
+              title="Advanced AI"
+              description="Unlimited AI-powered insights"
+              status="active"
+              onClick={() => navigate('/analytics')}
+            />
+          </>
+        )}
+
+        {/* Free plan specific features */}
+        {isFreePlan && (
+          <>
+            <FeatureCard
+              icon={<MessageCircle className="h-6 w-6" />}
+              title="Basic Reports"
+              description="Simple project reporting"
+              status="active"
+              onClick={() => setIsViewReportsModalOpen(true)}
+            />
+            <FeatureCard
+              icon={<Zap className="h-6 w-6" />}
+              title="AI Suggestions"
+              description="10 AI suggestions per month"
+              status="active"
+              onClick={() => {
+                /* Add AI feature with limit check */
+              }}
+            />
+          </>
+        )}
+      </div>
+      {/* Enhanced Metrics Cards - Conditional based on plan */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5">
         <MetricCard
-          title="Active Projects"
-          value={activeProjects}
-          description="Currently in progress"
+          title={isFreePlan ? 'Projects Used' : 'Active Projects'}
+          value={isFreePlan ? `${activeProjects}/3` : activeProjects}
+          description={isFreePlan ? 'Free plan limit' : 'Currently in progress'}
           trend="up"
         />
         <MetricCard
@@ -344,9 +365,9 @@ export const Dashboard = () => {
           trend="up"
         />
         <MetricCard
-          title="Team Members"
-          value={teamMembers.length}
-          description="Active team members"
+          title={isFreePlan ? 'Team Size' : 'Team Members'}
+          value={isFreePlan ? `${teamMembers.length}/5` : teamMembers.length}
+          description={isFreePlan ? 'Free plan limit' : 'Active team members'}
           trend="neutral"
         />
         <MetricCard
@@ -357,39 +378,45 @@ export const Dashboard = () => {
         />
         <MetricCard
           title="Storage Used"
-          value="24.3MB"
-          description="of 100MB available"
+          value={isFreePlan ? '2.1/10MB' : '247MB'}
+          description={isFreePlan ? 'Free plan limit' : 'of 100GB available'}
           trend="neutral"
         />
       </div>
-
-      {/* Real-time Features & Analytics */}
+      {/* Real-time Features & Analytics - Conditional based on plan */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-        {/* Live Updates */}
-        <div className="lg:col-span-1">
-          <LiveUpdates />
-        </div>
+        {/* Live Updates - Only for paid plans */}
+        {!isFreePlan && (
+          <div className="lg:col-span-1">
+            <LiveUpdates />
+          </div>
+        )}
 
         {/* Progress Chart */}
-        <Card className="shadow-soft lg:col-span-2">
+        <Card className={`shadow-soft ${isFreePlan ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
-              Project Progress
+              {isFreePlan ? 'Basic Progress' : 'Project Progress'}
             </CardTitle>
-            <CardDescription>Weekly progress overview with real-time updates</CardDescription>
+            <CardDescription>
+              {isFreePlan
+                ? 'Simple progress overview'
+                : 'Weekly progress overview with real-time updates'}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <SimpleChart data={progressData} type="line" />
+            <SimpleChart data={progressData} type={isFreePlan ? 'bar' : 'line'} />
           </CardContent>
         </Card>
 
-        {/* Online Team Members */}
-        <div className="lg:col-span-1">
-          <OnlineUsers />
-        </div>
+        {/* Online Team Members - Only for paid plans */}
+        {!isFreePlan && (
+          <div className="lg:col-span-1">
+            <OnlineUsers />
+          </div>
+        )}
       </div>
-
       {/* Enhanced Task Status */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Task Status with Kanban Preview */}
@@ -427,56 +454,73 @@ export const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Support & Features */}
-        <Card className="bg-gradient-to-br from-green-50 to-blue-50 shadow-soft dark:from-green-950/50 dark:to-blue-950/50">
+        {/* Support & Features - Conditional based on plan */}
+        <Card
+          className={`shadow-soft ${isFreePlan ? 'bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-orange-950/50 dark:to-yellow-950/50' : 'bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/50 dark:to-blue-950/50'}`}
+        >
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
+            <CardTitle
+              className={`flex items-center gap-2 ${isFreePlan ? 'text-orange-700 dark:text-orange-400' : 'text-green-700 dark:text-green-400'}`}
+            >
               <Zap className="h-5 w-5" />
-              24/7 Support
+              {isFreePlan ? 'Email Support' : '24/7 Support'}
             </CardTitle>
-            <CardDescription>Premium support included free</CardDescription>
+            <CardDescription>
+              {isFreePlan ? 'Community support included' : 'Premium support included free'}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-2 text-sm">
-              <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-              <span>Support team online</span>
+              <div
+                className={`h-2 w-2 rounded-full ${isFreePlan ? 'bg-orange-500' : 'animate-pulse bg-green-500'}`}
+              />
+              <span>{isFreePlan ? 'Email support available' : 'Support team online'}</span>
             </div>
             <div className="text-sm text-muted-foreground">
-              Get instant help with our dedicated support team available around the clock.
+              {isFreePlan
+                ? 'Get help via email within 24-48 hours. Upgrade for priority support.'
+                : 'Get instant help with our dedicated support team available around the clock.'}
             </div>
             <Button
               variant="outline"
-              className="w-full border-green-200 text-green-700 hover:bg-green-50"
+              className={`w-full ${isFreePlan ? 'border-orange-200 text-orange-700 hover:bg-orange-50' : 'border-green-200 text-green-700 hover:bg-green-50'}`}
               size="sm"
             >
               <MessageCircle className="mr-2 h-4 w-4" />
-              Contact Support
+              {isFreePlan ? 'Email Support' : 'Contact Support'}
             </Button>
           </CardContent>
         </Card>
       </div>
-
-      {/* Enhanced Recent Activity and Quick Actions */}
+      {/* Recent Activity and Quick Actions - Conditional based on plan */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Recent Activity */}
         <Card className="shadow-soft lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Zap className="h-5 w-5" />
-              Recent Activity
+              {isFreePlan ? 'Recent Activity' : 'Recent Activity'}
             </CardTitle>
-            <CardDescription>Latest updates from your team with real-time sync</CardDescription>
+            <CardDescription>
+              {isFreePlan
+                ? 'Latest updates from your team'
+                : 'Latest updates from your team with real-time sync'}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            {recentActivities.map((activity, index) => (
+            {recentActivities.slice(0, isFreePlan ? 3 : 4).map((activity, index) => (
               <ActivityItem key={index} {...activity} />
             ))}
-            <div className="flex items-center justify-center pt-3">
-              <Badge variant="secondary" className="text-xs">
-                <div className="mr-2 h-2 w-2 animate-pulse rounded-full bg-green-500" />
-                Live updates active
-              </Badge>
-            </div>
+            {isFreePlan && (
+              <div className="mt-4 rounded-lg bg-muted/30 p-3 text-center">
+                <p className="mb-2 text-sm text-muted-foreground">
+                  Want to see more activity details?
+                </p>
+                <Button variant="outline" size="sm">
+                  Upgrade for Advanced Activity Tracking
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -529,17 +573,13 @@ export const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
-
       {/* Modals */}
       <CreateProjectModal
         open={isCreateProjectModalOpen}
         onOpenChange={setIsCreateProjectModalOpen}
       />
-
       <CreateTaskModal open={isCreateTaskModalOpen} onOpenChange={setIsCreateTaskModalOpen} />
-
       <ViewReportsModal open={isViewReportsModalOpen} onOpenChange={setIsViewReportsModalOpen} />
-
       <VideoRecordingModal open={isVideoRecordingOpen} onOpenChange={setIsVideoRecordingOpen} />
     </div>
   );

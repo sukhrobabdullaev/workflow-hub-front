@@ -44,11 +44,20 @@ export interface Project {
   tasks: Task[];
 }
 
+export interface KanbanColumn {
+  id: string;
+  title: string;
+  color: string;
+  position: number;
+  isDefault: boolean; // true for 'todo', 'in-progress', 'done'
+  projectId?: string; // if null, it's a global column
+}
+
 export interface Task {
   id: string;
   title: string;
   description: string;
-  status: 'todo' | 'in-progress' | 'done';
+  status: string; // Changed from union to string to support custom columns
   priority: 'low' | 'medium' | 'high';
   assignee?: string;
   dueDate?: string;
@@ -70,6 +79,7 @@ interface AppState {
   projects: Project[];
   tasks: Task[];
   teamMembers: TeamMember[];
+  kanbanColumns: KanbanColumn[];
   sidebarCollapsed: boolean;
   currentProject: string | null;
 
@@ -82,7 +92,13 @@ interface AppState {
   addTask: (task: Omit<Task, 'id'>) => void;
   updateTask: (id: string, data: Partial<Task>) => void;
   deleteTask: (id: string) => void;
-  moveTask: (taskId: string, newStatus: Task['status']) => void;
+  moveTask: (taskId: string, newStatus: string) => void;
+
+  // Column Actions
+  addColumn: (column: Omit<KanbanColumn, 'id'>) => void;
+  updateColumn: (id: string, data: Partial<KanbanColumn>) => void;
+  deleteColumn: (id: string) => void;
+  getColumnsForProject: (projectId?: string) => KanbanColumn[];
 
   // Comment Actions
   addComment: (taskId: string, comment: Omit<TaskComment, 'id' | 'timestamp'>) => void;
@@ -124,56 +140,6 @@ const mockProjects: Project[] = [
     progress: 100,
     dueDate: '2024-12-20',
     teamMembers: ['1', '6'],
-    tasks: [],
-  },
-  {
-    id: '4',
-    name: 'Marketing Campaign',
-    description: 'Q1 2025 digital marketing initiative',
-    status: 'active',
-    progress: 40,
-    dueDate: '2025-03-31',
-    teamMembers: ['2', '3', '4'],
-    tasks: [],
-  },
-  {
-    id: '5',
-    name: 'Infrastructure Upgrade',
-    description: 'Server hardware and software updates',
-    status: 'on-hold',
-    progress: 15,
-    dueDate: '2025-08-15',
-    teamMembers: ['1', '6'],
-    tasks: [],
-  },
-  {
-    id: '6',
-    name: 'Customer Portal',
-    description: 'Self-service customer dashboard with analytics',
-    status: 'planning',
-    progress: 5,
-    dueDate: '2025-09-30',
-    teamMembers: ['4', '5', '6'],
-    tasks: [],
-  },
-  {
-    id: '7',
-    name: 'E-commerce Platform',
-    description: 'Build comprehensive online store with payment integration',
-    status: 'active',
-    progress: 80,
-    dueDate: '2025-01-31',
-    teamMembers: ['1', '2', '4', '6'],
-    tasks: [],
-  },
-  {
-    id: '8',
-    name: 'API Documentation',
-    description: 'Complete technical documentation for REST APIs',
-    status: 'completed',
-    progress: 100,
-    dueDate: '2024-11-15',
-    teamMembers: ['3', '5'],
     tasks: [],
   },
 ];
@@ -359,14 +325,39 @@ const mockTeamMembers: TeamMember[] = [
       'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
     status: 'offline',
   },
+  // {
+  //   id: '6',
+  //   name: 'Lisa Wong',
+  //   email: 'lisa@workflowhub.com',
+  //   role: 'DevOps Engineer',
+  //   avatar:
+  //     'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+  //   status: 'active',
+  // },
+];
+
+// Default Kanban columns
+const mockKanbanColumns: KanbanColumn[] = [
   {
-    id: '6',
-    name: 'Lisa Wong',
-    email: 'lisa@workflowhub.com',
-    role: 'DevOps Engineer',
-    avatar:
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
-    status: 'active',
+    id: 'todo',
+    title: 'To Do',
+    color: 'bg-slate-100 dark:bg-slate-800',
+    position: 0,
+    isDefault: true,
+  },
+  {
+    id: 'in-progress',
+    title: 'In Progress',
+    color: 'bg-blue-50 dark:bg-blue-900/20',
+    position: 1,
+    isDefault: true,
+  },
+  {
+    id: 'done',
+    title: 'Done',
+    color: 'bg-green-50 dark:bg-green-900/20',
+    position: 2,
+    isDefault: true,
   },
 ];
 
@@ -374,6 +365,7 @@ export const useAppStore = create<AppState>(set => ({
   projects: mockProjects,
   tasks: mockTasks,
   teamMembers: mockTeamMembers,
+  kanbanColumns: mockKanbanColumns,
   sidebarCollapsed: false,
   currentProject: null,
 
@@ -529,5 +521,45 @@ export const useAppStore = create<AppState>(set => ({
           : t
       ),
     }));
+  },
+
+  // Column Management Actions
+  addColumn: columnData => {
+    const newColumn: KanbanColumn = {
+      ...columnData,
+      id: Date.now().toString(),
+    };
+    set(state => ({ kanbanColumns: [...state.kanbanColumns, newColumn] }));
+  },
+
+  updateColumn: (id, data) => {
+    set(state => ({
+      kanbanColumns: state.kanbanColumns.map(c => (c.id === id ? { ...c, ...data } : c)),
+    }));
+  },
+
+  deleteColumn: id => {
+    set(state => {
+      const columnToDelete = state.kanbanColumns.find(c => c.id === id);
+      if (columnToDelete?.isDefault) {
+        // Don't allow deletion of default columns
+        return state;
+      }
+
+      // Move tasks from deleted column to 'todo'
+      const updatedTasks = state.tasks.map(t => (t.status === id ? { ...t, status: 'todo' } : t));
+
+      return {
+        kanbanColumns: state.kanbanColumns.filter(c => c.id !== id),
+        tasks: updatedTasks,
+      };
+    });
+  },
+
+  getColumnsForProject: projectId => {
+    return useAppStore
+      .getState()
+      .kanbanColumns.filter(c => !c.projectId || c.projectId === projectId)
+      .sort((a, b) => a.position - b.position);
   },
 }));

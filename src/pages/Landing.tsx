@@ -1,4 +1,3 @@
-import { DemoVideo } from '@/components/DemoVideo';
 import { AppFooter } from '@/components/layout/AppFooter';
 import { LandingNavbar } from '@/components/layout/LandingNavbar';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { DemoVideo } from '../components/DemoVideo';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -165,7 +165,7 @@ export const Landing = () => {
           >
             <motion.div variants={fadeInUp}>
               <Badge className="mb-6 border-primary/20 bg-primary/10 px-4 py-2 text-primary">
-                🚀 Smart Workflow: Intelligent project management that adapts to your team
+                ✨ New: AI-powered project insights now available
               </Badge>
             </motion.div>
 
@@ -173,17 +173,17 @@ export const Landing = () => {
               variants={fadeInUp}
               className="mb-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-4xl font-bold text-transparent dark:from-gray-100 dark:via-gray-200 dark:to-gray-400 md:text-6xl lg:text-7xl"
             >
-              Project management
+              The future of team
               <br />
-              <span className="text-primary">reimagined</span>
+              <span className="text-primary">collaboration</span>
             </motion.h1>
 
             <motion.p
               variants={fadeInUp}
               className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-muted-foreground md:text-2xl"
             >
-              The smartest project management platform with intelligent features that predict,
-              optimize, and automate your workflow. More powerful features at competitive pricing.
+              Streamline your workflow, boost productivity, and bring your team together with our
+              powerful project management platform.
             </motion.p>
 
             <motion.div

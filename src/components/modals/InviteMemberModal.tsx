@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -7,11 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -20,8 +18,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mail, Link, Copy, Check, Send, Users, Plus, X } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
+import { Check, Copy, Link, Mail, Plus, Send, Users, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { UpgradeDialog } from './UpgradeDialog';
 
 interface InviteMemberModalProps {
   open: boolean;
@@ -30,6 +32,7 @@ interface InviteMemberModalProps {
 
 export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOpenChange }) => {
   const { toast } = useToast();
+  const { checkLimit, incrementUsage } = useSubscriptionStore();
 
   // Email invitation state
   const [emailList, setEmailList] = useState<string[]>(['']);
@@ -43,6 +46,9 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
   const [linkExpiry, setLinkExpiry] = useState<string>('7');
   const [isLinkLoading, setIsLinkLoading] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+
+  // Upgrade dialog state
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   const roles = [
     { value: 'member', label: 'Member' },
@@ -95,6 +101,12 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
       return;
     }
 
+    // Check if adding these members would exceed the limit
+    if (!checkLimit('maxTeamMembers')) {
+      setShowUpgradeDialog(true);
+      return;
+    }
+
     if (!selectedRole) {
       toast({
         title: 'Error',
@@ -114,6 +126,9 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
         title: 'Invitations Sent!',
         description: `${validEmails.length} invitation${validEmails.length > 1 ? 's' : ''} sent successfully`,
       });
+
+      // Increment team member usage
+      incrementUsage('teamMembers', validEmails.length);
 
       // Reset form
       setEmailList(['']);
@@ -201,133 +216,83 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
     setLinkCopied(false);
   };
 
+  const isFreePlan = useSubscriptionStore(state => state.currentPlan === 'free');
   return (
-    <Dialog
-      open={open}
-      onOpenChange={open => {
-        if (!open) resetModal();
-        onOpenChange(open);
-      }}
-    >
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            Invite Team Members
-          </DialogTitle>
-          <DialogDescription>
-            Invite new members to join your team via email or shareable link
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog
+        open={open}
+        onOpenChange={open => {
+          if (!open) resetModal();
+          onOpenChange(open);
+        }}
+      >
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              Invite Team Members
+            </DialogTitle>
+            <DialogDescription>
+              Invite new members to join your team via email or shareable link
+            </DialogDescription>
+          </DialogHeader>
 
-        <Tabs defaultValue="email" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="email" className="flex items-center gap-2">
-              <Mail className="h-4 w-4" />
-              Email Invitation
-            </TabsTrigger>
-            <TabsTrigger value="link" className="flex items-center gap-2">
-              <Link className="h-4 w-4" />
-              Invite Link
-            </TabsTrigger>
-          </TabsList>
+          <Tabs defaultValue="email" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="email" className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                Email Invitation
+              </TabsTrigger>
+              <TabsTrigger value="link" className="flex items-center gap-2" disabled={isFreePlan}>
+                <Link className="h-4 w-4" />
+                Invite Link
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="email" className="mt-6 space-y-4">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>Email Addresses *</Label>
+            <TabsContent value="email" className="mt-6 space-y-4">
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  {emailList.map((email, index) => (
-                    <div key={index} className="flex gap-2">
-                      <Input
-                        type="email"
-                        placeholder="colleague@company.com"
-                        value={email}
-                        onChange={e => updateEmail(index, e.target.value)}
-                        className={
-                          email.trim() && !isValidEmail(email.trim()) ? 'border-red-500' : ''
-                        }
-                      />
-                      {emailList.length > 1 && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeEmailField(index)}
-                          className="px-3"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <Button variant="outline" size="sm" onClick={addEmailField} className="w-full">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Another Email
-                </Button>
-                <p className="text-sm text-muted-foreground">
-                  {getValidEmails().length} valid email
-                  {getValidEmails().length !== 1 ? 's' : ''} entered
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="role">Role *</Label>
-                <Select value={selectedRole} onValueChange={setSelectedRole}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a role for the invitees" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {roles.map(role => (
-                      <SelectItem key={role.value} value={role.value}>
-                        {role.label}
-                      </SelectItem>
+                  <Label>Email Addresses *</Label>
+                  <div className="space-y-2">
+                    {emailList.map((email, index) => (
+                      <div key={index} className="flex gap-2">
+                        <Input
+                          type="email"
+                          placeholder="colleague@company.com"
+                          value={email}
+                          onChange={e => updateEmail(index, e.target.value)}
+                          className={
+                            email.trim() && !isValidEmail(email.trim()) ? 'border-red-500' : ''
+                          }
+                        />
+                        {emailList.length > 1 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => removeEmailField(index)}
+                            className="px-3"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
                     ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={addEmailField} className="w-full">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Another Email
+                  </Button>
+                  <p className="text-sm text-muted-foreground">
+                    {getValidEmails().length} valid email
+                    {getValidEmails().length !== 1 ? 's' : ''} entered
+                  </p>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="message">Custom Message (Optional)</Label>
-                <Textarea
-                  id="message"
-                  placeholder="Add a personal message to your invitation..."
-                  value={customMessage}
-                  onChange={e => setCustomMessage(e.target.value)}
-                  rows={3}
-                />
-              </div>
-
-              <Card className="bg-muted/30">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm">Preview</CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-muted-foreground">
-                  <p>Invitees will receive an email with:</p>
-                  <ul className="mt-2 list-inside list-disc space-y-1">
-                    <li>Invitation to join your team</li>
-                    <li>
-                      Role:{' '}
-                      {selectedRole
-                        ? roles.find(r => r.value === selectedRole)?.label
-                        : 'Not selected'}
-                    </li>
-                    <li>Setup instructions</li>
-                    {customMessage && <li>Your custom message</li>}
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="link" className="mt-6 space-y-4">
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Role *</Label>
-                  <Select value={linkRole} onValueChange={setLinkRole}>
+                  <Label htmlFor="role">Role *</Label>
+                  <Select value={selectedRole} onValueChange={setSelectedRole}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select role" />
+                      <SelectValue placeholder="Select a role for the invitees" />
                     </SelectTrigger>
                     <SelectContent>
                       {roles.map(role => (
@@ -340,115 +305,180 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Link Expires</Label>
-                  <Select value={linkExpiry} onValueChange={setLinkExpiry}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {expiryOptions.map(option => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="message">Custom Message (Optional)</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Add a personal message to your invitation..."
+                    value={customMessage}
+                    onChange={e => setCustomMessage(e.target.value)}
+                    rows={3}
+                  />
                 </div>
-              </div>
 
-              <Button
-                onClick={generateInviteLink}
-                disabled={!linkRole || isLinkLoading}
-                className="w-full"
-              >
-                {isLinkLoading ? (
-                  'Generating Link...'
-                ) : (
-                  <>
-                    <Link className="mr-2 h-4 w-4" />
-                    Generate Invite Link
-                  </>
-                )}
-              </Button>
-
-              {generatedLink && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-sm">
-                      <Check className="h-4 w-4 text-green-500" />
-                      Invite Link Generated
-                    </CardTitle>
+                <Card className="bg-muted/30">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm">Preview</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex gap-2">
-                      <Input value={generatedLink} readOnly className="font-mono text-sm" />
-                      <Button
-                        onClick={copyLinkToClipboard}
-                        variant="outline"
-                        size="sm"
-                        className="px-3"
-                      >
-                        {linkCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                    <div className="space-y-1 text-sm text-muted-foreground">
-                      <p>• Role: {roles.find(r => r.value === linkRole)?.label}</p>
-                      <p>
-                        • Expires:{' '}
-                        {linkExpiry === 'never'
-                          ? 'Never'
-                          : `${linkExpiry} day${linkExpiry !== '1' ? 's' : ''}`}
-                      </p>
-                      <p>• Anyone with this link can join your team</p>
-                    </div>
+                  <CardContent className="text-sm text-muted-foreground">
+                    <p>Invitees will receive an email with:</p>
+                    <ul className="mt-2 list-inside list-disc space-y-1">
+                      <li>Invitation to join your team</li>
+                      <li>
+                        Role:{' '}
+                        {selectedRole
+                          ? roles.find(r => r.value === selectedRole)?.label
+                          : 'Not selected'}
+                      </li>
+                      <li>Setup instructions</li>
+                      {customMessage && <li>Your custom message</li>}
+                    </ul>
                   </CardContent>
                 </Card>
-              )}
+              </div>
+            </TabsContent>
 
-              <Card className="bg-blue-50 dark:bg-blue-950/20">
-                <CardContent className="pt-4">
-                  <div className="flex gap-3">
-                    <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
-                    <div className="text-sm text-blue-700 dark:text-blue-300">
-                      <p className="mb-1 font-medium">Share this link safely</p>
-                      <p>
-                        Only share invite links with people you trust. Anyone with the link can join
-                        your team with the specified role.
-                      </p>
-                    </div>
+            <TabsContent value="link" className="mt-6 space-y-4">
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Role *</Label>
+                    <Select value={linkRole} onValueChange={setLinkRole}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {roles.map(role => (
+                          <SelectItem key={role.value} value={role.value}>
+                            {role.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
 
-        <DialogFooter className="flex-col gap-2 sm:flex-row">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <div className="flex gap-2">
-            <Tabs defaultValue="email" className="contents">
-              <TabsContent value="email" className="contents">
+                  <div className="space-y-2">
+                    <Label>Link Expires</Label>
+                    <Select value={linkExpiry} onValueChange={setLinkExpiry}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {expiryOptions.map(option => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
                 <Button
-                  onClick={handleSendInvitations}
-                  disabled={getValidEmails().length === 0 || !selectedRole || isEmailLoading}
-                  className="min-w-[140px]"
+                  onClick={generateInviteLink}
+                  disabled={!linkRole || isLinkLoading}
+                  className="w-full"
                 >
-                  {isEmailLoading ? (
-                    'Sending...'
+                  {isLinkLoading ? (
+                    'Generating Link...'
                   ) : (
                     <>
-                      <Send className="mr-2 h-4 w-4" />
-                      Send Invites
+                      <Link className="mr-2 h-4 w-4" />
+                      Generate Invite Link
                     </>
                   )}
                 </Button>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+
+                {generatedLink && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <Check className="h-4 w-4 text-green-500" />
+                        Invite Link Generated
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex gap-2">
+                        <Input value={generatedLink} readOnly className="font-mono text-sm" />
+                        <Button
+                          onClick={copyLinkToClipboard}
+                          variant="outline"
+                          size="sm"
+                          className="px-3"
+                        >
+                          {linkCopied ? (
+                            <Check className="h-4 w-4" />
+                          ) : (
+                            <Copy className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                      <div className="space-y-1 text-sm text-muted-foreground">
+                        <p>• Role: {roles.find(r => r.value === linkRole)?.label}</p>
+                        <p>
+                          • Expires:{' '}
+                          {linkExpiry === 'never'
+                            ? 'Never'
+                            : `${linkExpiry} day${linkExpiry !== '1' ? 's' : ''}`}
+                        </p>
+                        <p>• Anyone with this link can join your team</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                <Card className="bg-blue-50 dark:bg-blue-950/20">
+                  <CardContent className="pt-4">
+                    <div className="flex gap-3">
+                      <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
+                      <div className="text-sm text-blue-700 dark:text-blue-300">
+                        <p className="mb-1 font-medium">Share this link safely</p>
+                        <p>
+                          Only share invite links with people you trust. Anyone with the link can
+                          join your team with the specified role.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <div className="flex gap-2">
+              <Tabs defaultValue="email" className="contents">
+                <TabsContent value="email" className="contents">
+                  <Button
+                    onClick={handleSendInvitations}
+                    disabled={getValidEmails().length === 0 || !selectedRole || isEmailLoading}
+                    className="min-w-[140px]"
+                  >
+                    {isEmailLoading ? (
+                      'Sending...'
+                    ) : (
+                      <>
+                        <Send className="mr-2 h-4 w-4" />
+                        Send Invites
+                      </>
+                    )}
+                  </Button>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <UpgradeDialog
+        open={showUpgradeDialog}
+        onOpenChange={setShowUpgradeDialog}
+        feature="Team Members"
+        title="Team Member Limit Reached"
+        description="You've reached the maximum number of team members for the Free plan. Upgrade to Professional to invite unlimited team members."
+      />
+    </>
   );
 };

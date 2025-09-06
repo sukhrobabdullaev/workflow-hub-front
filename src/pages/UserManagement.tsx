@@ -1,4 +1,5 @@
 import { InviteMemberModal } from '@/components/modals/InviteMemberModal';
+import { UpgradeDialog } from '@/components/modals/UpgradeDialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +30,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PlanLimitIndicator } from '@/components/ui/plan-indicators';
 import {
   Select,
   SelectContent,
@@ -47,6 +49,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthStore } from '@/store/authStore';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
 import {
   Activity,
   Ban,
@@ -164,6 +167,10 @@ const mockUsers = [
 export const UserManagement = () => {
   const { user } = useAuthStore();
   const { toast } = useToast();
+  const { currentPlan, checkLimit } = useSubscriptionStore();
+  const isFreePlan = currentPlan === 'free';
+  const canAddMoreMembers = checkLimit('maxTeamMembers');
+
   const [users, setUsers] = useState(mockUsers);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
@@ -172,6 +179,7 @@ export const UserManagement = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   // Only allow admin role to access user management
   if (!user || user.role !== 'admin') {
@@ -235,6 +243,9 @@ export const UserManagement = () => {
 
   return (
     <div className="animate-fade-in space-y-6">
+      {/* Team Member Usage Indicator */}
+      {isFreePlan && <PlanLimitIndicator feature="teamMembers" />}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
@@ -242,15 +253,24 @@ export const UserManagement = () => {
             User Management
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Manage users, roles, and permissions across your organization
+            {isFreePlan
+              ? 'Manage up to 5 team members on the Free plan'
+              : 'Manage users, roles, and permissions across your organization'}
           </p>
         </div>
         <Button
-          onClick={() => setIsInviteModalOpen(true)}
+          onClick={() => {
+            if (!canAddMoreMembers && isFreePlan) {
+              setShowUpgradeDialog(true);
+            } else {
+              setIsInviteModalOpen(true);
+            }
+          }}
           className="bg-gradient-primary hover:opacity-90"
+          disabled={!canAddMoreMembers && isFreePlan}
         >
           <UserPlus className="mr-2 h-4 w-4" />
-          Invite User
+          {!canAddMoreMembers && isFreePlan ? 'Upgrade to Add More' : 'Invite User'}
         </Button>
       </div>
 
@@ -264,7 +284,11 @@ export const UserManagement = () => {
             <Users className="h-4 w-4" />
             All Users
           </TabsTrigger>
-          <TabsTrigger value="permissions" className="flex items-center gap-2">
+          <TabsTrigger
+            value="permissions"
+            className="flex items-center gap-2"
+            // disabled={isFreePlan}
+          >
             <Shield className="h-4 w-4" />
             Roles & Permissions
           </TabsTrigger>
@@ -709,6 +733,14 @@ export const UserManagement = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Upgrade Dialog */}
+      <UpgradeDialog
+        open={showUpgradeDialog}
+        onOpenChange={setShowUpgradeDialog}
+        title="Upgrade to Add More Team Members"
+        description="You've reached the 5 team member limit on the Free plan. Upgrade to Professional for unlimited team members and advanced user management features."
+      />
     </div>
   );
 };

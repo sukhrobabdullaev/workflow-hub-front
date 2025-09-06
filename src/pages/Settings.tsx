@@ -1,18 +1,22 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { LiveUpdates } from '@/components/realtime/LiveUpdates';
+import { OnlineUsers } from '@/components/realtime/OnlineUsers';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { useAuthStore } from '@/store/authStore';
-import { OnlineUsers } from '@/components/realtime/OnlineUsers';
-import { LiveUpdates } from '@/components/realtime/LiveUpdates';
-import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuthStore } from '@/store/authStore';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
+import { Crown } from 'lucide-react';
+import { useState } from 'react';
 
 export const Settings = () => {
   const { user, updateProfile } = useAuthStore();
   const { toast } = useToast();
+  const { currentPlan } = useSubscriptionStore();
+  const isFreePlan = currentPlan === 'free';
 
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
@@ -39,7 +43,11 @@ export const Settings = () => {
     <div className="max-w-4xl animate-fade-in space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="mt-2 text-muted-foreground">Manage your account settings and preferences</p>
+        <p className="mt-2 text-muted-foreground">
+          {isFreePlan
+            ? 'Manage your basic settings. Upgrade for advanced integrations and features.'
+            : 'Manage your account settings and preferences'}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -199,9 +207,34 @@ export const Settings = () => {
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Real-time Features */}
-          <OnlineUsers />
-          <LiveUpdates />
+          {/* Real-time Features - Pro only */}
+          {!isFreePlan ? (
+            <>
+              <OnlineUsers />
+              <LiveUpdates />
+            </>
+          ) : (
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  Real-time Features
+                  <Crown className="h-4 w-4 text-muted-foreground" />
+                </CardTitle>
+                <CardDescription>Available with Professional plan</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Live team activity, online users, and real-time collaboration features
+                  </p>
+                  <Button size="sm" className="bg-gradient-to-r from-primary to-primary/80">
+                    <Crown className="mr-2 h-4 w-4" />
+                    Upgrade to Unlock
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Organization Info */}
           <Card className="shadow-soft">
@@ -245,8 +278,13 @@ export const Settings = () => {
               <Button variant="outline" size="sm" className="w-full justify-start">
                 Import Projects
               </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                API Settings
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start"
+                disabled={isFreePlan}
+              >
+                {isFreePlan ? 'API Settings (Pro)' : 'API Settings'}
               </Button>
               <Button
                 variant="outline"

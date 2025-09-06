@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthStore } from '@/store/authStore';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { Bell, Camera, Crown, Eye, Save, Shield, User, UserCheck, Users } from 'lucide-react';
 import { useState } from 'react';
 
@@ -42,6 +43,9 @@ const getRoleColor = (role: string) => {
 export const Profile = () => {
   const { user, updateProfile, completeOnboarding } = useAuthStore();
   const { toast } = useToast();
+  const { currentPlan } = useSubscriptionStore();
+  const isFreePlan = currentPlan === 'free';
+
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -116,7 +120,11 @@ export const Profile = () => {
             <User className="h-8 w-8" />
             Profile Settings
           </h1>
-          <p className="mt-2 text-muted-foreground">Manage your account settings and preferences</p>
+          <p className="mt-2 text-muted-foreground">
+            {isFreePlan
+              ? 'Manage your basic profile settings. Upgrade for advanced features.'
+              : 'Manage your account settings and preferences'}
+          </p>
         </div>
       </div>
 

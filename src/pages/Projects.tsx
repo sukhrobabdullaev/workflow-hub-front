@@ -18,9 +18,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { PlanLimitIndicator } from '@/components/ui/plan-indicators';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAppStore, type Project } from '@/store/appStore';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
 import {
   BarChart3,
   Calendar,
@@ -50,12 +52,29 @@ const getStatusColor = (status: string) => {
 
 export const Projects = () => {
   const { projects, teamMembers, setCurrentProject, tasks, deleteProject } = useAppStore();
+  const { getCurrentPlan, checkLimit } = useSubscriptionStore();
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const currentPlan = getCurrentPlan();
+  const isFreePlan = currentPlan.id === 'free';
+
+  const handleCreateProject = () => {
+    if (isFreePlan && !checkLimit('maxProjects')) {
+      toast({
+        title: 'Project Limit Reached',
+        description:
+          'Free plan is limited to 3 projects. Upgrade to Professional for unlimited projects.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setIsCreateProjectModalOpen(true);
+  };
 
   const handleProjectClick = (projectId: string) => {
     setCurrentProject(projectId);
@@ -64,8 +83,9 @@ export const Projects = () => {
 
   const handleEditProject = (project: Project, e: React.MouseEvent) => {
     e.stopPropagation();
-    setSelectedProject(project);
     console.log(selectedProject);
+    setSelectedProject(project);
+    // TODO: Implement edit functionality
     toast({
       title: 'Edit Project',
       description: 'Edit functionality coming soon',
@@ -112,6 +132,13 @@ export const Projects = () => {
 
   return (
     <div className="animate-fade-in space-y-6">
+      {/* Project Limit Indicator */}
+      {isFreePlan && (
+        <div className="max-w-sm">
+          <PlanLimitIndicator feature="projects" />
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
@@ -119,16 +146,15 @@ export const Projects = () => {
             Projects & Kanban
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Visual project management with unlimited Kanban boards
+            {isFreePlan
+              ? 'Simple project management with up to 3 projects and basic Kanban boards'
+              : 'Visual project management with unlimited Kanban boards'}
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button
-            className="bg-gradient-primary hover:opacity-90"
-            onClick={() => setIsCreateProjectModalOpen(true)}
-          >
+          <Button className="bg-gradient-primary hover:opacity-90" onClick={handleCreateProject}>
             <FolderOpen className="mr-2 h-4 w-4" />
-            New Project
+            {isFreePlan ? `New Project (${projects.length}/3)` : 'New Project'}
           </Button>
           <Link to="/project-management">
             <Button variant="outline">

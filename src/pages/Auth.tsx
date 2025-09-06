@@ -34,33 +34,32 @@ export const Auth = () => {
   const showEnterpriseSSO = () => setCurrentFlow('enterprise-sso');
   const backToLogin = () => setCurrentFlow('login');
 
-  // Rotating features for the left panel
+  // Rotating features for the left panel - Updated for Free Plan
   const features = [
     {
       icon: Shield,
-      title: 'Enterprise Security',
-      description:
-        'Bank-level encryption, SSO, SAML, and compliance features to keep your data safe.',
-      stats: '99.9% uptime',
+      title: 'Free Plan Features',
+      description: 'Get started with essential project management tools at no cost.',
+      stats: 'Forever free',
     },
     {
       icon: Users,
       title: 'Team Collaboration',
       description:
-        'Real-time collaboration tools that bring your team together, wherever they are.',
-      stats: '50% faster delivery',
+        'Up to 5 team members can collaborate on up to 3 projects with basic task management.',
+      stats: '3 projects • 5 members',
     },
     {
       icon: Zap,
-      title: 'Lightning Fast',
-      description: 'Optimized performance with instant loading and real-time updates.',
-      stats: '<100ms response',
+      title: 'AI-Powered Suggestions',
+      description: 'Get 10 AI suggestions per month to boost your productivity.',
+      stats: '10 AI suggestions/month',
     },
     {
       icon: Award,
-      title: 'Industry Leading',
-      description: 'Trusted by Fortune 500 companies and growing startups worldwide.',
-      stats: '100k+ teams',
+      title: 'Upgrade Anytime',
+      description: 'Need more? Upgrade to Professional for unlimited everything.',
+      stats: 'Start at $8/month',
     },
   ];
 
@@ -186,7 +185,7 @@ export const Auth = () => {
               ))}
             </div>
 
-            {/* Trust indicators */}
+            {/* Trust indicators - Updated for Free Plan */}
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-400">
@@ -198,7 +197,7 @@ export const Auth = () => {
                     />
                   </svg>
                 </div>
-                <span className="text-primary-foreground/80">Free 14-day trial</span>
+                <span className="text-primary-foreground/80">Always free plan available</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-400">
@@ -222,7 +221,9 @@ export const Auth = () => {
                     />
                   </svg>
                 </div>
-                <span className="text-primary-foreground/80">Cancel anytime</span>
+                <span className="text-primary-foreground/80">
+                  Upgrade anytime for more features
+                </span>
               </div>
             </div>
           </motion.div>

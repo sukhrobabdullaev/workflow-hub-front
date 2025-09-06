@@ -1,4 +1,4 @@
-import React from 'react';
+import { Task, useAppStore } from '@/store/appStore';
 import {
   DndContext,
   DragEndEvent,
@@ -9,10 +9,9 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { useAppStore } from '@/store/appStore';
-import { Task } from '@/store/appStore';
-import { KanbanColumn } from './KanbanColumn';
+import React from 'react';
 import { KanbanCard } from './KanbanCard';
+import { KanbanColumn } from './KanbanColumn';
 
 interface KanbanBoardProps {
   projectId?: string;
@@ -20,7 +19,7 @@ interface KanbanBoardProps {
 }
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, tasks: propTasks }) => {
-  const { tasks: storeTasks, moveTask } = useAppStore();
+  const { tasks: storeTasks, moveTask, getColumnsForProject, deleteColumn } = useAppStore();
   const [activeTask, setActiveTask] = React.useState<Task | null>(null);
 
   const sensors = useSensors(
@@ -35,9 +34,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, tasks: prop
   const filteredTasks =
     propTasks || (projectId ? storeTasks.filter(task => task.projectId === projectId) : storeTasks);
 
-  const todoTasks = filteredTasks.filter(task => task.status === 'todo');
-  const inProgressTasks = filteredTasks.filter(task => task.status === 'in-progress');
-  const doneTasks = filteredTasks.filter(task => task.status === 'done');
+  // Get columns for this project (or global columns)
+  const columns = getColumnsForProject(projectId);
 
   const handleDragStart = (event: DragStartEvent) => {
     const task = filteredTasks.find(t => t.id === event.active.id);
@@ -51,40 +49,40 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, tasks: prop
     if (!over) return;
 
     const taskId = active.id as string;
-    const newStatus = over.id as Task['status'];
+    const newStatus = over.id as string;
 
-    // If dropped on a column, update the task status
-    if (['todo', 'in-progress', 'done'].includes(newStatus)) {
+    // Check if the drop target is a valid column
+    const isValidColumn = columns.some(col => col.id === newStatus);
+    if (isValidColumn) {
       moveTask(taskId, newStatus);
     }
   };
 
-  const columns = [
-    {
-      id: 'todo' as const,
-      title: 'To Do',
-      tasks: todoTasks,
-      color: 'bg-slate-100 dark:bg-slate-800',
-    },
-    {
-      id: 'in-progress' as const,
-      title: 'In Progress',
-      tasks: inProgressTasks,
-      color: 'bg-blue-50 dark:bg-blue-900/20',
-    },
-    {
-      id: 'done' as const,
-      title: 'Done',
-      tasks: doneTasks,
-      color: 'bg-green-50 dark:bg-green-900/20',
-    },
-  ];
+  const handleDeleteColumn = (columnId: string) => {
+    deleteColumn(columnId);
+  };
+
+  // Prepare column data for rendering
+  const columnData = columns.map(column => ({
+    ...column,
+    tasks: filteredTasks.filter(task => task.status === column.id),
+  }));
 
   return (
     <div className="h-full">
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-3">
-          {columns.map(column => (
+        <div
+          className={`grid h-full gap-6 ${
+            columns.length === 3
+              ? 'grid-cols-1 md:grid-cols-3'
+              : columns.length === 4
+                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
+                : columns.length === 5
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-5'
+                  : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-6'
+          }`}
+        >
+          {columnData.map(column => (
             <KanbanColumn
               key={column.id}
               id={column.id}
@@ -92,6 +90,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, tasks: prop
               color={column.color}
               taskCount={column.tasks.length}
               projectId={projectId}
+              isDefault={column.isDefault}
+              onDelete={column.isDefault ? undefined : () => handleDeleteColumn(column.id)}
             >
               <SortableContext
                 items={column.tasks.map(task => task.id)}

@@ -1,6 +1,8 @@
+import { UpgradeDialog } from '@/components/modals/UpgradeDialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { FreePlanBanner } from '@/components/ui/plan-indicators';
 import {
   Select,
   SelectContent,
@@ -10,6 +12,8 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuthStore } from '@/store/authStore';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
+import { Crown } from 'lucide-react';
 import { useState } from 'react';
 import {
   Bar,
@@ -51,7 +55,10 @@ const projectStatusData = [
 
 export const Reports = () => {
   const user = useAuthStore(state => state.user);
+  const { currentPlan } = useSubscriptionStore();
+  const isFreePlan = currentPlan === 'free';
   const [selectedPeriod, setSelectedPeriod] = useState('30');
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   // Access control
   if (user?.role === 'member') {
@@ -73,16 +80,21 @@ export const Reports = () => {
 
   return (
     <div className="container mx-auto space-y-6 p-6">
+      {/* Free Plan Banner */}
+      {isFreePlan && <FreePlanBanner />}
+
       {/* Header */}
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Reports & Analytics</h1>
           <p className="text-muted-foreground">
-            Comprehensive insights into team performance and project progress
+            {isFreePlan
+              ? 'Basic insights into team performance and project progress'
+              : 'Comprehensive insights into team performance and project progress'}
           </p>
         </div>
         <div className="flex gap-4">
-          <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+          <Select value={selectedPeriod} onValueChange={setSelectedPeriod} disabled={isFreePlan}>
             <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="Select period" />
             </SelectTrigger>
@@ -93,7 +105,16 @@ export const Reports = () => {
               <SelectItem value="365">Last year</SelectItem>
             </SelectContent>
           </Select>
-          <Button>Export PDF</Button>
+          <Button disabled={isFreePlan} onClick={() => isFreePlan && setShowUpgradeDialog(true)}>
+            {isFreePlan ? (
+              <>
+                <Crown className="mr-2 h-4 w-4" />
+                Export PDF (Pro)
+              </>
+            ) : (
+              'Export PDF'
+            )}
+          </Button>
         </div>
       </div>
 
@@ -180,29 +201,74 @@ export const Reports = () => {
       <Tabs defaultValue="productivity" className="space-y-6">
         <TabsList>
           <TabsTrigger value="productivity">Productivity</TabsTrigger>
-          <TabsTrigger value="team">Team Performance</TabsTrigger>
-          <TabsTrigger value="projects">Project Status</TabsTrigger>
+          <TabsTrigger value="team" disabled={isFreePlan}>
+            Team Performance {isFreePlan && '(Pro)'}
+          </TabsTrigger>
+          <TabsTrigger value="projects" disabled={isFreePlan}>
+            Project Status {isFreePlan && '(Pro)'}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="productivity" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Team Productivity Trends</CardTitle>
-              <CardDescription>Track task completion and efficiency over time</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={productivityData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="tasks" fill="#3B82F6" name="Total Tasks" />
-                  <Bar dataKey="completed" fill="#22C55E" name="Completed" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          {isFreePlan ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  Basic Productivity Overview
+                  <Button
+                    size="sm"
+                    onClick={() => setShowUpgradeDialog(true)}
+                    className="bg-gradient-to-r from-primary to-primary/80"
+                  >
+                    <Crown className="mr-2 h-4 w-4" />
+                    Upgrade for Advanced Charts
+                  </Button>
+                </CardTitle>
+                <CardDescription>Limited insights available on Free plan</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between rounded-lg bg-muted/30 p-4">
+                    <span className="font-medium">This Month&apos;s Tasks</span>
+                    <span className="text-2xl font-bold">24</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg bg-muted/30 p-4">
+                    <span className="font-medium">Completed Tasks</span>
+                    <span className="text-2xl font-bold text-green-600">18</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg bg-muted/30 p-4">
+                    <span className="font-medium">Completion Rate</span>
+                    <span className="text-2xl font-bold text-blue-600">75%</span>
+                  </div>
+                  <div className="mt-6 rounded-lg border-2 border-dashed border-primary/30 p-4 text-center">
+                    <Crown className="mx-auto mb-2 h-12 w-12 text-primary/60" />
+                    <p className="text-sm text-muted-foreground">
+                      Upgrade to Professional for detailed charts, trends, and analytics
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>Team Productivity Trends</CardTitle>
+                <CardDescription>Track task completion and efficiency over time</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={productivityData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="tasks" fill="#3B82F6" name="Total Tasks" />
+                    <Bar dataKey="completed" fill="#22C55E" name="Completed" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         <TabsContent value="team" className="space-y-6">
@@ -302,6 +368,14 @@ export const Reports = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Upgrade Dialog */}
+      <UpgradeDialog
+        open={showUpgradeDialog}
+        onOpenChange={setShowUpgradeDialog}
+        title="Unlock Advanced Reports & Analytics"
+        description="Upgrade to Professional to access detailed charts, team performance insights, project analytics, and data export features."
+      />
     </div>
   );
 };

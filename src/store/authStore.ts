@@ -7,6 +7,15 @@ interface User {
   email: string;
   avatar?: string;
   role: 'admin' | 'manager' | 'member';
+  plan: 'free' | 'professional' | 'enterprise';
+  planLimits?: {
+    maxProjects: number;
+    maxTeamMembers: number;
+    storageGB: number;
+    aiFeatures: boolean;
+    advancedAnalytics: boolean;
+    prioritySupport: boolean;
+  };
   companyName?: string;
   companySize?: string;
   industry?: string;
@@ -27,6 +36,39 @@ interface AuthState {
   enableTwoFactor: () => void;
 }
 
+// Helper function to get plan limits
+const getPlanLimits = (plan: 'free' | 'professional' | 'enterprise') => {
+  switch (plan) {
+    case 'free':
+      return {
+        maxProjects: 3,
+        maxTeamMembers: 5,
+        storageGB: 0.01, // 10MB
+        aiFeatures: false,
+        advancedAnalytics: false,
+        prioritySupport: false,
+      };
+    case 'professional':
+      return {
+        maxProjects: -1, // unlimited
+        maxTeamMembers: -1, // unlimited
+        storageGB: 1, // 1GB per user
+        aiFeatures: true,
+        advancedAnalytics: true,
+        prioritySupport: true,
+      };
+    case 'enterprise':
+      return {
+        maxProjects: -1, // unlimited
+        maxTeamMembers: -1, // unlimited
+        storageGB: -1, // unlimited
+        aiFeatures: true,
+        advancedAnalytics: true,
+        prioritySupport: true,
+      };
+  }
+};
+
 // Mock user data for demo
 const mockUsers: User[] = [
   {
@@ -36,6 +78,8 @@ const mockUsers: User[] = [
     avatar:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
     role: 'admin',
+    plan: 'enterprise',
+    planLimits: getPlanLimits('enterprise'),
   },
   {
     id: '2',
@@ -44,6 +88,8 @@ const mockUsers: User[] = [
     avatar:
       'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
     role: 'manager',
+    plan: 'professional',
+    planLimits: getPlanLimits('professional'),
   },
 ];
 
@@ -68,12 +114,17 @@ export const useAuthStore = create<AuthState>()(
       register: async (name: string, email: string, password: string) => {
         // Mock registration - TODO: Replace with API call
         await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log(password);
+        // eslint-disable-next-line no-console
+        console.log('Registration with password:', password);
+
+        const plan = 'free';
         const newUser: User = {
           id: Date.now().toString(),
           name,
           email,
           role: 'member',
+          plan,
+          planLimits: getPlanLimits(plan),
           twoFactorEnabled: false,
           onboardingCompleted: false,
         };
@@ -86,12 +137,15 @@ export const useAuthStore = create<AuthState>()(
         // Mock social authentication
         await new Promise(resolve => setTimeout(resolve, 1000));
 
+        const plan = 'free';
         const newUser: User = {
           id: Date.now().toString(),
           name: userData.name || `${provider} User`,
           email: userData.email || `user@${provider}.com`,
           avatar: userData.avatar,
           role: 'member',
+          plan,
+          planLimits: getPlanLimits(plan),
           twoFactorEnabled: false,
           onboardingCompleted: false,
         };

@@ -1,8 +1,11 @@
+import { UpgradeDialog } from '@/components/modals/UpgradeDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAppStore } from '@/store/appStore';
-import { BarChart3, Target, TrendingUp, Users } from 'lucide-react';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
+import { BarChart3, Crown, Lock, Target, TrendingUp, Users } from 'lucide-react';
+import { useState } from 'react';
 
 // Enhanced chart component
 const Chart = ({
@@ -94,6 +97,11 @@ const Chart = ({
 
 export const Analytics = () => {
   const { projects, tasks } = useAppStore();
+  const { getCurrentPlan } = useSubscriptionStore();
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
+
+  const currentPlan = getCurrentPlan();
+  const isFreePlan = currentPlan.id === 'free';
 
   // Sample analytics data
   const weeklyProgress = [45, 52, 61, 58, 67, 73, 68];
@@ -107,6 +115,99 @@ export const Analytics = () => {
   const overallProgress = Math.round(
     projects.reduce((acc, p) => acc + p.progress, 0) / totalProjects
   );
+
+  // For free plan, show basic analytics only
+  if (isFreePlan) {
+    return (
+      <div className="animate-fade-in space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
+              <BarChart3 className="h-8 w-8" />
+              Basic Reports
+            </h1>
+            <p className="mt-2 text-muted-foreground">Simple project insights for your free plan</p>
+          </div>
+        </div>
+
+        {/* Basic metrics for free plan */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
+              <Target className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalProjects}/3</div>
+              <p className="text-xs text-muted-foreground">Free plan limit</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{activeProjects}</div>
+              <p className="text-xs text-muted-foreground">Currently in progress</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Tasks</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{tasks.length}</div>
+              <p className="text-xs text-muted-foreground">Across all projects</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Avg Progress</CardTitle>
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{overallProgress}%</div>
+              <p className="text-xs text-muted-foreground">Overall completion</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Advanced Analytics Upgrade Prompt */}
+        <Card className="border-2 border-dashed border-primary/20 bg-primary/5">
+          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="mb-4 rounded-full bg-primary/10 p-4">
+              <Lock className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="mb-2 text-xl font-semibold">Advanced Analytics</h3>
+            <p className="mb-6 max-w-md text-muted-foreground">
+              Unlock detailed insights, team performance tracking, time analytics, and custom
+              reports with Professional plan.
+            </p>
+            <Button
+              onClick={() => setShowUpgradeDialog(true)}
+              className="bg-gradient-to-r from-primary to-primary/80"
+            >
+              <Crown className="mr-2 h-4 w-4" />
+              Upgrade for Advanced Analytics
+            </Button>
+          </CardContent>
+        </Card>
+
+        <UpgradeDialog
+          open={showUpgradeDialog}
+          onOpenChange={setShowUpgradeDialog}
+          feature="Advanced Analytics"
+          title="Unlock Powerful Analytics"
+          description="Get detailed insights, team performance tracking, time analytics, and custom reports with Professional plan."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in space-y-6">
