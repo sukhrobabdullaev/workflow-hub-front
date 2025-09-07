@@ -8,6 +8,7 @@ import { Approvals } from '@/pages/Approvals';
 import { Auth } from '@/pages/Auth';
 import { Billing } from '@/pages/Billing';
 import { Dashboard } from '@/pages/Dashboard';
+import { InviteAcceptance } from '@/pages/InviteAcceptance';
 import { Landing } from '@/pages/Landing';
 import { OnboardingFlow } from '@/pages/Onboarding';
 import { Profile } from '@/pages/Profile';
@@ -54,6 +55,7 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/landing" element={<Landing />} />
+          <Route path="/join/:inviteId" element={<InviteAcceptance />} />
           <Route
             path="/onboarding"
             element={

@@ -165,7 +165,7 @@ const mockUsers = [
 ];
 
 export const UserManagement = () => {
-  const { user } = useAuthStore();
+  const { user, getCurrentRole } = useAuthStore();
   const { toast } = useToast();
   const { currentPlan, checkLimit } = useSubscriptionStore();
   const isFreePlan = currentPlan === 'free';
@@ -181,8 +181,10 @@ export const UserManagement = () => {
   const [userToDelete, setUserToDelete] = useState(null);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
+  const currentRole = getCurrentRole();
+
   // Only allow admin role to access user management
-  if (!user || user.role !== 'admin') {
+  if (!user || currentRole !== 'admin') {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <Card className="mx-auto max-w-md text-center">

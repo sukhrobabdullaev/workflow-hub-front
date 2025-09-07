@@ -51,9 +51,21 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   const roles = [
-    { value: 'member', label: 'Member' },
-    { value: 'manager', label: 'Manager' },
-    { value: 'admin', label: 'Administrator' },
+    {
+      value: 'member',
+      label: 'Member',
+      description: 'Can view and work on assigned tasks',
+    },
+    {
+      value: 'manager',
+      label: 'Manager',
+      description: 'Can manage projects and assign tasks to team members',
+    },
+    {
+      value: 'admin',
+      label: 'Administrator',
+      description: 'Full access to all features including user management and billing',
+    },
   ];
 
   const expiryOptions = [
@@ -171,7 +183,8 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
 
       toast({
         title: 'Invite Link Generated!',
-        description: 'Share this link with potential team members',
+        description:
+          'Share this link with potential team members. They will be assigned the selected role upon joining.',
       });
     } catch {
       toast({
@@ -233,9 +246,38 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
               Invite Team Members
             </DialogTitle>
             <DialogDescription>
-              Invite new members to join your team via email or shareable link
+              Invite new members to join your team with specific roles. As the admin, you can assign
+              different permission levels to each team member.
             </DialogDescription>
           </DialogHeader>
+
+          {/* Role Assignment Info */}
+          <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 dark:border-blue-800 dark:from-blue-950/20 dark:to-indigo-950/20">
+            <CardContent className="pt-4">
+              <div className="flex gap-3">
+                <div className="mt-0.5 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
+                <div className="text-sm">
+                  <p className="mb-1 font-medium text-blue-900 dark:text-blue-100">
+                    Role Assignment Logic
+                  </p>
+                  <div className="space-y-1 text-blue-700 dark:text-blue-300">
+                    <p>
+                      • <strong>Independent signup:</strong> Anyone who signs up and completes
+                      onboarding automatically becomes an Administrator
+                    </p>
+                    <p>
+                      • <strong>Invited users:</strong> You can assign specific roles (Member,
+                      Manager, or Admin) based on their responsibilities
+                    </p>
+                    <p>
+                      • <strong>Your role:</strong> As the workspace creator, you have full
+                      administrative privileges
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           <Tabs defaultValue="email" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
@@ -297,11 +339,21 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
                     <SelectContent>
                       {roles.map(role => (
                         <SelectItem key={role.value} value={role.value}>
-                          {role.label}
+                          <div className="flex flex-col">
+                            <span className="font-medium">{role.label}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {role.description}
+                            </span>
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  {selectedRole && (
+                    <p className="text-xs text-muted-foreground">
+                      {roles.find(r => r.value === selectedRole)?.description}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -349,11 +401,21 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
                       <SelectContent>
                         {roles.map(role => (
                           <SelectItem key={role.value} value={role.value}>
-                            {role.label}
+                            <div className="flex flex-col">
+                              <span className="font-medium">{role.label}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {role.description}
+                              </span>
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+                    {linkRole && (
+                      <p className="text-xs text-muted-foreground">
+                        {roles.find(r => r.value === linkRole)?.description}
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -420,7 +482,10 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ open, onOp
                             ? 'Never'
                             : `${linkExpiry} day${linkExpiry !== '1' ? 's' : ''}`}
                         </p>
-                        <p>• Anyone with this link can join your team</p>
+                        <p>
+                          • Anyone with this link will join your team with the{' '}
+                          {roles.find(r => r.value === linkRole)?.label} role
+                        </p>
                       </div>
                     </CardContent>
                   </Card>

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAuthStore } from '@/store/authStore';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { NavLink } from 'react-router-dom';
 
 // Navigation menu items organized by sections with clear connections to pages
@@ -69,12 +70,6 @@ const getNavigationSections = (userRole: string) =>
               },
             ]
           : []),
-        // ...(userRole === 'admin' || userRole === 'manager' ? [{
-        //   title: 'Approvals',
-        //   url: '/approvals',
-        //   icon: 'check-circle',
-        //   description: 'Review and approve requests'
-        // }] : []),
         ...(userRole === 'admin'
           ? [
               {
@@ -280,6 +275,19 @@ const IconComponent = ({ name, className }: { name: string; className?: string }
 export const AppSidebar = () => {
   const { open } = useSidebar();
   const user = useAuthStore(state => state.user);
+  const getCurrentRole = useAuthStore(state => state.getCurrentRole);
+  const { getCurrentPlan } = useSubscriptionStore();
+
+  const currentPlan = getCurrentPlan();
+  const currentRole = getCurrentRole();
+
+  // Debug logging for workspace switcher
+  console.log('AppSidebar Debug:', {
+    user: user?.name,
+    workspacesCount: user?.workspaces?.length,
+    currentWorkspaceId: user?.currentWorkspaceId,
+    workspaces: user?.workspaces,
+  });
 
   const getNavClassName = ({ isActive }: { isActive: boolean }) =>
     `${
@@ -287,7 +295,7 @@ export const AppSidebar = () => {
     }`;
 
   const collapsed = !open;
-  const navigationSections = getNavigationSections(user?.role || 'member');
+  const navigationSections = getNavigationSections(currentRole || 'member');
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
@@ -303,7 +311,19 @@ export const AppSidebar = () => {
             {!collapsed && (
               <div>
                 <h2 className="font-bold text-sidebar-foreground">WorkflowHub</h2>
-                <p className="text-xs text-sidebar-foreground/60">Enterprise</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-xs capitalize text-sidebar-foreground/60">
+                    {currentPlan.name}
+                  </p>
+                  {currentPlan.id === 'free' && (
+                    <span className="rounded border border-dashed border-muted-foreground/30 px-1.5 py-0.5 text-xs text-muted-foreground/70">
+                      Free
+                    </span>
+                  )}
+                  {(currentPlan.id === 'professional' || currentPlan.id === 'enterprise') && (
+                    <span className="text-xs text-primary">👑</span>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -326,7 +346,79 @@ export const AppSidebar = () => {
               )}
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium text-sidebar-foreground">{user.name}</p>
-                <p className="text-xs capitalize text-sidebar-foreground/60">{user.role}</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs capitalize text-sidebar-foreground/60">{currentRole}</p>
+                  {currentPlan.id === 'free' && (
+                    <button
+                      onClick={() => {
+                        const { setUpgradeDialog } = useSubscriptionStore.getState();
+                        setUpgradeDialog(true);
+                      }}
+                      className="cursor-pointer text-xs text-primary transition-colors hover:text-primary/80"
+                      title="Upgrade to unlock more features"
+                    >
+                      Upgrade
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* Temporary test button */}
+            {user.workspaces.length === 1 && (
+              <button
+                onClick={() => {
+                  const { addTestWorkspace } = useAuthStore.getState();
+                  addTestWorkspace();
+                }}
+                className="mt-2 w-full rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
+              >
+                Add Test Workspace (for testing)
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Workspace Switcher */}
+        {!collapsed && user && user.workspaces.length > 1 && (
+          <div className="border-b border-sidebar-border p-4">
+            <div className="space-y-2">
+              <p className="text-xs font-medium uppercase tracking-wide text-sidebar-foreground/60">
+                Workspaces
+              </p>
+              <div className="space-y-1">
+                {user.workspaces.map(workspace => (
+                  <button
+                    key={workspace.workspaceId}
+                    onClick={() => {
+                      console.log(
+                        'Switching to workspace:',
+                        workspace.workspaceId,
+                        workspace.workspaceName
+                      );
+                      const { switchWorkspace } = useAuthStore.getState();
+                      switchWorkspace(workspace.workspaceId);
+                      console.log(
+                        'After switch - current workspace:',
+                        useAuthStore.getState().user?.currentWorkspaceId
+                      );
+                    }}
+                    className={`w-full rounded-md p-2 text-left text-sm transition-colors ${
+                      workspace.workspaceId === user.currentWorkspaceId
+                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                        : 'hover:bg-sidebar-accent/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="truncate">{workspace.workspaceName}</span>
+                      <div className="flex items-center gap-1">
+                        {workspace.isOwner && <span className="text-xs">👑</span>}
+                        <span className="text-xs capitalize text-sidebar-foreground/60">
+                          {workspace.role}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>

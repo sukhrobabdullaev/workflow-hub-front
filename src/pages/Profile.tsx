@@ -41,10 +41,21 @@ const getRoleColor = (role: string) => {
 };
 
 export const Profile = () => {
-  const { user, updateProfile, completeOnboarding } = useAuthStore();
+  const {
+    user,
+    updateProfile,
+    completeOnboarding,
+    getCurrentRole,
+    getCurrentWorkspace,
+    isWorkspaceOwner,
+  } = useAuthStore();
   const { toast } = useToast();
   const { currentPlan } = useSubscriptionStore();
   const isFreePlan = currentPlan === 'free';
+
+  const currentRole = getCurrentRole();
+  const currentWorkspace = getCurrentWorkspace();
+  const isOwner = isWorkspaceOwner();
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -172,9 +183,14 @@ export const Profile = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <h2 className="text-2xl font-bold">{user.name}</h2>
-                    <Badge className={getRoleIcon(user.role) && getRoleColor(user.role)}>
-                      {getRoleIcon(user.role)}
-                      <span className="ml-1 capitalize">{user.role}</span>
+                    <Badge
+                      className={
+                        getRoleIcon(currentRole || 'member') &&
+                        getRoleColor(currentRole || 'member')
+                      }
+                    >
+                      {getRoleIcon(currentRole || 'member')}
+                      <span className="ml-1 capitalize">{currentRole}</span>
                     </Badge>
                   </div>
                   <p className="text-muted-foreground">{user.email}</p>
@@ -341,8 +357,30 @@ export const Profile = () => {
                   )}
                 </div>
 
+                {/* Workspace Information */}
+                <div className="space-y-3 border-t pt-4">
+                  <h4 className="font-medium">Current Workspace</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">{currentWorkspace?.workspaceName}</span>
+                      {isOwner && <span className="text-xs">👑 Owner</span>}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Role: {currentRole} • Joined{' '}
+                      {currentWorkspace
+                        ? new Date(currentWorkspace.joinedAt).toLocaleDateString()
+                        : 'N/A'}
+                    </p>
+                    {user && user.workspaces.length > 1 && (
+                      <p className="text-xs text-muted-foreground">
+                        Member of {user.workspaces.length} workspaces
+                      </p>
+                    )}
+                  </div>
+                </div>
+
                 {/* Role-specific information */}
-                {user.role === 'manager' && (
+                {currentRole === 'manager' && (
                   <div className="space-y-3 border-t pt-4">
                     <h4 className="flex items-center gap-2 font-medium">
                       <Users className="h-4 w-4" />
@@ -357,7 +395,7 @@ export const Profile = () => {
                   </div>
                 )}
 
-                {user.role === 'admin' && (
+                {currentRole === 'admin' && (
                   <div className="space-y-3 border-t pt-4">
                     <h4 className="flex items-center gap-2 font-medium">
                       <Crown className="h-4 w-4" />

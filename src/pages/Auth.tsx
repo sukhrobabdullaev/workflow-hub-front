@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, Award, Layers, Shield, Users, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 type AuthFlow =
   | 'login'
@@ -23,6 +23,7 @@ export const Auth = () => {
   const [currentFlow, setCurrentFlow] = useState<AuthFlow>('login');
   const [userEmail, setUserEmail] = useState('');
   const [currentFeature, setCurrentFeature] = useState(0);
+  const navigate = useNavigate();
 
   // Helper functions for flow navigation
   const toggleMode = () => setCurrentFlow(currentFlow === 'login' ? 'register' : 'login');
@@ -317,7 +318,7 @@ export const Auth = () => {
                 <EmailVerification
                   email={userEmail}
                   onBack={backToLogin}
-                  onVerificationComplete={() => setCurrentFlow('two-factor')}
+                  onVerificationComplete={() => navigate('/onboarding')}
                 />
               )}
 

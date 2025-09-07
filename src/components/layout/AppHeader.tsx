@@ -34,7 +34,6 @@ import {
   Search,
   Settings,
   ShieldCheck,
-  TrendingUp,
   User,
   Zap,
 } from 'lucide-react';
@@ -42,7 +41,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const AppHeader = () => {
-  const { user, logout } = useAuthStore();
+  const { user, logout, getCurrentRole } = useAuthStore();
   const { getCurrentPlan, setUpgradeDialog } = useSubscriptionStore();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -124,11 +123,8 @@ export const AppHeader = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        if (isFreePlan) {
-          setUpgradeDialog(true);
-        } else {
-          setOpen(true);
-        }
+        setUpgradeDialog(true);
+        setOpen(true);
       }
     };
     document.addEventListener('keydown', handleKeyDown);
@@ -200,28 +196,17 @@ export const AppHeader = () => {
             <div className="relative hidden md:block">
               <Button
                 variant="outline"
-                className={`w-64 justify-start text-muted-foreground transition-all duration-200 hover:bg-accent/50 ${
-                  isFreePlan
-                    ? 'border-dashed border-primary/50 bg-gradient-to-r from-primary/5 to-purple-500/5'
-                    : ''
-                }`}
+                className={`w-64 justify-start text-muted-foreground transition-all duration-200 hover:bg-accent/50`}
                 onClick={() => {
-                  if (isFreePlan) {
-                    setUpgradeDialog(true);
-                  } else {
-                    setOpen(true);
-                  }
+                  setUpgradeDialog(true);
+                  setOpen(true);
                 }}
               >
                 <Search className="mr-2 h-4 w-4" />
-                {isFreePlan ? 'Search (Pro)' : 'Search projects, tasks...'}
-                {isFreePlan ? (
-                  <Crown className="absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-primary" />
-                ) : (
-                  <kbd className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 select-none items-center gap-1 rounded border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-medium opacity-100 lg:inline-flex">
-                    <span className="text-xs">⌘</span>K
-                  </kbd>
-                )}
+                Search projects, tasks...
+                <kbd className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 select-none items-center gap-1 rounded border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-medium opacity-100 lg:inline-flex">
+                  <span className="text-xs">⌘</span>K
+                </kbd>
               </Button>
             </div>
           </div>
@@ -348,45 +333,6 @@ export const AppHeader = () => {
                         </div>
                       ))}
                     </div>
-
-                    {/* Enhanced Upgrade Overlay */}
-                    <div className="from-background/98 absolute inset-0 flex items-center justify-center bg-gradient-to-t via-background/85 to-background/20">
-                      <div className="max-w-sm space-y-4 p-6 text-center">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-gradient-to-r from-primary/10 to-purple-500/10 px-4 py-2 text-sm font-medium text-primary">
-                          <Crown className="h-4 w-4" />
-                          Pro Feature Preview
-                        </div>
-                        <div>
-                          <h3 className="mb-2 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-xl font-semibold text-transparent">
-                            Intelligent Notifications
-                          </h3>
-                          <div className="space-y-2 text-sm text-muted-foreground">
-                            <div className="flex items-center justify-center gap-2">
-                              <Bot className="h-4 w-4 text-purple-500" />
-                              <span>AI-powered priority detection</span>
-                            </div>
-                            <div className="flex items-center justify-center gap-2">
-                              <TrendingUp className="h-4 w-4 text-green-500" />
-                              <span>Real-time project insights</span>
-                            </div>
-                            <div className="flex items-center justify-center gap-2">
-                              <AlertTriangle className="h-4 w-4 text-red-500" />
-                              <span>Critical issue alerts</span>
-                            </div>
-                          </div>
-                        </div>
-                        <Button
-                          onClick={() => {
-                            setShowNotificationPreview(false);
-                            setUpgradeDialog(true);
-                          }}
-                          className="bg-gradient-to-r from-primary to-purple-600 shadow-lg transition-all duration-200 hover:from-primary/90 hover:to-purple-600/90 hover:shadow-xl"
-                        >
-                          <Crown className="mr-2 h-4 w-4" />
-                          Unlock Smart Notifications
-                        </Button>
-                      </div>
-                    </div>
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -511,15 +457,20 @@ export const AppHeader = () => {
                       {user?.name?.charAt(0) || 'U'}
                     </AvatarFallback>
                   </Avatar>
-                  {user?.role && (
-                    <div className="absolute -bottom-1 -right-1">
-                      <div
-                        className={`flex h-5 w-5 items-center justify-center rounded-full ${getRoleBadge(user.role)}`}
-                      >
-                        {getRoleIcon(user.role)}
-                      </div>
-                    </div>
-                  )}
+                  {(() => {
+                    const currentRole = getCurrentRole();
+                    return (
+                      currentRole && (
+                        <div className="absolute -bottom-1 -right-1">
+                          <div
+                            className={`flex h-5 w-5 items-center justify-center rounded-full ${getRoleBadge(currentRole)}`}
+                          >
+                            {getRoleIcon(currentRole)}
+                          </div>
+                        </div>
+                      )
+                    );
+                  })()}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64" align="end" forceMount>
@@ -527,14 +478,19 @@ export const AppHeader = () => {
                   <div className="flex flex-col space-y-2">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium leading-none">{user?.name}</p>
-                      {user?.role && (
-                        <Badge
-                          variant="secondary"
-                          className={`text-xs ${getRoleBadge(user.role)} border-0 text-white`}
-                        >
-                          {user.role}
-                        </Badge>
-                      )}
+                      {(() => {
+                        const currentRole = getCurrentRole();
+                        return (
+                          currentRole && (
+                            <Badge
+                              variant="secondary"
+                              className={`text-xs ${getRoleBadge(currentRole)} border-0 text-white`}
+                            >
+                              {currentRole}
+                            </Badge>
+                          )
+                        );
+                      })()}
                     </div>
                     <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                   </div>
@@ -544,12 +500,20 @@ export const AppHeader = () => {
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </DropdownMenuItem>
-                {(user?.role === 'admin' || user?.role === 'manager') && (
-                  <DropdownMenuItem onClick={() => navigate('/billing')} className="cursor-pointer">
-                    <CreditCard className="mr-2 h-4 w-4" />
-                    Billing
-                  </DropdownMenuItem>
-                )}
+                {(() => {
+                  const currentRole = getCurrentRole();
+                  return (
+                    (currentRole === 'admin' || currentRole === 'manager') && (
+                      <DropdownMenuItem
+                        onClick={() => navigate('/billing')}
+                        className="cursor-pointer"
+                      >
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Billing
+                      </DropdownMenuItem>
+                    )
+                  );
+                })()}
                 <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer">
                   <Settings className="mr-2 h-4 w-4" />
                   Settings

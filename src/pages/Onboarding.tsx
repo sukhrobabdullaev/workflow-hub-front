@@ -1,10 +1,7 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -14,17 +11,20 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
 import {
-  Users,
   ArrowRight,
+  BarChart3,
+  Calendar,
   Check,
+  FileText,
+  MessageSquare,
   Rocket,
   Target,
-  Calendar,
-  MessageSquare,
-  FileText,
-  BarChart3,
+  Users,
 } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface OnboardingStep {
   id: string;
@@ -61,7 +61,8 @@ export const OnboardingFlow = () => {
 
       toast({
         title: 'Welcome to WorkflowHub!',
-        description: 'Your workspace has been set up successfully.',
+        description:
+          'Your workspace has been set up successfully. You are now the Administrator of your workspace and can invite team members.',
       });
 
       navigate('/dashboard');

@@ -135,13 +135,15 @@ const approvalHistory = [
 ];
 
 export const Approvals = () => {
-  const user = useAuthStore(state => state.user);
+  const { user, getCurrentRole } = useAuthStore();
   const [selectedApproval, setSelectedApproval] = useState<any>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [reviewComments, setReviewComments] = useState('');
 
-  // Access control
-  if (user?.role === 'member') {
+  const currentRole = getCurrentRole();
+
+  // Access control - only admin and manager can view approvals
+  if (!user || currentRole === 'member') {
     return (
       <div className="container mx-auto p-6">
         <Card>

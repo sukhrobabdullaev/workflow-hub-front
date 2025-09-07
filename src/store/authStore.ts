@@ -6,7 +6,6 @@ interface User {
   name: string;
   email: string;
   avatar?: string;
-  role: 'admin' | 'manager' | 'member';
   plan: 'free' | 'professional' | 'enterprise';
   planLimits?: {
     maxProjects: number;
@@ -22,6 +21,18 @@ interface User {
   goals?: string[];
   twoFactorEnabled?: boolean;
   onboardingCompleted?: boolean;
+  // Workspace memberships
+  workspaces: WorkspaceMembership[];
+  currentWorkspaceId?: string;
+}
+
+interface WorkspaceMembership {
+  workspaceId: string;
+  workspaceName: string;
+  role: 'admin' | 'manager' | 'member';
+  isOwner: boolean; // True if this user created/owns the workspace
+  joinedAt: string;
+  invitedBy?: string; // User ID who invited them (if not owner)
 }
 
 interface AuthState {
@@ -34,6 +45,17 @@ interface AuthState {
   updateProfile: (data: Partial<User>) => void;
   completeOnboarding: (data: Partial<User>) => void;
   enableTwoFactor: () => void;
+  switchWorkspace: (workspaceId: string) => void;
+  joinWorkspace: (
+    workspaceId: string,
+    role: 'admin' | 'manager' | 'member',
+    invitedBy?: string
+  ) => void;
+  getCurrentWorkspace: () => WorkspaceMembership | null;
+  getCurrentRole: () => 'admin' | 'manager' | 'member' | null;
+  isWorkspaceOwner: () => boolean;
+  // Testing function to add workspace
+  addTestWorkspace: () => void;
 }
 
 // Helper function to get plan limits
@@ -69,7 +91,7 @@ const getPlanLimits = (plan: 'free' | 'professional' | 'enterprise') => {
   }
 };
 
-// Mock user data for demo
+// Mock user data for demo - updated for multi-workspace
 const mockUsers: User[] = [
   {
     id: '1',
@@ -77,9 +99,26 @@ const mockUsers: User[] = [
     email: 'john@workflowhub.com',
     avatar:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-    role: 'admin',
     plan: 'enterprise',
     planLimits: getPlanLimits('enterprise'),
+    workspaces: [
+      {
+        workspaceId: 'ws-1',
+        workspaceName: "John's Company",
+        role: 'admin',
+        isOwner: true,
+        joinedAt: '2024-01-01',
+      },
+      {
+        workspaceId: 'ws-3',
+        workspaceName: 'Tech Startup Inc',
+        role: 'manager',
+        isOwner: false,
+        joinedAt: '2024-06-01',
+        invitedBy: '3',
+      },
+    ],
+    currentWorkspaceId: 'ws-1',
   },
   {
     id: '2',
@@ -87,9 +126,45 @@ const mockUsers: User[] = [
     email: 'sarah@workflowhub.com',
     avatar:
       'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-    role: 'manager',
     plan: 'professional',
     planLimits: getPlanLimits('professional'),
+    workspaces: [
+      {
+        workspaceId: 'ws-2',
+        workspaceName: "Sarah's Agency",
+        role: 'admin',
+        isOwner: true,
+        joinedAt: '2024-02-01',
+      },
+      {
+        workspaceId: 'ws-1',
+        workspaceName: "John's Company",
+        role: 'manager',
+        isOwner: false,
+        joinedAt: '2024-03-01',
+        invitedBy: '1',
+      },
+    ],
+    currentWorkspaceId: 'ws-2',
+  },
+  {
+    id: '3',
+    name: 'Mike Chen',
+    email: 'mike@techstartup.com',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+    plan: 'professional',
+    planLimits: getPlanLimits('professional'),
+    workspaces: [
+      {
+        workspaceId: 'ws-3',
+        workspaceName: 'Tech Startup Inc',
+        role: 'admin',
+        isOwner: true,
+        joinedAt: '2024-05-01',
+      },
+    ],
+    currentWorkspaceId: 'ws-3',
   },
 ];
 
@@ -112,21 +187,33 @@ export const useAuthStore = create<AuthState>()(
       },
 
       register: async (name: string, email: string, password: string) => {
-        // Mock registration - TODO: Replace with API call
+        // Mock registration - creates new workspace for the user
         await new Promise(resolve => setTimeout(resolve, 1000));
         // eslint-disable-next-line no-console
         console.log('Registration with password:', password);
 
         const plan = 'free';
+        const userId = Date.now().toString();
+        const workspaceId = `ws-${userId}`;
+
         const newUser: User = {
-          id: Date.now().toString(),
+          id: userId,
           name,
           email,
-          role: 'member',
           plan,
           planLimits: getPlanLimits(plan),
           twoFactorEnabled: false,
           onboardingCompleted: false,
+          workspaces: [
+            {
+              workspaceId,
+              workspaceName: `${name}'s Workspace`,
+              role: 'admin',
+              isOwner: true,
+              joinedAt: new Date().toISOString(),
+            },
+          ],
+          currentWorkspaceId: workspaceId,
         };
 
         set({ user: newUser, isAuthenticated: true });
@@ -134,20 +221,33 @@ export const useAuthStore = create<AuthState>()(
       },
 
       socialAuth: async (provider: string, userData: Partial<User>) => {
-        // Mock social authentication
+        // Mock social authentication - creates new workspace for the user
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         const plan = 'free';
+        const userId = Date.now().toString();
+        const workspaceId = `ws-${userId}`;
+        const userName = userData.name || `${provider} User`;
+
         const newUser: User = {
-          id: Date.now().toString(),
-          name: userData.name || `${provider} User`,
+          id: userId,
+          name: userName,
           email: userData.email || `user@${provider}.com`,
           avatar: userData.avatar,
-          role: 'member',
           plan,
           planLimits: getPlanLimits(plan),
           twoFactorEnabled: false,
           onboardingCompleted: false,
+          workspaces: [
+            {
+              workspaceId,
+              workspaceName: `${userName}'s Workspace`,
+              role: 'admin',
+              isOwner: true,
+              joinedAt: new Date().toISOString(),
+            },
+          ],
+          currentWorkspaceId: workspaceId,
         };
 
         set({ user: newUser, isAuthenticated: true });
@@ -161,11 +261,19 @@ export const useAuthStore = create<AuthState>()(
       completeOnboarding: (data: Partial<User>) => {
         const { user } = get();
         if (user) {
+          // Update workspace name with company name if provided
+          const updatedWorkspaces = user.workspaces.map(ws =>
+            ws.workspaceId === user.currentWorkspaceId && ws.isOwner
+              ? { ...ws, workspaceName: data.companyName || ws.workspaceName }
+              : ws
+          );
+
           set({
             user: {
               ...user,
               ...data,
               onboardingCompleted: true,
+              workspaces: updatedWorkspaces,
             },
           });
         }
@@ -187,6 +295,91 @@ export const useAuthStore = create<AuthState>()(
         const { user } = get();
         if (user) {
           set({ user: { ...user, ...data } });
+        }
+      },
+
+      switchWorkspace: (workspaceId: string) => {
+        const { user } = get();
+        if (user && user.workspaces.some(ws => ws.workspaceId === workspaceId)) {
+          set({
+            user: {
+              ...user,
+              currentWorkspaceId: workspaceId,
+            },
+          });
+        }
+      },
+
+      joinWorkspace: (
+        workspaceId: string,
+        role: 'admin' | 'manager' | 'member',
+        invitedBy?: string
+      ) => {
+        const { user } = get();
+        if (user) {
+          // Check if user is already in this workspace
+          const existingMembership = user.workspaces.find(ws => ws.workspaceId === workspaceId);
+
+          if (!existingMembership) {
+            const newWorkspace: WorkspaceMembership = {
+              workspaceId,
+              workspaceName: 'Invited Workspace', // Would be fetched from API in real app
+              role,
+              isOwner: false,
+              joinedAt: new Date().toISOString(),
+              invitedBy,
+            };
+
+            set({
+              user: {
+                ...user,
+                workspaces: [...user.workspaces, newWorkspace],
+                currentWorkspaceId: workspaceId, // Switch to the new workspace
+              },
+            });
+          }
+        }
+      },
+
+      getCurrentWorkspace: () => {
+        const { user } = get();
+        if (!user || !user.currentWorkspaceId) return null;
+        return user.workspaces.find(ws => ws.workspaceId === user.currentWorkspaceId) || null;
+      },
+
+      getCurrentRole: () => {
+        const { getCurrentWorkspace } = get();
+        const currentWorkspace = getCurrentWorkspace();
+        return currentWorkspace?.role || null;
+      },
+
+      isWorkspaceOwner: () => {
+        const { getCurrentWorkspace } = get();
+        const currentWorkspace = getCurrentWorkspace();
+        return currentWorkspace?.isOwner || false;
+      },
+
+      // Testing function to add workspace to current user
+      addTestWorkspace: () => {
+        const { user } = get();
+        if (user) {
+          const newWorkspace = {
+            workspaceId: 'ws-test-' + Date.now(),
+            workspaceName: 'Test Workspace',
+            role: 'manager' as const,
+            isOwner: false,
+            joinedAt: new Date().toISOString(),
+            invitedBy: 'system',
+          };
+
+          set({
+            user: {
+              ...user,
+              workspaces: [...user.workspaces, newWorkspace],
+            },
+          });
+
+          console.log('Added test workspace:', newWorkspace);
         }
       },
     }),

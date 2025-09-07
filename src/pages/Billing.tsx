@@ -66,7 +66,7 @@ const invoices = [
 ];
 
 export const Billing = () => {
-  const { user } = useAuthStore();
+  const { user, getCurrentRole } = useAuthStore();
   const { toast } = useToast();
   const { getCurrentPlan, usage, plans, upgradeTo, getUsagePercentage, getRemainingLimit } =
     useSubscriptionStore();
@@ -77,8 +77,10 @@ export const Billing = () => {
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
 
+  const currentRole = getCurrentRole();
+
   // Only allow admin and manager roles to access billing
-  if (!user || (user.role !== 'admin' && user.role !== 'manager')) {
+  if (!user || (currentRole !== 'admin' && currentRole !== 'manager')) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <Card className="mx-auto max-w-md text-center">

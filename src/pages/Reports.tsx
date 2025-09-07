@@ -2,7 +2,6 @@ import { UpgradeDialog } from '@/components/modals/UpgradeDialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FreePlanBanner } from '@/components/ui/plan-indicators';
 import {
   Select,
   SelectContent,
@@ -54,14 +53,16 @@ const projectStatusData = [
 ];
 
 export const Reports = () => {
-  const user = useAuthStore(state => state.user);
+  const { user, getCurrentRole } = useAuthStore();
   const { currentPlan } = useSubscriptionStore();
   const isFreePlan = currentPlan === 'free';
   const [selectedPeriod, setSelectedPeriod] = useState('30');
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
-  // Access control
-  if (user?.role === 'member') {
+  const currentRole = getCurrentRole();
+
+  // Access control - only admin and manager can view reports
+  if (!user || currentRole === 'member') {
     return (
       <div className="container mx-auto p-6">
         <Card>
@@ -69,7 +70,8 @@ export const Reports = () => {
             <div className="text-center">
               <h2 className="mb-2 text-xl font-semibold">Access Restricted</h2>
               <p className="text-muted-foreground">
-                You don&apos;t have permission to view reports.
+                You don&apos;t have permission to view reports. Only administrators and managers can
+                access analytics.
               </p>
             </div>
           </CardContent>
@@ -80,9 +82,6 @@ export const Reports = () => {
 
   return (
     <div className="container mx-auto space-y-6 p-6">
-      {/* Free Plan Banner */}
-      {isFreePlan && <FreePlanBanner />}
-
       {/* Header */}
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>

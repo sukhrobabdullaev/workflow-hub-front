@@ -325,15 +325,6 @@ const mockTeamMembers: TeamMember[] = [
       'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
     status: 'offline',
   },
-  // {
-  //   id: '6',
-  //   name: 'Lisa Wong',
-  //   email: 'lisa@workflowhub.com',
-  //   role: 'DevOps Engineer',
-  //   avatar:
-  //     'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
-  //   status: 'active',
-  // },
 ];
 
 // Default Kanban columns
